@@ -1,0 +1,114 @@
+Mac version
+
+Using ReadLine,Boost,HDF5,GSL
+mothur v.1.47.0
+Last updated: 1/21/22
+by
+Patrick D. Schloss
+
+Department of Microbiology & Immunology
+
+University of Michigan
+http://www.mothur.org
+
+When using, please cite:
+Schloss, P.D., et al., Introducing mothur: Open-source, platform-independent, community-supported software for describing and comparing microbial communities. Appl Environ Microbiol, 2009. 75(23):7537-41.
+
+Distributed under the GNU General Public License
+
+Type 'help()' for information on the commands that are available
+
+For questions and analysis support, please visit our forum at https://forum.mothur.org
+
+Type 'quit()' to exit program
+
+[NOTE]: Setting random seed to 19760620.
+
+Interactive Mode
+
+
+
+mothur > otu.association(shared=final.opti_mcc.shared.shared, metadata=metadata.tsv)
+Unable to open final.opti_mcc.shared.shared. Trying mothur's executable directory final.opti_mcc.shared.shared.
+Unable to open final.opti_mcc.shared.shared.
+Unable to open final.opti_mcc.shared.shared
+Unable to open metadata.tsv. Trying mothur's executable directory metadata.tsv.
+Unable to open metadata.tsv.
+Unable to open metadata.tsv
+[ERROR]: did not complete otu.association.
+
+mothur > otu.association(shared=final.opti_mcc.shared.shared, metadata=metadata.txt)
+Unable to open final.opti_mcc.shared.shared. Trying mothur's executable directory final.opti_mcc.shared.shared.
+Unable to open final.opti_mcc.shared.shared.
+Unable to open final.opti_mcc.shared.shared
+Unable to open metadata.txt. Trying mothur's executable directory metadata.txt.
+Unable to open metadata.txt.
+Unable to open metadata.txt
+[ERROR]: did not complete otu.association.
+
+mothur > otu.association(shared=final.opti_mcc.shared.shared, metadata=isolate.txt)
+Unable to open final.opti_mcc.shared.shared. Trying mothur's executable directory final.opti_mcc.shared.shared.
+Unable to open final.opti_mcc.shared.shared.
+Unable to open final.opti_mcc.shared.shared
+Unable to open isolate.txt. Trying mothur's executable directory isolate.txt.
+Unable to open isolate.txt.
+Unable to open isolate.txt
+[ERROR]: did not complete otu.association.
+
+mothur > pwd
+/*****************************************************************************/
+Unable to open pwd. Trying MOTHUR_FILES directory /Users/tmbuza/bin//pwd.
+Unable to open /Users/tmbuza/bin//pwd. Trying mothur's executable directory /Users/tmbuza/bin//pwd.
+Unable to open /Users/tmbuza/bin//pwd.
+[ERROR]: unable to open /Users/tmbuza/bin//pwd batch file, please correct.
+/*****************************************************************************/
+
+mothur > system(ped
+
+
+It took 10 seconds to run 0 commands from /Users/tmbuza/bin//pwd batch file.
+
+[ERROR]: You are missing )
+[ERROR]: Invalid.
+
+mothur > system(pwd)
+/Users/tmbuza/Dropbox/CDILLC/GIT_REPOS/smda_part2
+
+
+mothur > system(cp metadata.tsv metadata.metadata)
+cp: metadata.tsv: No such file or directory
+
+
+mothur > otu.association(shared=final.opti_mcc.shared.shared, metadata=data/metadata.tsv)
+Unable to open final.opti_mcc.shared.shared. Trying MOTHUR_FILES directory /Users/tmbuza/bin//final.opti_mcc.shared.shared.
+Unable to open /Users/tmbuza/bin//final.opti_mcc.shared.shared. Trying mothur's executable directory /Users/tmbuza/bin//final.opti_mcc.shared.shared.
+Unable to open /Users/tmbuza/bin//final.opti_mcc.shared.shared.
+Unable to open final.opti_mcc.shared.shared
+[ERROR]: did not complete otu.association.
+
+mothur > otu.association(shared=data/final.opti_mcc.shared.shared, metadata=data/metadata.tsv)
+Unable to open data/final.opti_mcc.shared.shared. Trying MOTHUR_FILES directory /Users/tmbuza/bin//final.opti_mcc.shared.shared.
+Unable to open /Users/tmbuza/bin//final.opti_mcc.shared.shared. Trying mothur's executable directory /Users/tmbuza/bin//final.opti_mcc.shared.shared.
+Unable to open /Users/tmbuza/bin//final.opti_mcc.shared.shared.
+Unable to open data/final.opti_mcc.shared.shared
+[ERROR]: did not complete otu.association.
+
+mothur > otu.association(shared=./data/final.opti_mcc.shared.shared, metadata=./data/metadata.tsv)
+Unable to open /Users/tmbuza/Dropbox/CDILLC/GIT_REPOS/smda_part2/data/final.opti_mcc.shared.shared. Trying MOTHUR_FILES directory /Users/tmbuza/bin//final.opti_mcc.shared.shared.
+Unable to open /Users/tmbuza/bin//final.opti_mcc.shared.shared. Trying mothur's executable directory /Users/tmbuza/bin//final.opti_mcc.shared.shared.
+Unable to open /Users/tmbuza/bin//final.opti_mcc.shared.shared.
+Unable to open ./data/final.opti_mcc.shared.shared
+[ERROR]: did not complete otu.association.
+
+mothur > quit()
+Logfile : mothur.1651506496.logfile
+
+
+
+************************************************************
+************************************************************
+************************************************************
+Detected 9 [ERROR] messages, please review.
+************************************************************
+************************************************************
+************************************************************

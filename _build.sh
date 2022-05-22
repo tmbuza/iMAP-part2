@@ -1,0 +1,18 @@
+#!/usr/bin/env Rscript
+
+set -ev
+
+Rscript -e "bookdown::render_book('index.Rmd', 'bookdown::gitbook')"
+Rscript -e "bookdown::render_book('index.Rmd', 'bookdown::pdf_book')"
+Rscript -e "bookdown::render_book('index.Rmd', 'bookdown::epub_book')"
+Rscript -e "bookdown::render_book('index.Rmd', 'bookdown::bs4_book')"
+
+# #!/bin/sh
+# 
+# set -ev
+# 
+# Rscript -e "bookdown::render_book('index.Rmd', 'bookdown::gitbook')"
+# Rscript -e "bookdown::render_book('index.Rmd', 'bookdown::pdf_book')"
+# Rscript -e "bookdown::render_book('index.Rmd', 'bookdown::epub_book')"
+# Rscript -e "bookdown::render_book('index.Rmd', 'bookdown::bs4_book')"
+

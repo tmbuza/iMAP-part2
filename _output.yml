@@ -1,0 +1,60 @@
+bookdown::gitbook:
+  css: style.css
+  config:
+    toc:
+      before: |
+        <li><a href="./">Microbiome Bioinformatics</a></li>
+      after: |
+        <li>This practical user guide was built by the <a href:"https://bookdown.org/">bookdown</a> R package</a></li>
+    edit: https://github.com/CDI2021/smda_part2/edit/main/%s
+    download: ["pdf", "epub"]
+
+bookdown::pdf_book:
+  includes:
+    in_header: preamble.tex
+  latex_engine: xelatex
+  citation_package: natbib
+  keep_tex: yes
+  
+bookdown::epub_book: default
+
+bookdown::bs4_book:
+  favicon: "favicon.ico"
+  footnotes_inline: false
+  split_bib: false
+  repo:
+    base: https://github.com/CDI2021/smda_part2
+    branch: main
+    # subdir: book
+    icon: "fas fa-air-freshener"
+  theme:
+    fg: "black"
+    bg: "#FFFEFA"
+    primary: "#277DB0"
+    secondary: "#277DB0"
+    success: "#277DB0"
+    info: "#277DB0"
+    warning: "#277DB0"
+    danger: "#277DB0"
+    base_font:
+      google: Sen
+    heading_font:
+      google:
+        family: Bitter
+        wght: 300
+    code_font:
+      google:
+        # arguments to sass::font_google()
+        family: DM Mono
+        local: false
+bibliography:
+- Library/book.bib
+- Library/packages.bib
+- Library/microbiome.bib
+- Library/software.bib
+citation_package:
+- natbib
+- biblatex
+- amsplain
+favicon: "favicon.ico"
+

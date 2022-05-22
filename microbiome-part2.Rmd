@@ -1,0 +1,947 @@
+---
+title: "Bioinformatics Analysis of Microbiome Data"
+subtitle: "End-to-End Practical User Guides"
+author: "Teresia Mrema-Buza, A Microbiome Data Science Enthusiast and Owner of the Complex Data Insights, LLC, USA"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+knit: bookdown::render_book
+output:
+  bookdown::bs4_book:
+    includes:
+      in_header:
+    template: bs4_part2_template.html
+documentclass: book
+classoption: openany #remove empty pages in pdf doc
+colorlinks: true
+css:
+- style.css
+- css/style.css
+always_allow_html: true
+fig_caption: true
+fontsize: 12pt
+geometry: margin=1in
+indent: false
+keep_tex: true
+link-citations: true
+mainfont: Times New Roman
+biblio-style: apalike
+description: |
+  This is a practical user's guide for **Systematic Microbiome Data Analysis in R**. The guide provides integrated and highly curated solutions for achieving better results.
+---
+
+
+```{r pkgbiblib, include=FALSE}
+knitr::write_bib(c(
+  .packages(), 'base','bookdown','rmarkdown','tidyverse','shiny','vegan','data.table, dendextend, robCompositions, microbiome, ALDEx2, caret, rms, phyloseq'
+), 'library/packages.bib')
+```
+
+```{r setup, include=FALSE}
+source(file = "R/common.R")
+```
+
+# Bioinformatics Analysis of Microbiome Data {-#frontpage}
+
+```{r include=FALSE}
+library(DiagrammeR)
+library(DiagrammeRsvg)
+
+graph <- DiagrammeR::grViz("
+digraph {
+graph [layout = dot, rankdir = TD]
+
+node [
+shape = box, 
+style = filled, 
+fillcolor = white, 
+fontname = Helvetica,
+penwidth = 2.0] 
+
+edge [arrowhead = diamond]
+
+A [label = 'TAXONOMIC \nPROFILING OF \nMICROBIOME DATA', fillcolor = white, penwidth = 5.0]
+B [label = 'Complex Data from \nSequencing Platforms\n(*.fastq.gz)', shape = folder]
+C [label = '16S rRNA Gene Amplicon\nSequencing Data']
+D [label = 'Metagenomics Shotgun\nSequencing Data']
+E [label = 'Mothur\nPipeline', shape = oval]
+F [label = 'QIIME2\nPipeline', shape = oval]
+G [label = 'MetaPhlAn\nPipeline', shape = oval]
+H [label = 'HUMAnN\nPipeline', shape = oval]
+I [label = 'ASV/OTU &\nTaxonomy Tables']
+J [label = 'Feature & Taxonomy\nTables']
+K [label = 'Microbial\nProfiles']
+L [label = 'MetaPhlAn\nBugs List']
+M [label = 'Tidying Mothur, QIIME2,\nMetaPhlAn & HUMAnN Output', shape = oval, penwidth = 2.0]
+N [label = 'TIDY MICROBIAL\nABUNDANCE\nTABLES', shape = diamond, fillcolor = yellow, penwidth = 4.0]
+
+A [color = black]
+C,E,F,I,J [color = limegreen]
+D,G,H,K,L [color = dodgerblue]
+
+{A}  -> B
+{B}  -> C
+{B}  -> D
+{C}  -> E
+{C}  -> F
+{D}  -> G
+{D}  -> H
+{E}  -> I
+{F}  -> J
+{G}  -> K
+{H}  -> L
+{I}  -> M [arrowhead = vee]
+{J}  -> M [arrowhead = vee]
+{K}  -> M [arrowhead = vee]
+{L}  -> M [arrowhead = vee]
+{M}  -> N 
+
+
+}", height = 500, width = 500)
+
+# 2. Convert to SVG, then save as png
+part2_flow = DiagrammeRsvg::export_svg(graph)
+part2_flow = charToRaw(part2_flow) # flatten
+rsvg::rsvg_png(part2_flow, "img/part2_flow.png")
+```
+
+
+<a href=""><img src="img/part2_bioinfo.png" alt="Book cover" width="100%" style="padding: 50px 0px 50px 0px; float: right;"/></a>
+
+## Quick Glimpse {-}
+Investigating the role of microbial communities in health and disease requires a thorough knowledge of the entire analytical process. Using wrong approaches can cost a significant amount of dollars and lengthy process to achieve the desired results. This is <b>PART 2</b> of the practical user guides intended to provide analytical support to the microbiome research community. The entire guide is reproducible, allowing users to easily follow along. If interested, user may use this model to publish their findings in a book format.
+
+## Structure of this guide {-}
+This guide is divided into chapters to facilitate easy navigation. Each chapter contains several sections as displayed in the navigation bars on the left and right. Click the hyper-linked text if you want to jump into a specific chapter or section.
+
+## Code availability {-}
+The code is available at a public [GitHub repository](https://github.com/tmbuza/microbiome-part2/). If interested you can request a consulting service by contacting the developer of this repo using <a href="https://complexdatainsights.com/contact-us">this contact form</a>. 
+
+<!--chapter:end:index.Rmd-->
+
+# (PART) BIOINFORMATICS ANALYSIS {-}
+
+# Standard Sequence Preprocessing {#preprocess-16S-reads}
+At this point we are aware of the preprocessing and bioinformatics tools needed to getting started with microbiome data analysis. We assume that the tools are already installed. Now it is time to use them to:
+
+- Get simple statistics.
+- Check the quality of the reads.
+- Create summary report of quality metrics. 
+- Trim poor read at a user-specified cutoff.
+- Remove contaminants.
+
+
+## Original read statistics
+Tool: SeqKit.
+
+```bash
+mkdir -p data
+mkdir -p data/stats1  
+seqkit stat *.fastq.gz >data/stats1/seqkit_stats.txt
+```
+
+## Initial read quality scores
+Tool: FastQC
+
+```bash
+mkdir data/fastqc1
+fastqc *.fastq.gz -o data/fastqc1
+```
+
+## Summary of initial read quality scores
+Tool: MultQC.
+```bash
+mkdir data/multiqc1
+multiqc -f --data-dir data/fastqc1 -o data/multiqc1 --export
+```
+
+> Plots from `multiqc` are exported to `multiqc_plots` folder. 
+
+![Original: Mean quality scores](data/multiqc1/multiqc_plots/png/mqc_fastqc_per_base_sequence_quality_plot_1.png){width=100%}
+
+<br>
+
+![Original: Per sequence quality scores](data/multiqc1/multiqc_plots/png/mqc_fastqc_per_sequence_quality_scores_plot_1.png){width=100%}
+
+<br>
+
+## Trimming poor reads 
+- Using `bbduk.sh` from bbmap platform
+- We use `-Xmx4g` switch to tell Java how much memory (heap size) to use, in this demo is 4 GB.
+- Note that we will use a `for loop` to specify the file name pattern to look for. Some files may contain different patterns containing `R1_001.fastq.gz`. Here we use files downloaded from NCBI-SRA and looks like `SRR7450758_1.fastq.gz`.
+- Then we will rerun `seqkit stat`, `fastqc` and `multiqc` on the trimmed reads.
+
+```bash
+for i in `ls -1 *_1.fastq.gz | sed 's/_1.fastq.gz//'`
+  do
+  bbduk.sh -Xmx4g in1=$i\_1.fastq.gz in2=$i\_2.fastq.gz out1=data/trimmed/$i\_1.fastq.gz out2=data/trimmed/$i\_2.fastq.gz qtrim=r trimq=25 overwrite=True
+  done
+```
+
+```bash
+mkdir -p data/stats2  
+seqkit stat data/trimmed/*.fastq.gz >data/stats2/seqkit_stats.txt
+
+mkdir data/fastqc2
+fastqc data/trimmed/*.fastq.gz -o data/fastqc2
+
+mkdir data/multiqc2
+multiqc -f --data-dir data/fastqc2 -o data/multiqc2 --export
+```
+
+![Trimmed: Mean quality scores](data/multiqc2/multiqc_plots/png/mqc_fastqc_per_base_sequence_quality_plot_1.png){width=100%}
+
+<br>
+
+![Trimmed: Per sequence quality scores](data/multiqc2/multiqc_plots/png/mqc_fastqc_per_sequence_quality_scores_plot_1.png){width=100%}
+
+## Read decontamination
+- Using `bbduk.sh` on trimmed reads.
+- This will remove some contamination (if found), e.g. phiX Control reads.
+- Then we will rerun `seqkit stat`, `fastqc` and `multiqc` on the decontaminated reads.
+
+```bash
+for i in `ls -1 *_1.fastq.gz | sed 's/_1.fastq.gz//'`
+do
+bbduk.sh -Xmx4g in1=data/trimmed/$i\_1.fastq.gz in2=data/trimmed/$i\_2.fastq.gz out1=data/decontam/$i\_1.fastq.gz out2=data/decontam/$i\_2.fastq.gz outm1=data/decontam/matchedphix/$i\_1.fastq.gz outm2=data/decontam/matchedphix/$i\_2.fastq.gz ref=~/bbmap/resources/phix174_ill.ref.fa.gz k=31 hdist=1 overwrite=True
+done
+```
+
+```bash
+mkdir -p data/stats3  
+seqkit stat data/decontam/*.fastq.gz >data/stats3/seqkit_stats.txt
+
+mkdir data/fastqc3
+fastqc data/decontam/*.fastq.gz -o data/fastqc3
+
+mkdir data/multiqc3
+multiqc -f --data-dir data/fastqc3 -o data/multiqc3 --export
+```
+
+<br>
+
+![Decontaminated: Mean quality scores](data/multiqc3/multiqc_plots/png/mqc_fastqc_per_base_sequence_quality_plot_1.png){width=100%}
+
+<br>
+
+![Decontaminated: Per sequence quality scores](data/multiqc3/multiqc_plots/png/mqc_fastqc_per_sequence_quality_scores_plot_1.png){width=100%}
+
+<br>
+
+## Merged and compare preprocessed reads
+```{r message=FALSE, warning=FALSE}
+library(tidyverse, suppressPackageStartupMessages())
+library(ggtext)
+
+stats1 <- read_table("data/stats1/seqkit_stats.txt", show_col_types = F) %>% 
+  mutate(file = str_replace_all(file, ".*/", "")) %>% 
+  select(file, original = num_seqs)
+
+stats2 <- read_table("data/stats2/seqkit_stats.txt", show_col_types = F) %>% 
+  mutate(file = str_replace_all(file, ".*/", "")) %>% 
+  select(file, trimmed = num_seqs)
+
+stats3 <- read_table("data/stats3/seqkit_stats.txt", show_col_types = F) %>% 
+  mutate(file = str_replace_all(file, ".*/", "")) %>% 
+  select(file, decontaminated = num_seqs)
+
+inner_join(stats1, stats2, by = "file") %>% 
+  inner_join(., stats3, by = "file") %>% 
+  mutate(strand = ifelse(str_detect(file, "_1"), "foward", "reverse"), .before=original) %>%
+  pivot_longer(cols = -c(file, strand), names_to = "variable", values_to = "num_seqs") %>% 
+  mutate(variable = factor(variable),
+         variable = fct_reorder(variable, num_seqs, .desc=TRUE)) %>% 
+  ggplot(aes(x = strand, y = num_seqs/1000, fill = variable)) +
+  geom_col(position = "dodge") +
+  labs(x = "Read Strand", y = "Number of Reads (thousand)", fill = "Preprocess") +
+  theme_classic() +
+  theme(axis.text.x = element_markdown(),
+        legend.text = element_text(face = NULL),
+        legend.key.size = unit(12, "pt")) + 
+  scale_y_continuous(expand = c(0, 0))
+```
+
+
+<br>
+
+# Preprocessing Metagenomics Data Using Kneaddata {#preprocess-kneaddata}
+The `kneaddata` tool from biobakery [biobakery](https://github.com/biobakery/kneaddata) is famous for preprocessing metagenomics data. It integrates several other quality control tools such as FastQC and Trimmomatic. Here we demonstrate how to use SeqKit, kneaddata and MultiQC t preprocess metagenomics sequencing data. 
+
+## What are the read statistics 
+- Using `seqkit stat` function.
+- Run the function on command line.
+
+```bash
+mkdir -p kneaddata
+mkdir -p kneaddata/stats1  
+seqkit stat *.fastq.gz >kneaddata/stats1/seqkit_stats.txt
+
+```
+
+## Initial read quality scores
+The `kneaddata` from biobakery platform is exclusively used to preprocess the metagenomics data.
+- Here we set the `kneaddata` to run `fastqc` as the first step using `run-fastqc-start` function.
+- Then `fastqc` results are then summarized outside `kneaddata` pipeline using `multiqc` software.
+
+```bash
+for i in data/*.fastq.gz
+do
+time kneaddata --i $i \
+-o kneaddata/fastqc1 \
+--run-fastqc-start \
+--bypass-trim \
+--bypass-trf \
+--sequencer-source "none" \
+-t 4 
+done
+
+
+mkdir -p kneaddata/multiqc1
+multiqc -f --data-dir kneaddata/fastqc1 -o kneaddata/multiqc1 --export
+
+```
+
+## Read Trimming
+- Using trimmomatic tool to trim the reads using the specified options.
+- The fastqc function is run after trimming
+- Then fastqc results are summarized using multiqc software.
+
+```bash
+
+for i in data/*.fastq.gz
+do
+  time kneaddata --i $i \
+    -o kneaddata/fastqc2 \
+    --trimmomatic /Users/tmbuza/opt/anaconda3/envs/biobakery3/bin/ \
+    --trimmomatic-options \
+        "ILLUMINACLIP:/Volumes/SeagateTMB/trimmomatic-0.36/adapters/NexteraPE-PE.fa:2:30:10 \
+        LEADING:3 \
+        TRAILING:3 \
+        SLIDINGWINDOW:4:20 \
+        MINLEN:60" \
+    --sequencer-source "NexteraPE" \
+    --run-fastqc-end \
+    --bypass-trf \
+    -t 4 
+done
+```
+
+```bash
+mkdir -p kneaddata/stats2
+seqkit stat kneaddata/fastqc2/*trimmed.fastq >kneaddata/stats2/seqkit_stats.txt
+
+mkdir -p kneaddata/fastqc2/multiqc2
+multiqc -f --data-dir kneaddata/fastqc2 -o kneaddata_fastqc1/multiqc1 --export
+
+```
+
+
+## Read Decontamination
+### Option 1: Using Bowtie2 database
+- Trimming is done using trimmomatic
+- Then decontamination is done using the bowtie2 database.
+- Then after decontamination fastqc is implemented to assess the read quality scores of the remaining reads.
+- Then fastqc results are summarized using multiqc software.
+
+```bash
+for i in data/*.fastq.gz
+do
+time kneaddata --i $i \
+  -o kneaddata_fastqc3 \
+      --reference-db /Volumes/SeagateTMB/kneaddata_database/ \
+      --trimmomatic /Users/tmbuza/opt/anaconda3/envs/biobakery3/bin/ \
+      --trimmomatic-options \
+          "ILLUMINACLIP:/Volumes/SeagateTMB/trimmomatic-0.36/adapters/NexteraPE-PE.fa:2:30:10 \
+          LEADING:3 \
+          TRAILING:3 \
+          SLIDINGWINDOW:4:20 \
+          MINLEN:60" \
+      --sequencer-source "NexteraPE" \
+      --run-trf \
+      --run-fastqc-end \
+      -t 4 
+done
+```
+
+```bash
+mkdir -p kneaddata/stats3
+seqkit stat kneaddata/fastqc3/*trimmed.fastq >kneaddata/stats3/seqkit_stats.txt
+
+mkdir -p kneaddata/fastqc3/multiqc3
+multiqc -f --data-dir kneaddata/fastqc3 -o kneaddata/fastqc3/multiqc3 --export
+
+```
+
+### Option 2: Using BMTagger database 
+- Trimming is done using trimmomatic
+- Then decontamination is done using the BMTagger database.
+- Then after decontamination fastqc is implemented to assess the read quality scores of the remaining reads.
+- Then fastqc results are summarized using multiqc software.
+
+```bash
+for i in data/*.fastq.gz
+do
+time kneaddata --i $i \
+  -o kneaddata_fastqc4 \
+      --reference-db /Volumes/SeagateTMB/Human_Assembly19_BMTagger_DB/ \
+      --trimmomatic /Users/tmbuza/opt/anaconda3/envs/biobakery3/bin/ \
+      --trimmomatic-options \
+          "ILLUMINACLIP:/Volumes/SeagateTMB/trimmomatic-0.36/adapters/NexteraPE-PE.fa:2:30:10 \
+          LEADING:3 \
+          TRAILING:3 \
+          SLIDINGWINDOW:4:20 \
+          MINLEN:60" \
+      --sequencer-source "NexteraPE" \
+      --run-trf \
+      --run-bmtagger \
+      --run-fastqc-end \
+      -t 4 
+done
+```
+
+```bash
+mkdir -p kneaddata/stats4
+seqkit stat kneaddata/fastqc4/*trimmed.fastq >kneaddata/stats4/seqkit_stats.txt
+
+mkdir -p kneaddata/fastqc4/multiqc4
+multiqc -f --data-dir kneaddata/fastqc4 -o kneaddata/fastqc4/multiqc4 --export
+
+```
+
+
+
+<!--chapter:end:02a_read_preprocessing.Rmd-->
+
+# Mcrobial profiling Using `mothur` {#mothur-pipeline}
+
+## Download a Mothur trained classifer
+- For demo purposes we will use [Silva seed](https://mothur.org/wiki/Silva_reference_files) due to its smaller size.
+- Other classifiers can be found [here](https://mothur.org/wiki/taxonomy_outline/).
+
+```bash
+wget https://mothur.s3.us-east-2.amazonaws.com/wiki/silva.seed_v138_1.tgz
+tar xvzf silva.seed_v138_1.tgz
+rm *.tgz
+```
+
+## Mothur basic wrapper
+- Below is a minimal wrapper for sequence processing, classification and taxonomic assignment using `mothur` pipeline.
+- For more information refer to `mothur` [MiSeq SOP](https://mothur.org/wiki/miseq_sop/).
+- We can save this wrapper as `mothur_code.batch` and place it in a folder named code.
+- Then we will run the file on command line as shown below. See the commented lines.
+- We assume that the input data is gunzipped i.e. **.fastq.gz**. If not run `gzip *.fastq` to compress the files.
+
+```{block, type="tmbalert", echo=TRUE}
+1. Note that the [`shebang line`](https://en.wikipedia.org/wiki/Shebang_(Unix)) remind us that we are running the analysis on `mothur` command line NOT `bash`. This takes the advantage of using the **current** option to refer to the last saved file.
+2. If not generating the mapping file automatically you should make sure that it confer to accepted format as in `mothur_mapping_files.tsv` described in the previous section. In this demo we use `bush.files`. This means that all output files will be prefixed with the term <u>bush</u> to reflect the name of the project. Try to avoid loner names.
+```
+
+
+```bash
+#!/mothur
+
+# Usage: mothur code/mothur_code.batch # if mothur is in the path
+# Usage: ./mothur code/mothur_code.batch # on mac/linux if the executable `mothur` is in the working directory.
+# Usage: ./mothur.exe code/mothur_code.batch # on Windows machins if the executable `mothur.exe` is in the working directory.
+
+set.current(processors=1)
+# set.logfile(name=make_files.logfile)
+# make.file(inputdir=., type=fastq.gz, prefix=test)
+
+set.logfile(name=seq_assembly.logfile)
+make.contigs(file=bush.files, outputdir=./test, maxambig=0, maxlength=275);
+unique.seqs(count=current);
+summary.seqs(fasta=current, count=current)
+
+set.logfile(name=seq_align_preclustering.logfile)
+align.seqs(fasta=current, reference=silva.seed_v138_1.align);
+screen.seqs(fasta=current, count=current, start=13862, end=23444, maxhomop=8);
+filter.seqs(fasta=current, vertical=T, trump=.);
+pre.cluster(fasta=current, count=current, diffs=2);
+unique.seqs(fasta=current, count=current);
+
+set.logfile(name=chimera_removal.logfile)
+chimera.vsearch(fasta=current, count=current, dereplicate=t);
+
+set.logfile(name=silva_seed_classification.logfile)
+classify.seqs(fasta=current, count=current, reference=silva.seed_v138_1.align, taxonomy=silva.seed_v138_1.tax, cutoff=100);
+remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-unknown-Archaea-Eukaryota);
+
+set.logfile(name=final_files.logfile)
+rename.file(fasta=current, count=current, taxonomy=current, prefix=final)
+
+set.logfile(name=otu_clustering.logfile)
+dist.seqs(fasta=current, cutoff=0.03);
+cluster(column=current, count=current, cutoff=0.03);
+make.shared(list=current, count=current, label=0.03);
+classify.otu(list=current, count=current, taxonomy=current, label=0.03);
+make.lefse(shared=current, constaxonomy=current);
+make.biom(shared=current, constaxonomy=current);
+
+set.logfile(name=phylotype_clustering.logfile)
+phylotype(taxonomy=current);
+make.shared(list=current, count=current, label=1);
+classify.otu(list=current, count=current, taxonomy=current, label=1);
+make.lefse(shared=current, constaxonomy=current);
+make.biom(shared=current, constaxonomy=current);
+
+set.logfile(name=asv_clustering.logfile)
+make.shared(count=current)
+classify.otu(list=current, count=current, taxonomy=current, label=ASV)
+make.lefse(shared=current, constaxonomy=current)
+make.biom(shared=current, constaxonomy=current)
+
+set.logfile(name=phylogenetic_clustering.logfile)
+dist.seqs(fasta=current, output=lt)
+clearcut(phylip=current)
+```
+
+<br>
+
+# Mcrobial Profiling Using `qiime2` {#qiime2-pipeline}
+
+## Prerequisites
+
+### Download a QIIME2 trained classifer
+- You can use Naive Bayes (nb) classifiers trained on GreenGenes or SILVA database with 99% OTUs. You can train your own classifier using the [q2-feature-classifier](https://github.com/qiime2/q2-feature-classifier).
+
+Here we will download the smallest classifier, the naive classifier trained on [Greengenes 13_8 99% OTUs from 515F/806R region of sequences](https://docs.qiime2.org/2022.2/data-resources/)
+
+```bash
+wget \
+  -O "gg-13-8-99-515-806-nb-classifier.qza" \
+  "https://data.qiime2.org/2022.2/common/gg-13-8-99-515-806-nb-classifier.qza"
+```
+
+### Install qiime2
+- We assumes that you have already installed QIIME 2. If not please do so using the instructions described [here!](https://docs.qiime2.org/2022.2/install/). Below is a simple demo for installing qiime2 on Mac OS.
+
+```bash
+wget https://data.qiime2.org/distro/core/qiime2-2022.2-py38-osx-conda.yml
+conda env create -n qiime2-2022.2 --file qiime2-2022.2-py38-osx-conda.yml
+rm qiime2-2022.2-py39-osx-conda.yml
+```
+
+### Running QIIME2 commands
+- We prefer to use the command line interface [g2cli](https://docs.qiime2.org/2022.2/interfaces/q2cli/).
+- Activate the qiime2 environment: We are using qiime2-2022.2.
+
+
+### Activate qiime environment
+```bash
+conda activate qiime2-2022.2
+```
+
+### Confirm installation
+```bash
+qiime info
+```
+
+### Validate associated metadata
+```bash
+qiime tools inspect-metadata \
+  $PWD/q2-metadata.tsv
+```
+
+### Tabulate metadata in QIIME2 format
+```bash
+qiime metadata tabulate \
+  --m-input-file $PWD/q2-metadata.tsv \
+  --o-visualization $PWD/qiime2_bushmeat/sample-metadata.qzv
+```
+
+### Visualizing tabulated metadata
+```bash
+qiime tools view $PWD/qiime2_bushmeat/sample-metadata.qzv
+```
+
+## Import paired-end fastq files
+```bash
+qiime tools import \
+  --type 'SampleData[PairedEndSequencesWithQuality]' \
+  --input-path $PWD/pe-33-manifest.tsv \
+  --output-path $PWD/qiime2_bushmeat/demux.qza \
+  --input-format PairedEndFastqManifestPhred33V2
+```
+
+### Summarize and visualize preliminary analysis
+```bash
+qiime demux summarize \
+  --i-data $PWD/qiime2_bushmeat/demux.qza \
+  --o-visualization $PWD/qiime2_bushmeat/demux.qzv
+```
+```bash
+qiime tools view $PWD/qiime2_bushmeat/demux.qzv
+```
+
+> Review and pick truncation parameters if needed.
+
+## Microbial profiling pipeline
+- Here we can set the parameters as desired.
+- Note that this may take a while, please be patient.
+- In addition to setting the STAR and END time, we also optionally use `time` to gauge the amount of time used for some analysis.
+
+```bash
+START=`date +%s`
+
+time qiime dada2 denoise-paired \
+  --i-demultiplexed-seqs $PWD/qiime2_bushmeat/demux.qza \
+  --p-trim-left-f 0 \
+  --p-trunc-len-f 0 \
+  --p-trim-left-r 0 \
+  --p-trunc-len-r 0 \
+  --o-representative-sequences $PWD/qiime2_bushmeat/rep-seqs.qza \
+  --o-table $PWD/qiime2_bushmeat/feature-table.qza \
+  --o-denoising-stats $PWD/qiime2_bushmeat/stats.qza
+
+echo "Summarizing denoise statistics"
+qiime metadata tabulate \
+  --m-input-file $PWD/qiime2_bushmeat/stats.qza \
+  --o-visualization $PWD/qiime2_bushmeat/stats.qzv
+
+## Visualizing denoise statistics
+qiime tools view $PWD/qiime2_bushmeat/stats.qzv
+
+
+echo ""
+echo "Visualizing denoise statistics"
+echo ""
+qiime metadata tabulate \
+  --m-input-file $PWD/qiime2_bushmeat/stats.qza \
+  --o-visualization $PWD/qiime2_bushmeat/stats.qzv
+
+
+echo ""
+echo "Visualizing feature (sample & seqs) table"
+echo ""
+qiime feature-table summarize \
+  --i-table $PWD/qiime2_bushmeat/feature-table.qza \
+  --o-visualization $PWD/qiime2_bushmeat/feature-table.qzv \
+  --m-sample-metadata-file $PWD/q2-metadata.tsv
+
+echo ""
+echo "Visualizing representative sequences"
+echo ""
+qiime feature-table tabulate-seqs \
+  --i-data $PWD/qiime2_bushmeat/rep-seqs.qza \
+  --o-visualization $PWD/qiime2_bushmeat/rep-seqs.qzv
+
+echo ""
+echo "Clustering sequences into OTUs"
+echo ""
+
+
+echo "De novo clustering"
+# Sequences are clustered against one another. Here the clustering is performed at 99% to create 99% OTUs.
+qiime vsearch cluster-features-de-novo \
+  --i-table $PWD/qiime2_bushmeat/feature-table.qza \
+  --i-sequences $PWD/qiime2_bushmeat/rep-seqs.qza \
+  --p-perc-identity 0.99 \
+  --o-clustered-table $PWD/qiime2_bushmeat/feature-table-dn-99.qza \
+  --o-clustered-sequences $PWD/qiime2_bushmeat/rep-seqs-dn-99.qza
+
+echo ""
+echo "Visualizing denovo 99%"
+echo ""
+qiime feature-table tabulate-seqs \
+  --i-data $PWD/qiime2_bushmeat/rep-seqs-dn-99.qza \
+  --o-visualization $PWD/qiime2_bushmeat/rep-seqs-dn-99.qzv
+
+echo ""
+echo "Closed-reference clustering"
+# Here the clustering is performed at 99% identity against the Greengenes 13_8 99% OTUs reference database.
+qiime vsearch cluster-features-closed-reference \
+  --i-table $PWD/qiime2_bushmeat/feature-table.qza \
+  --i-sequences $PWD/qiime2_bushmeat/rep-seqs.qza \
+  --i-reference-sequences $PWD/qiime2_bushmeat/rep-seqs-dn-99.qza \
+  --p-perc-identity 0.99 \
+  --o-clustered-table $PWD/qiime2_bushmeat/feature-table-cr-99.qza \
+  --o-clustered-sequences $PWD/qiime2_bushmeat/rep-seqs-cr-99.qza \
+  --o-unmatched-sequences $PWD/qiime2_bushmeat/unmatched-cr-99.qza
+
+echo ""
+echo "Open-reference clustering"
+# Here the clustering is performed at 99% identity against the Greengenes 13_8 99% OTUs reference database.
+qiime vsearch cluster-features-open-reference \
+  --i-table $PWD/qiime2_bushmeat/feature-table.qza \
+  --i-sequences $PWD/qiime2_bushmeat/rep-seqs.qza \
+  --i-reference-sequences $PWD/qiime2_bushmeat/rep-seqs-dn-99.qza \
+  --p-perc-identity 0.99 \
+  --o-clustered-table $PWD/qiime2_bushmeat/feature-table-or-99.qza \
+  --o-clustered-sequences $PWD/qiime2_bushmeat/rep-seqs-or-99.qza \
+  --o-new-reference-sequences $PWD/qiime2_bushmeat/new-ref-seqs-or-99.qza
+
+
+echo ""
+echo "Performing de novo multiple sequence alignment of representative sequences using MAFFT " 
+echo ""
+
+qiime alignment mafft \
+  --i-sequences $PWD/qiime2_bushmeat/rep-seqs.qza \
+  --o-alignment $PWD/qiime2_bushmeat/aligned-rep-seqs.qza
+
+echo ""
+echo "Removing poor alignment" 
+echo ""
+
+qiime alignment mask \
+  --i-alignment $PWD/qiime2_bushmeat/aligned-rep-seqs.qza \
+  --o-masked-alignment $PWD/qiime2_bushmeat/masked-aligned-rep-seqs.qza
+
+echo ""
+echo "Visualizing masked alignments"
+echo ""
+qiime feature-table tabulate-seqs \
+  --i-data $PWD/qiime2_bushmeat/masked-aligned-rep-seqs.qza \
+  --o-visualization $PWD/qiime2_bushmeat/masked-aligned-rep-seqs.qzv
+
+
+echo ""
+echo "Phylogenetic sequence clustering" 
+echo ""
+
+echo "Unrooted tree"
+echo ""
+qiime phylogeny fasttree \
+  --i-alignment $PWD/qiime2_bushmeat/masked-aligned-rep-seqs.qza \
+  --o-tree $PWD/qiime2_bushmeat/unrooted-tree.qza
+
+echo ""
+echo "Rooted tree"
+echo ""
+qiime phylogeny midpoint-root \
+  --i-tree $PWD/qiime2_bushmeat/unrooted-tree.qza \
+  --o-rooted-tree $PWD/qiime2_bushmeat/rooted-tree.qza
+
+
+echo ""
+echo "Taxonomic assignment to masked aligned representative sequences"
+echo ""
+
+## Using Greengenes 2013-8-99-515-806-nb
+
+time qiime feature-classifier classify-sklearn \
+  --i-classifier $PWD/gg-13-8-99-515-806-nb-classifier.qza \
+  --i-reads $PWD/qiime2_bushmeat/rep-seqs-dn-99.qza \
+  --o-classification $PWD/qiime2_bushmeat/taxonomy.qza
+
+
+### Visualizing taxonomy classification
+qiime metadata tabulate \
+  --m-input-file $PWD/qiime2_bushmeat/taxonomy.qza \
+  --o-visualization $PWD/qiime2_bushmeat/taxonomy.qzv
+
+echo ""
+echo "QIIME2 data transformation"
+echo ""
+
+qiime tools export \
+  --input-path $PWD/qiime2_bushmeat/feature-table.qza \
+  --output-path $PWD/qiime2_bushmeat/q2-transformed-tables # Output feature-table.biom 
+
+
+echo ""
+echo "Converting BIOM table into Tab-Separated-Values (TSV)"
+echo ""
+
+biom convert \
+  -i $PWD/qiime2_bushmeat/q2-transformed-tables/feature-table.biom \
+  -o $PWD/qiime2_bushmeat/q2-transformed-tables/feature-table.tsv --to-tsv
+  
+qiime tools export \
+  --input-path $PWD/qiime2_bushmeat/taxonomy.qza \
+  --output-path $PWD/qiime2_bushmeat/q2-transformed-tables # Output taxonomy.tsv
+
+
+echo ""
+echo "Combining fetature table with taxonomy"
+echo ""
+
+qiime metadata tabulate \
+  --m-input-file $PWD/qiime2_bushmeat/q2-transformed-tables/feature-table.tsv \
+  --m-input-file $PWD/qiime2_bushmeat/q2-transformed-tables/taxonomy.tsv \
+  --o-visualization $PWD/qiime2_bushmeat/q2-transformed-tables/feature-taxonomy-table.qzv
+
+
+## Newick tree
+qiime tools export \
+  --input-path $PWD/qiime2_bushmeat/rooted-tree.qza \
+  --output-path $PWD/qiime2_bushmeat/q2-transformed-tables/rooted-tree
+
+qiime tools export \
+  --input-path $PWD/qiime2_bushmeat/unrooted-tree.qza \
+  --output-path $PWD/qiime2_bushmeat/q2-transformed-tables/unrooted-tree
+
+#-------------------------
+END=`date +%s`
+RUNTIME=$(( END - START ))
+
+echo ""
+echo "Time taken to complete the whole workflow\n"
+echo ""
+echo "$RUNTIME seconds"
+
+echo "...THE END..."
+
+```
+
+## Tidying qiime2 output
+```{r}
+taxlevels <- c("kingdom", "phylum", "class", "order", "family", "genus", "species")
+
+read_delim("/Volumes/RedSeagate/MOTHUR_BUSHMEAT/SRR7450/qiime2_bushmeat/q2-transformed-tables/taxonomy.tsv", show_col_types = F) %>%
+  rename_all(tolower) %>%
+  rename(otu = "feature id") %>% 
+  mutate(confidence = round(confidence, digits = 2)) %>%
+  # filter(confidence == 1.00) %>% 
+  mutate(taxon = str_replace_all(taxon, "; s__$", ""),
+         taxon = str_replace_all(taxon, "; g__$", ""),
+         taxon = str_replace_all(taxon, "; f__$", ""),
+         taxon = str_replace_all(taxon, "; o__$", ""),
+         taxon = str_replace_all(taxon, "; c__$", ""),
+         taxon = str_replace_all(taxon, "; p__$", ""),
+         taxon = str_replace_all(taxon, "; k__$", ""),
+         ) %>% 
+  separate(col = taxon, into = all_of(taxlevels), sep = "; ") %>%
+  saveRDS("RDataRDS/q2_taxonomy.rds")
+```
+
+```{r}
+read_delim("/Volumes/RedSeagate/MOTHUR_BUSHMEAT/SRR7450/qiime2_bushmeat/q2-transformed-tables/feature-table.tsv", skip = 1, show_col_types = F) %>%
+  rename(otu = "#OTU ID") %>% 
+  saveRDS("RDataRDS/q2_otutable.rds")
+
+```
+
+```{r}
+readRDS("RDataRDS/q2_taxonomy.rds") %>% 
+  inner_join(., readRDS("RDataRDS/q2_otutable.rds"), by="otu")
+```
+
+<br>
+<br>
+
+# Taxonomic Profiling Metagenomics Sequencing Data {#metaphlan-taxonomic-profiling}
+## Using MetaPhlAn pipeline.
+- We loop through the fastq files using the following parameters.
+- You can optionally customize these parameters to suit your needs.
+- Note that most parameters are default setting except the *-t rel_ab_w_read_stats* which will add the read count to the output.
+
+```bash
+
+for i in data/*.fastq.gz
+	do 
+		metaphlan $i \
+		--input_type fastq \
+		--force \
+		--bowtie2db /Volumes/SeagateTMB/metaphlan_databases/ \
+		--nproc 4 \
+		--stat_q 0.02 \
+		--min_mapq_val 5 \
+		--output_file ${i%}_metaphlan3_profile.txt \
+		--bowtie2out ${i%}_metaphlan3_bowtie2out.txt \
+		--biom ${i%}_metaphlan3_abundance.biom \
+    -t rel_ab_w_read_stats
+	done
+
+```
+
+## Output of taxonomic profiling
+- OTU table in mothur and QIIME2
+- MetaPhlAn pipeline output taxonomic profiles for each input fastq file. 
+- You can further use some integrated functions to manage the output. For example, the command below merge relative abundance into a single file similar to a transposed OTU table from Mothur and QIIME platforms.
+
+
+
+
+<!--chapter:end:02b_bioinfomatics_analysis.Rmd-->
+
+# (APPENDIX) APPENDIX {-}
+
+# Saved Data Objects
+
+```{r include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+## RDS Format for Individual Object
+```{r}
+
+rds <- list.files(path="./RDataRDS", pattern = "*.rds", full.names = TRUE)
+rds
+
+```
+
+## RData Format for Multiple Objects
+```{r}
+
+rdata <- list.files(path="./RDataRDS", pattern = "*.RData", full.names = TRUE)
+rdata
+
+```
+
+
+## CSV or TSV Format Files
+```{r}
+
+list.files(path="./data", pattern = "*.csv|tsv", full.names = TRUE)
+
+```
+
+
+```{r eval=FALSE, include=FALSE}
+## All-in-One Input-Output Data
+lsdata("RDataRDS/saved_objects.RData")
+```
+
+## How to reload RDS or RData into R environment
+```{block, type="tmbarrowF", echo=TRUE}
+
+- RDS format e.g. foo.rds
+  - foo <- readRDS("RDataRDS/foo.rds")
+
+- RData format e.g. foo.RData
+  - load("RDataRDS/foo.RData", verbose = TRUE)
+
+- List objects in RData
+  - lsdata("foo.RData") 
+
+```
+
+
+# Software and Packages
+
+## Basic dependencies
+* `r R.version.string`
+* `tidyverse` (v. `r packageVersion("tidyverse")`)
+* `knitr` (v. `r packageVersion("knitr")`)
+* `rmarkdown` (v. `r packageVersion("rmarkdown")`)
+* `bookdown` (v. `r packageVersion("bookdown")`)
+
+<!-- * `ggpubr` (v. `r packageVersion("ggpubr")`) -->
+<!-- * `downlit` (v. `r packageVersion("downlit")`) -->
+<!-- * `phyloseq` (v. `r packageVersion("phyloseq")`) -->
+<!-- * `ape` (v. `r packageVersion("ape")`) -->
+<!-- * `ggtext` (v. `r packageVersion("ggtext")`) -->
+<!-- * `dendextend` (v. `r packageVersion("dendextend")`) -->
+<!-- * `metagMisc` (v. `r packageVersion("metagMisc")`) -->
+<!-- * `cgwtools` (v. `r packageVersion("cgwtools")`) -->
+
+## Available on machine used 
+```{r}
+sessionInfo()
+
+```
+
+
+
+
+<!--chapter:end:99_appendix.Rmd-->
+
+`r if (knitr:::is_html_output()) '
+# References {-}
+'`
+
+
+<!--chapter:end:999-references.Rmd-->
+

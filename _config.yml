@@ -1,0 +1,6 @@
+theme: jekyll-theme-cayman
+show_downloads: FALSE
+title:
+github:
+  is_project_page: false
+description: SMDA PART 2: A practical user guide for bioinformatics analysis of microbiome.

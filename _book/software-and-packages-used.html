@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>B Software and Packages Used | Bioinformatics Analysis of Microbiome Data</title>
+<meta name="author" content="Teresia Mrema-Buza, A Microbiome Data Science Enthusiast and Owner of the Complex Data Insights, LLC, USA">
+<meta name="description" content="B.1 Basic dependencies R version 4.1.3 (2022-03-10) tidyverse (v. 1.3.1) bookdown (v. 0.25) ggpubr (v. 0.4.0) downlit (v. 0.4.0) phyloseq (v. 1.38.0) ape (v. 5.6.2) ggtext (v. 0.1.1) dendextend...">
+<meta name="generator" content="bookdown 0.25 with bs4_book()">
+<meta property="og:title" content="B Software and Packages Used | Bioinformatics Analysis of Microbiome Data">
+<meta property="og:type" content="book">
+<meta property="og:description" content="B.1 Basic dependencies R version 4.1.3 (2022-03-10) tidyverse (v. 1.3.1) bookdown (v. 0.25) ggpubr (v. 0.4.0) downlit (v. 0.4.0) phyloseq (v. 1.38.0) ape (v. 5.6.2) ggtext (v. 0.1.1) dendextend...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="B Software and Packages Used | Bioinformatics Analysis of Microbiome Data">
+<meta name="twitter:description" content="B.1 Basic dependencies R version 4.1.3 (2022-03-10) tidyverse (v. 1.3.1) bookdown (v. 0.25) ggpubr (v. 0.4.0) downlit (v. 0.4.0) phyloseq (v. 1.38.0) ape (v. 5.6.2) ggtext (v. 0.1.1) dendextend...">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><link href="libs/_Sen-0.4.1/font.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM%20Mono&amp;display=swap" rel="stylesheet">
+<link href="libs/_Bitter-0.4.1/font.css" rel="stylesheet">
+<script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><link href="libs/font-awesome-5.1.0/css/all.css" rel="stylesheet">
+<link href="libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="End-to-End Practical User Guides">Bioinformatics Analysis of Microbiome Data</a>:
+        <small class="text-muted">End-to-End Practical User Guides</small>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Bioinformatics Analysis of Microbiome Data</a></li>
+<li class="book-part">BIOINFORMATICS ANALYSIS</li>
+<li><a class="" href="preprocess-16S-reads.html"><span class="header-section-number">1</span> Preprocessing Sequences</a></li>
+<li><a class="" href="preprocess-metag-reads.html"><span class="header-section-number">2</span> Preprocessing Metagenomics Sequencing Data</a></li>
+<li class="book-part">TAXONOMIC PROFILING</li>
+<li><a class="" href="microbial-profiling.html"><span class="header-section-number">3</span> Microbial Profiling</a></li>
+<li><a class="" href="mothur-taxonomic-profiling.html"><span class="header-section-number">4</span> Mcrobial profiling Using mothur Pipeline</a></li>
+<li><a class="" href="qiime2-taxonomic-profiling.html"><span class="header-section-number">5</span> Mcrobial Profiling Using qiime2 Pipeline</a></li>
+<li><a class="" href="metaphlan-taxonomic-profiling.html"><span class="header-section-number">6</span> Taxonomic Profiling of Metagenomics Sequencing Data</a></li>
+<li class="book-part">APPENDIX</li>
+<li><a class="" href="saved-data-objects.html"><span class="header-section-number">A</span> Saved Data Objects</a></li>
+<li><a class="active" href="software-and-packages-used.html"><span class="header-section-number">B</span> Software and Packages Used</a></li>
+<li><a class="" href="references.html">References</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/CDI2021/smda_part2">View book source <i class="fas fa-air-freshener"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="software-and-packages-used" class="section level1" number="8">
+<h1>
+<span class="header-section-number">B</span> Software and Packages Used<a class="anchor" aria-label="anchor" href="#software-and-packages-used"><i class="fas fa-link"></i></a>
+</h1>
+<div id="basic-dependencies" class="section level2" number="8.1">
+<h2>
+<span class="header-section-number">B.1</span> Basic dependencies<a class="anchor" aria-label="anchor" href="#basic-dependencies"><i class="fas fa-link"></i></a>
+</h2>
+<ul>
+<li>R version 4.1.3 (2022-03-10)</li>
+<li>
+<code>tidyverse</code> (v. 1.3.1)</li>
+<li>
+<code>bookdown</code> (v. 0.25)</li>
+<li>
+<code>ggpubr</code> (v. 0.4.0)</li>
+<li>
+<code>downlit</code> (v. 0.4.0)</li>
+<li>
+<code>phyloseq</code> (v. 1.38.0)</li>
+<li>
+<code>ape</code> (v. 5.6.2)</li>
+<li>
+<code>ggtext</code> (v. 0.1.1)</li>
+<li>
+<code>dendextend</code> (v. 1.15.2)</li>
+<li>
+<code>metagMisc</code> (v. 0.0.4)</li>
+<li>
+<code>cgwtools</code> (v. 3.3)</li>
+</ul>
+</div>
+<div id="available-on-machine-used" class="section level2" number="8.2">
+<h2>
+<span class="header-section-number">B.2</span> Available on machine used<a class="anchor" aria-label="anchor" href="#available-on-machine-used"><i class="fas fa-link"></i></a>
+</h2>
+<pre><code>R version 4.1.3 (2022-03-10)
+Platform: x86_64-apple-darwin17.0 (64-bit)
+Running under: macOS Big Sur/Monterey 10.16
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] DiagrammeRsvg_0.1 DiagrammeR_1.0.9  cgwtools_3.3      metagMisc_0.0.4  
+ [5] dendextend_1.15.2 ggtext_0.1.1      ape_5.6-2         phyloseq_1.38.0  
+ [9] downlit_0.4.0     ggpubr_0.4.0      bookdown_0.25     rmarkdown_2.13   
+[13] knitr_1.38        forcats_0.5.1     stringr_1.4.0     dplyr_1.0.8      
+[17] purrr_0.3.4       readr_2.1.2       tidyr_1.2.0       tibble_3.1.6     
+[21] ggplot2_3.3.5     tidyverse_1.3.1  
+
+loaded via a namespace (and not attached):
+  [1] colorspace_2.0-3       ggsignif_0.6.3         ellipsis_0.3.2        
+  [4] markdown_1.1           XVector_0.34.0         fs_1.5.2              
+  [7] gridtext_0.1.4         rstudioapi_0.13        farver_2.1.0          
+ [10] bit64_4.0.5            fansi_1.0.3            lubridate_1.8.0       
+ [13] xml2_1.3.3             codetools_0.2-18       splines_4.1.3         
+ [16] cachem_1.0.6           ade4_1.7-18            jsonlite_1.8.0        
+ [19] broom_0.7.12           cluster_2.1.2          dbplyr_2.1.1          
+ [22] compiler_4.1.3         httr_1.4.2             backports_1.4.1       
+ [25] assertthat_0.2.1       Matrix_1.4-1           fastmap_1.1.0         
+ [28] cli_3.2.0              visNetwork_2.1.0       htmltools_0.5.2       
+ [31] tools_4.1.3            gmp_0.6-5              igraph_1.2.11         
+ [34] gtable_0.3.0           glue_1.6.2             GenomeInfoDbData_1.2.7
+ [37] reshape2_1.4.4         rsvg_2.3.1             V8_4.1.0              
+ [40] Rcpp_1.0.8.3           carData_3.0-5          Biobase_2.54.0        
+ [43] cellranger_1.1.0       jquerylib_0.1.4        vctrs_0.4.0           
+ [46] Biostrings_2.62.0      rhdf5filters_1.6.0     multtest_2.50.0       
+ [49] nlme_3.1-157           iterators_1.0.14       xfun_0.30             
+ [52] rvest_1.0.2            lifecycle_1.0.1        rstatix_0.7.0         
+ [55] zlibbioc_1.40.0        MASS_7.3-56            scales_1.1.1          
+ [58] vroom_1.5.7            hms_1.1.1              parallel_4.1.3        
+ [61] biomformat_1.22.0      rhdf5_2.38.1           RColorBrewer_1.1-2    
+ [64] curl_4.3.2             yaml_2.3.5             gridExtra_2.3         
+ [67] memoise_2.0.1          sass_0.4.1             stringi_1.7.6         
+ [70] highr_0.9              S4Vectors_0.32.3       foreach_1.5.2         
+ [73] permute_0.9-7          BiocGenerics_0.40.0    GenomeInfoDb_1.30.1   
+ [76] rlang_1.0.2            pkgconfig_2.0.3        bitops_1.0-7          
+ [79] evaluate_0.15          lattice_0.20-45        Rhdf5lib_1.16.0       
+ [82] htmlwidgets_1.5.4      labeling_0.4.2         bit_4.0.4             
+ [85] tidyselect_1.1.2       plyr_1.8.7             magrittr_2.0.3        
+ [88] R6_2.5.1               IRanges_2.28.0         generics_0.1.2        
+ [91] DBI_1.1.2              pillar_1.7.0           haven_2.4.3           
+ [94] withr_2.5.0            mgcv_1.8-39            survival_3.3-1        
+ [97] abind_1.4-5            RCurl_1.98-1.6         modelr_0.1.8          
+[100] crayon_1.5.1           car_3.0-12             utf8_1.2.2            
+[103] tzdb_0.3.0             viridis_0.6.2          grid_4.1.3            
+[106] readxl_1.4.0           data.table_1.14.2      vegan_2.5-7           
+[109] reprex_2.0.1           digest_0.6.29          stats4_4.1.3          
+[112] munsell_0.5.0          viridisLite_0.4.0      bslib_0.3.1           </code></pre>
+
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="saved-data-objects.html"><span class="header-section-number">A</span> Saved Data Objects</a></div>
+<div class="next"><a href="references.html">References</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#software-and-packages-used"><span class="header-section-number">B</span> Software and Packages Used</a></li>
+<li><a class="nav-link" href="#basic-dependencies"><span class="header-section-number">B.1</span> Basic dependencies</a></li>
+<li><a class="nav-link" href="#available-on-machine-used"><span class="header-section-number">B.2</span> Available on machine used</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/CDI2021/smda_part2/blob/main/99_appendix.Rmd">View source <i class="fas fa-air-freshener"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/CDI2021/smda_part2/edit/main/99_appendix.Rmd">Edit this page <i class="fas fa-air-freshener"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container">
+    <div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p><strong>Bioinformatics Analysis of Microbiome Data</strong> is PART 2 of the <a class="text-light" href="https://complexdatainsights.com/books/microbiome-analysis-in-R/"><u>End-to-End Practical User Guides</u></a> written by Teresia Mrema-Buza, A Microbiome Data Science Enthusiast and Owner of the Complex Data Insights, LLC, USA. 
+  </p>
+</div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This guide was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div>
+</div>
+</footer>
+</body>
+</html>
