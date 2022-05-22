@@ -2,3 +2,14 @@
 .Rhistory
 .RData
 .Ruserdata
+
+library
+data
+figures
+images
+global
+RDataRDS
+_book
+R/part2.R
+
+microbiome-part2.Rmd
