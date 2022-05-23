@@ -1,4 +1,3 @@
-# Systematic Microbiome Data Analysis (SMDA)
-## PART 2: Bioinformatics Analysis
+# Bioinformatics Analysis of Microbiome Data
 
-![](img/part2_flow.png)
+![](img/part2_bioinfo.png)
