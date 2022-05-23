@@ -1,8 +1,12 @@
 # Mcrobial profiling Using `mothur` {#mothur-pipeline}
+## Expected tabulated results
+1. Operational Taxonomic Units (OTUs).
+2. Amplicon Sequence Variants (ASVs).
+3. Phylotypes.
+4. Conserved taxonomy.
 
-## Download a Mothur trained classifer
+## Download trained classifer
 - For demo purposes we will use [Silva seed](https://mothur.org/wiki/Silva_reference_files) due to its smaller size.
-- Other classifiers can be found [here](https://mothur.org/wiki/taxonomy_outline/).
 
 ```bash
 wget https://mothur.s3.us-east-2.amazonaws.com/wiki/silva.seed_v138_1.tgz
@@ -10,26 +14,22 @@ tar xvzf silva.seed_v138_1.tgz
 rm *.tgz
 ```
 
-## Mothur basic wrapper
-- Below is a minimal wrapper for sequence processing, classification and taxonomic assignment using `mothur` pipeline.
-- For more information refer to `mothur` [MiSeq SOP](https://mothur.org/wiki/miseq_sop/).
-- We can save this wrapper as `mothur_code.batch` and place it in a folder named code.
-- Then we will run the file on command line as shown below. See the commented lines.
-- We assume that the input data is gunzipped i.e. **.fastq.gz**. If not run `gzip *.fastq` to compress the files.
+> Other mothur-based classifiers can be found [here](https://mothur.org/wiki/taxonomy_outline/).
 
-```{block, type="tmbalert", echo=TRUE}
-1. Note that the [`shebang line`](https://en.wikipedia.org/wiki/Shebang_(Unix)) remind us that we are running the analysis on `mothur` command line NOT `bash`. This takes the advantage of using the **current** option to refer to the last saved file.
-2. If not generating the mapping file automatically you should make sure that it confer to accepted format as in `mothur_mapping_files.tsv` described in the previous section. In this demo we use `bush.files`. This means that all output files will be prefixed with the term <u>bush</u> to reflect the name of the project. Try to avoid loner names.
+## Implementing `mothur` pipeline interactively
+- We recommend to familiarize with the tutorials detailed in [MiSeq SOP](https://mothur.org/wiki/miseq_sop/).
+
+```{block, type="tmbinfo", echo=TRUE}
+### Key Points
+- Run the analysis on `mothur` command line NOT `bash`. This takes the advantage of using the **current** option to refer to the last saved files.
+- If not generating the mapping file automatically you should make sure that it confer to accepted format as in `mothur_mapping_files.tsv` described in the previous section. 
+- In this demo we name the mapping file `bush.files`. This means that all output files will be prefixed with the term <u>bush</u> to reflect the name of the project. Try to avoid longer names.
 ```
 
 
+Let's get started! Start by running one line at a time to see how it goes. See another option at the end of the script.
+
 ```bash
-#!/mothur
-
-# Usage: mothur code/mothur_code.batch # if mothur is in the path
-# Usage: ./mothur code/mothur_code.batch # on mac/linux if the executable `mothur` is in the working directory.
-# Usage: ./mothur.exe code/mothur_code.batch # on Windows machins if the executable `mothur.exe` is in the working directory.
-
 set.current(processors=1)
 # set.logfile(name=make_files.logfile)
 # make.file(inputdir=., type=fastq.gz, prefix=test)
@@ -82,9 +82,23 @@ dist.seqs(fasta=current, output=lt)
 clearcut(phylip=current)
 ```
 
+Alternatively,
+
+- We can save the code above as `mothur_code.batch` and place it in a folder named code.
+- Then call `mothur` to run the file from bash command line as shown below.
+
+```bash
+mothur code/mothur_code.batch # if mothur is in the path
+./mothur code/mothur_code.batch # on mac/linux if the executable `mothur` is in the working directory.
+./mothur.exe code/mothur_code.batch # on Windows machins if the executable `mothur.exe` is in the working directory.
+```
+
 <br>
 
 # Mcrobial Profiling Using `qiime2` {#qiime2-pipeline}
+## Expected tabulated results
+1. Operational Taxonomic Units (OTUs).
+2. Taxonomy.
 
 ## Prerequisites
 
@@ -168,8 +182,6 @@ qiime tools view $PWD/qiime2_bushmeat/demux.qzv
 - In addition to setting the STAR and END time, we also optionally use `time` to gauge the amount of time used for some analysis.
 
 ```bash
-START=`date +%s`
-
 time qiime dada2 denoise-paired \
   --i-demultiplexed-seqs $PWD/qiime2_bushmeat/demux.qza \
   --p-trim-left-f 0 \
@@ -357,25 +369,13 @@ qiime tools export \
 qiime tools export \
   --input-path $PWD/qiime2_bushmeat/unrooted-tree.qza \
   --output-path $PWD/qiime2_bushmeat/q2-transformed-tables/unrooted-tree
-
-#-------------------------
-END=`date +%s`
-RUNTIME=$(( END - START ))
-
-echo ""
-echo "Time taken to complete the whole workflow\n"
-echo ""
-echo "$RUNTIME seconds"
-
-echo "...THE END..."
-
 ```
 
-## Tidying qiime2 output
-```{r}
+## Getting tidy OTUs and taxonomy
+```{r message=FALSE, warning=FALSE}
 taxlevels <- c("kingdom", "phylum", "class", "order", "family", "genus", "species")
 
-read_delim("/Volumes/RedSeagate/MOTHUR_BUSHMEAT/SRR7450/qiime2_bushmeat/q2-transformed-tables/taxonomy.tsv", show_col_types = F) %>%
+read_delim("data/q2-transformed-tables/taxonomy.tsv", show_col_types = F) %>%
   rename_all(tolower) %>%
   rename(otu = "feature id") %>% 
   mutate(confidence = round(confidence, digits = 2)) %>%
@@ -393,7 +393,7 @@ read_delim("/Volumes/RedSeagate/MOTHUR_BUSHMEAT/SRR7450/qiime2_bushmeat/q2-trans
 ```
 
 ```{r}
-read_delim("/Volumes/RedSeagate/MOTHUR_BUSHMEAT/SRR7450/qiime2_bushmeat/q2-transformed-tables/feature-table.tsv", skip = 1, show_col_types = F) %>%
+read_delim("data/q2-transformed-tables/feature-table.tsv", skip = 1, show_col_types = F) %>%
   rename(otu = "#OTU ID") %>% 
   saveRDS("RDataRDS/q2_otutable.rds")
 
@@ -407,14 +407,18 @@ readRDS("RDataRDS/q2_taxonomy.rds") %>%
 <br>
 <br>
 
-# Taxonomic Profiling Metagenomics Sequencing Data {#metaphlan-taxonomic-profiling}
+# Taxonomic Profiling of Metagenomics Sequencing Data {#metaphlan-taxonomic-profiling}
+## Expected tabulated results
+1. Relative taxonomic profiles with taxonomy or
+2. Relative taxonomic profiles with read count and taxonomy if setting *-t rel_ab_w_read_stats*.
+
+
 ## Using MetaPhlAn pipeline.
 - We loop through the fastq files using the following parameters.
 - You can optionally customize these parameters to suit your needs.
 - Note that most parameters are default setting except the *-t rel_ab_w_read_stats* which will add the read count to the output.
 
 ```bash
-
 for i in data/*.fastq.gz
 	do 
 		metaphlan $i \
@@ -429,13 +433,6 @@ for i in data/*.fastq.gz
 		--biom ${i%}_metaphlan3_abundance.biom \
     -t rel_ab_w_read_stats
 	done
-
 ```
-
-## Output of taxonomic profiling
-- OTU table in mothur and QIIME2
-- MetaPhlAn pipeline output taxonomic profiles for each input fastq file. 
-- You can further use some integrated functions to manage the output. For example, the command below merge relative abundance into a single file similar to a transposed OTU table from Mothur and QIIME platforms.
-
 
 

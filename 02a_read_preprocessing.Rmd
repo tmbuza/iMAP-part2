@@ -1,6 +1,6 @@
 # (PART) BIOINFORMATICS ANALYSIS {-}
 
-# Standard Sequence Preprocessing {#preprocess-16S-reads}
+# Preprocessing 16S rRNA Sequencing Data{#preprocess-16S-reads}
 At this point we are aware of the preprocessing and bioinformatics tools needed to getting started with microbiome data analysis. We assume that the tools are already installed. Now it is time to use them to:
 
 - Get simple statistics.
@@ -143,24 +143,20 @@ inner_join(stats1, stats2, by = "file") %>%
 
 <br>
 
-# Preprocessing Metagenomics Data Using Kneaddata {#preprocess-kneaddata}
-The `kneaddata` tool from biobakery [biobakery](https://github.com/biobakery/kneaddata) is famous for preprocessing metagenomics data. It integrates several other quality control tools such as FastQC and Trimmomatic. Here we demonstrate how to use SeqKit, kneaddata and MultiQC t preprocess metagenomics sequencing data. 
+# Preprocessing Metagenomics Sequencing Data {#preprocess-kneaddata}
 
-## What are the read statistics 
-- Using `seqkit stat` function.
-- Run the function on command line.
-
+## Getting initial read statistics 
 ```bash
 mkdir -p kneaddata
 mkdir -p kneaddata/stats1  
 seqkit stat *.fastq.gz >kneaddata/stats1/seqkit_stats.txt
-
 ```
 
 ## Initial read quality scores
-The `kneaddata` from biobakery platform is exclusively used to preprocess the metagenomics data.
-- Here we set the `kneaddata` to run `fastqc` as the first step using `run-fastqc-start` function.
-- Then `fastqc` results are then summarized outside `kneaddata` pipeline using `multiqc` software.
+- Using KneadData tool from [biobakery](https://github.com/biobakery/kneaddata).
+- The `kneaddata` tool is exclusively used to preprocess the metagenomics data.
+- We will set it to run `fastqc` to compute initial quality checks.
+- Then summarize the `fastqc` results outside KneadData pipeline using `multiqc` software.
 
 ```bash
 for i in data/*.fastq.gz
@@ -173,20 +169,19 @@ time kneaddata --i $i \
 --sequencer-source "none" \
 -t 4 
 done
+```
 
-
+```bash
 mkdir -p kneaddata/multiqc1
 multiqc -f --data-dir kneaddata/fastqc1 -o kneaddata/multiqc1 --export
-
 ```
 
 ## Read Trimming
-- Using trimmomatic tool to trim the reads using the specified options.
-- The fastqc function is run after trimming
-- Then fastqc results are summarized using multiqc software.
+- Using `trimmomatic` tool to trim the poor reads.
+- The `fastqc` function is automatically run after trimming.
+- Then we will run `seqkit` and `multiqc` on the trimmed reads
 
 ```bash
-
 for i in data/*.fastq.gz
 do
   time kneaddata --i $i \
@@ -209,24 +204,23 @@ done
 mkdir -p kneaddata/stats2
 seqkit stat kneaddata/fastqc2/*trimmed.fastq >kneaddata/stats2/seqkit_stats.txt
 
-mkdir -p kneaddata/fastqc2/multiqc2
-multiqc -f --data-dir kneaddata/fastqc2 -o kneaddata_fastqc1/multiqc1 --export
-
+mkdir -p kneaddata/multiqc2
+multiqc -f --data-dir kneaddata/fastqc2 -o kneaddata/multiqc2 --export
 ```
 
 
 ## Read Decontamination
-### Option 1: Using Bowtie2 database
-- Trimming is done using trimmomatic
-- Then decontamination is done using the bowtie2 database.
-- Then after decontamination fastqc is implemented to assess the read quality scores of the remaining reads.
-- Then fastqc results are summarized using multiqc software.
+### Option 1: Searching against Bowtie2 database
+- Trimming is done first using `trimmomatic`.
+- Then contaminated reads are identified by searching the reads against a `bowtie2` reference database.
+- The `fastqc` is automatically run after decontamination.
+- Then we will run `seqkit` and `multiqc` on the decontaminated reads
 
 ```bash
 for i in data/*.fastq.gz
 do
 time kneaddata --i $i \
-  -o kneaddata_fastqc3 \
+  -o kneaddata/fastqc3 \
       --reference-db /Volumes/SeagateTMB/kneaddata_database/ \
       --trimmomatic /Users/tmbuza/opt/anaconda3/envs/biobakery3/bin/ \
       --trimmomatic-options \
@@ -246,22 +240,22 @@ done
 mkdir -p kneaddata/stats3
 seqkit stat kneaddata/fastqc3/*trimmed.fastq >kneaddata/stats3/seqkit_stats.txt
 
-mkdir -p kneaddata/fastqc3/multiqc3
-multiqc -f --data-dir kneaddata/fastqc3 -o kneaddata/fastqc3/multiqc3 --export
-
+mkdir -p kneaddata/multiqc3
+multiqc -f --data-dir kneaddata/fastqc3 -o kneaddata/multiqc3 --export
 ```
 
-### Option 2: Using BMTagger database 
-- Trimming is done using trimmomatic
-- Then decontamination is done using the BMTagger database.
-- Then after decontamination fastqc is implemented to assess the read quality scores of the remaining reads.
-- Then fastqc results are summarized using multiqc software.
+### Option 2: Seaching against BMTagger database 
+- Trimming is done first using `trimmomatic`.
+- Then contaminated reads are identified by searching the reads against `BMTagger` database.
+- The `fastqc` is automatically run after decontamination.
+- Then we will run `seqkit` and `multiqc` on the decontaminated reads
 
 ```bash
+mkdir kneaddata
 for i in data/*.fastq.gz
 do
 time kneaddata --i $i \
-  -o kneaddata_fastqc4 \
+  -o kneaddata/fastqc4 \
       --reference-db /Volumes/SeagateTMB/Human_Assembly19_BMTagger_DB/ \
       --trimmomatic /Users/tmbuza/opt/anaconda3/envs/biobakery3/bin/ \
       --trimmomatic-options \
@@ -282,9 +276,8 @@ done
 mkdir -p kneaddata/stats4
 seqkit stat kneaddata/fastqc4/*trimmed.fastq >kneaddata/stats4/seqkit_stats.txt
 
-mkdir -p kneaddata/fastqc4/multiqc4
-multiqc -f --data-dir kneaddata/fastqc4 -o kneaddata/fastqc4/multiqc4 --export
-
+mkdir -p kneaddata/multiqc4
+multiqc -f --data-dir kneaddata/fastqc4 -o kneaddata/multiqc4 --export
 ```
 
 

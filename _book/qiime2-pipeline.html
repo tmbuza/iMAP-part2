@@ -6,14 +6,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Chapter 4 Mcrobial Profiling Using qiime2 | Bioinformatics Analysis of Microbiome Data</title>
 <meta name="author" content="Teresia Mrema-Buza, A Microbiome Data Science Enthusiast and Owner of the Complex Data Insights, LLC, USA">
-<meta name="description" content="4.1 Prerequisites  4.1.1 Download a QIIME2 trained classifer You can use Naive Bayes (nb) classifiers trained on GreenGenes or SILVA database with 99% OTUs. You can train your own classifier using...">
+<meta name="description" content="4.1 Expected tabulated results Operational Taxonomic Units (OTUs). Taxonomy.  4.2 Prerequisites  4.2.1 Download a QIIME2 trained classifer You can use Naive Bayes (nb) classifiers trained on...">
 <meta name="generator" content="bookdown 0.25 with bs4_book()">
 <meta property="og:title" content="Chapter 4 Mcrobial Profiling Using qiime2 | Bioinformatics Analysis of Microbiome Data">
 <meta property="og:type" content="book">
-<meta property="og:description" content="4.1 Prerequisites  4.1.1 Download a QIIME2 trained classifer You can use Naive Bayes (nb) classifiers trained on GreenGenes or SILVA database with 99% OTUs. You can train your own classifier using...">
+<meta property="og:description" content="4.1 Expected tabulated results Operational Taxonomic Units (OTUs). Taxonomy.  4.2 Prerequisites  4.2.1 Download a QIIME2 trained classifer You can use Naive Bayes (nb) classifiers trained on...">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Chapter 4 Mcrobial Profiling Using qiime2 | Bioinformatics Analysis of Microbiome Data">
-<meta name="twitter:description" content="4.1 Prerequisites  4.1.1 Download a QIIME2 trained classifer You can use Naive Bayes (nb) classifiers trained on GreenGenes or SILVA database with 99% OTUs. You can train your own classifier using...">
+<meta name="twitter:description" content="4.1 Expected tabulated results Operational Taxonomic Units (OTUs). Taxonomy.  4.2 Prerequisites  4.2.1 Download a QIIME2 trained classifer You can use Naive Bayes (nb) classifiers trained on...">
 <!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
 <script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><link href="libs/_Sen-0.4.1/font.css" rel="stylesheet">
@@ -50,11 +50,11 @@
         <ul class="book-toc list-unstyled">
 <li><a class="" href="index.html">Bioinformatics Analysis of Microbiome Data</a></li>
 <li class="book-part">BIOINFORMATICS ANALYSIS</li>
-<li><a class="" href="preprocess-16S-reads.html"><span class="header-section-number">1</span> Standard Sequence Preprocessing</a></li>
-<li><a class="" href="preprocess-kneaddata.html"><span class="header-section-number">2</span> Preprocessing Metagenomics Data Using Kneaddata</a></li>
+<li><a class="" href="preprocess-16S-reads.html"><span class="header-section-number">1</span> Preprocessing 16S rRNA Sequencing Data</a></li>
+<li><a class="" href="preprocess-kneaddata.html"><span class="header-section-number">2</span> Preprocessing Metagenomics Sequencing Data</a></li>
 <li><a class="" href="mothur-pipeline.html"><span class="header-section-number">3</span> Mcrobial profiling Using mothur</a></li>
 <li><a class="active" href="qiime2-pipeline.html"><span class="header-section-number">4</span> Mcrobial Profiling Using qiime2</a></li>
-<li><a class="" href="metaphlan-taxonomic-profiling.html"><span class="header-section-number">5</span> Taxonomic Profiling Metagenomics Sequencing Data</a></li>
+<li><a class="" href="metaphlan-taxonomic-profiling.html"><span class="header-section-number">5</span> Taxonomic Profiling of Metagenomics Sequencing Data</a></li>
 <li class="book-part">APPENDIX</li>
 <li><a class="" href="saved-data-objects.html"><span class="header-section-number">A</span> Saved Data Objects</a></li>
 <li><a class="" href="software-and-packages.html"><span class="header-section-number">B</span> Software and Packages</a></li>
@@ -70,316 +70,312 @@
 <h1>
 <span class="header-section-number">4</span> Mcrobial Profiling Using <code>qiime2</code><a class="anchor" aria-label="anchor" href="#qiime2-pipeline"><i class="fas fa-link"></i></a>
 </h1>
-<div id="prerequisites" class="section level2" number="4.1">
+<div id="expected-tabulated-results-1" class="section level2" number="4.1">
 <h2>
-<span class="header-section-number">4.1</span> Prerequisites<a class="anchor" aria-label="anchor" href="#prerequisites"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.1</span> Expected tabulated results<a class="anchor" aria-label="anchor" href="#expected-tabulated-results-1"><i class="fas fa-link"></i></a>
 </h2>
-<div id="download-a-qiime2-trained-classifer" class="section level3" number="4.1.1">
+<ol style="list-style-type: decimal">
+<li>Operational Taxonomic Units (OTUs).</li>
+<li>Taxonomy.</li>
+</ol>
+</div>
+<div id="prerequisites" class="section level2" number="4.2">
+<h2>
+<span class="header-section-number">4.2</span> Prerequisites<a class="anchor" aria-label="anchor" href="#prerequisites"><i class="fas fa-link"></i></a>
+</h2>
+<div id="download-a-qiime2-trained-classifer" class="section level3" number="4.2.1">
 <h3>
-<span class="header-section-number">4.1.1</span> Download a QIIME2 trained classifer<a class="anchor" aria-label="anchor" href="#download-a-qiime2-trained-classifer"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.2.1</span> Download a QIIME2 trained classifer<a class="anchor" aria-label="anchor" href="#download-a-qiime2-trained-classifer"><i class="fas fa-link"></i></a>
 </h3>
 <ul>
 <li>You can use Naive Bayes (nb) classifiers trained on GreenGenes or SILVA database with 99% OTUs. You can train your own classifier using the <a href="https://github.com/qiime2/q2-feature-classifier">q2-feature-classifier</a>.</li>
 </ul>
 <p>Here we will download the smallest classifier, the naive classifier trained on <a href="https://docs.qiime2.org/2022.2/data-resources/">Greengenes 13_8 99% OTUs from 515F/806R region of sequences</a></p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb19-1"><a href="qiime2-pipeline.html#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> <span class="dt">\</span></span>
-<span id="cb19-2"><a href="qiime2-pipeline.html#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-O</span> <span class="st">"gg-13-8-99-515-806-nb-classifier.qza"</span> <span class="dt">\</span></span>
-<span id="cb19-3"><a href="qiime2-pipeline.html#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"https://data.qiime2.org/2022.2/common/gg-13-8-99-515-806-nb-classifier.qza"</span></span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb21-1"><a href="qiime2-pipeline.html#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> <span class="dt">\</span></span>
+<span id="cb21-2"><a href="qiime2-pipeline.html#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-O</span> <span class="st">"gg-13-8-99-515-806-nb-classifier.qza"</span> <span class="dt">\</span></span>
+<span id="cb21-3"><a href="qiime2-pipeline.html#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"https://data.qiime2.org/2022.2/common/gg-13-8-99-515-806-nb-classifier.qza"</span></span></code></pre></div>
 </div>
-<div id="install-qiime2" class="section level3" number="4.1.2">
+<div id="install-qiime2" class="section level3" number="4.2.2">
 <h3>
-<span class="header-section-number">4.1.2</span> Install qiime2<a class="anchor" aria-label="anchor" href="#install-qiime2"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.2.2</span> Install qiime2<a class="anchor" aria-label="anchor" href="#install-qiime2"><i class="fas fa-link"></i></a>
 </h3>
 <ul>
 <li>We assumes that you have already installed QIIME 2. If not please do so using the instructions described <a href="https://docs.qiime2.org/2022.2/install/">here!</a>. Below is a simple demo for installing qiime2 on Mac OS.</li>
 </ul>
-<div class="sourceCode" id="cb20"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb20-1"><a href="qiime2-pipeline.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> https://data.qiime2.org/distro/core/qiime2-2022.2-py38-osx-conda.yml</span>
-<span id="cb20-2"><a href="qiime2-pipeline.html#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> env create <span class="at">-n</span> qiime2-2022.2 <span class="at">--file</span> qiime2-2022.2-py38-osx-conda.yml</span>
-<span id="cb20-3"><a href="qiime2-pipeline.html#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> qiime2-2022.2-py39-osx-conda.yml</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb22-1"><a href="qiime2-pipeline.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> https://data.qiime2.org/distro/core/qiime2-2022.2-py38-osx-conda.yml</span>
+<span id="cb22-2"><a href="qiime2-pipeline.html#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> env create <span class="at">-n</span> qiime2-2022.2 <span class="at">--file</span> qiime2-2022.2-py38-osx-conda.yml</span>
+<span id="cb22-3"><a href="qiime2-pipeline.html#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> qiime2-2022.2-py39-osx-conda.yml</span></code></pre></div>
 </div>
-<div id="running-qiime2-commands" class="section level3" number="4.1.3">
+<div id="running-qiime2-commands" class="section level3" number="4.2.3">
 <h3>
-<span class="header-section-number">4.1.3</span> Running QIIME2 commands<a class="anchor" aria-label="anchor" href="#running-qiime2-commands"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.2.3</span> Running QIIME2 commands<a class="anchor" aria-label="anchor" href="#running-qiime2-commands"><i class="fas fa-link"></i></a>
 </h3>
 <ul>
 <li>We prefer to use the command line interface <a href="https://docs.qiime2.org/2022.2/interfaces/q2cli/">g2cli</a>.</li>
 <li>Activate the qiime2 environment: We are using qiime2-2022.2.</li>
 </ul>
 </div>
-<div id="activate-qiime-environment" class="section level3" number="4.1.4">
+<div id="activate-qiime-environment" class="section level3" number="4.2.4">
 <h3>
-<span class="header-section-number">4.1.4</span> Activate qiime environment<a class="anchor" aria-label="anchor" href="#activate-qiime-environment"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.2.4</span> Activate qiime environment<a class="anchor" aria-label="anchor" href="#activate-qiime-environment"><i class="fas fa-link"></i></a>
 </h3>
-<div class="sourceCode" id="cb21"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb21-1"><a href="qiime2-pipeline.html#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate qiime2-2022.2</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb23-1"><a href="qiime2-pipeline.html#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate qiime2-2022.2</span></code></pre></div>
 </div>
-<div id="confirm-installation" class="section level3" number="4.1.5">
+<div id="confirm-installation" class="section level3" number="4.2.5">
 <h3>
-<span class="header-section-number">4.1.5</span> Confirm installation<a class="anchor" aria-label="anchor" href="#confirm-installation"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.2.5</span> Confirm installation<a class="anchor" aria-label="anchor" href="#confirm-installation"><i class="fas fa-link"></i></a>
 </h3>
-<div class="sourceCode" id="cb22"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb22-1"><a href="qiime2-pipeline.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> info</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb24-1"><a href="qiime2-pipeline.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> info</span></code></pre></div>
 </div>
-<div id="validate-associated-metadata" class="section level3" number="4.1.6">
+<div id="validate-associated-metadata" class="section level3" number="4.2.6">
 <h3>
-<span class="header-section-number">4.1.6</span> Validate associated metadata<a class="anchor" aria-label="anchor" href="#validate-associated-metadata"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.2.6</span> Validate associated metadata<a class="anchor" aria-label="anchor" href="#validate-associated-metadata"><i class="fas fa-link"></i></a>
 </h3>
-<div class="sourceCode" id="cb23"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb23-1"><a href="qiime2-pipeline.html#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> tools inspect-metadata <span class="dt">\</span></span>
-<span id="cb23-2"><a href="qiime2-pipeline.html#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="va">$PWD</span>/q2-metadata.tsv</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb25-1"><a href="qiime2-pipeline.html#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> tools inspect-metadata <span class="dt">\</span></span>
+<span id="cb25-2"><a href="qiime2-pipeline.html#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="va">$PWD</span>/q2-metadata.tsv</span></code></pre></div>
 </div>
-<div id="tabulate-metadata-in-qiime2-format" class="section level3" number="4.1.7">
+<div id="tabulate-metadata-in-qiime2-format" class="section level3" number="4.2.7">
 <h3>
-<span class="header-section-number">4.1.7</span> Tabulate metadata in QIIME2 format<a class="anchor" aria-label="anchor" href="#tabulate-metadata-in-qiime2-format"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.2.7</span> Tabulate metadata in QIIME2 format<a class="anchor" aria-label="anchor" href="#tabulate-metadata-in-qiime2-format"><i class="fas fa-link"></i></a>
 </h3>
-<div class="sourceCode" id="cb24"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb24-1"><a href="qiime2-pipeline.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> metadata tabulate <span class="dt">\</span></span>
-<span id="cb24-2"><a href="qiime2-pipeline.html#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--m-input-file</span> <span class="va">$PWD</span>/q2-metadata.tsv <span class="dt">\</span></span>
-<span id="cb24-3"><a href="qiime2-pipeline.html#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-visualization</span> <span class="va">$PWD</span>/qiime2_bushmeat/sample-metadata.qzv</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb26-1"><a href="qiime2-pipeline.html#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> metadata tabulate <span class="dt">\</span></span>
+<span id="cb26-2"><a href="qiime2-pipeline.html#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--m-input-file</span> <span class="va">$PWD</span>/q2-metadata.tsv <span class="dt">\</span></span>
+<span id="cb26-3"><a href="qiime2-pipeline.html#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-visualization</span> <span class="va">$PWD</span>/qiime2_bushmeat/sample-metadata.qzv</span></code></pre></div>
 </div>
-<div id="visualizing-tabulated-metadata" class="section level3" number="4.1.8">
+<div id="visualizing-tabulated-metadata" class="section level3" number="4.2.8">
 <h3>
-<span class="header-section-number">4.1.8</span> Visualizing tabulated metadata<a class="anchor" aria-label="anchor" href="#visualizing-tabulated-metadata"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.2.8</span> Visualizing tabulated metadata<a class="anchor" aria-label="anchor" href="#visualizing-tabulated-metadata"><i class="fas fa-link"></i></a>
 </h3>
-<div class="sourceCode" id="cb25"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb25-1"><a href="qiime2-pipeline.html#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> tools view <span class="va">$PWD</span>/qiime2_bushmeat/sample-metadata.qzv</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb27-1"><a href="qiime2-pipeline.html#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> tools view <span class="va">$PWD</span>/qiime2_bushmeat/sample-metadata.qzv</span></code></pre></div>
 </div>
 </div>
-<div id="import-paired-end-fastq-files" class="section level2" number="4.2">
+<div id="import-paired-end-fastq-files" class="section level2" number="4.3">
 <h2>
-<span class="header-section-number">4.2</span> Import paired-end fastq files<a class="anchor" aria-label="anchor" href="#import-paired-end-fastq-files"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.3</span> Import paired-end fastq files<a class="anchor" aria-label="anchor" href="#import-paired-end-fastq-files"><i class="fas fa-link"></i></a>
 </h2>
-<div class="sourceCode" id="cb26"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb26-1"><a href="qiime2-pipeline.html#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> tools import <span class="dt">\</span></span>
-<span id="cb26-2"><a href="qiime2-pipeline.html#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--type</span> <span class="st">'SampleData[PairedEndSequencesWithQuality]'</span> <span class="dt">\</span></span>
-<span id="cb26-3"><a href="qiime2-pipeline.html#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input-path</span> <span class="va">$PWD</span>/pe-33-manifest.tsv <span class="dt">\</span></span>
-<span id="cb26-4"><a href="qiime2-pipeline.html#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--output-path</span> <span class="va">$PWD</span>/qiime2_bushmeat/demux.qza <span class="dt">\</span></span>
-<span id="cb26-5"><a href="qiime2-pipeline.html#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input-format</span> PairedEndFastqManifestPhred33V2</span></code></pre></div>
-<div id="summarize-and-visualize-preliminary-analysis" class="section level3" number="4.2.1">
+<div class="sourceCode" id="cb28"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb28-1"><a href="qiime2-pipeline.html#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> tools import <span class="dt">\</span></span>
+<span id="cb28-2"><a href="qiime2-pipeline.html#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--type</span> <span class="st">'SampleData[PairedEndSequencesWithQuality]'</span> <span class="dt">\</span></span>
+<span id="cb28-3"><a href="qiime2-pipeline.html#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input-path</span> <span class="va">$PWD</span>/pe-33-manifest.tsv <span class="dt">\</span></span>
+<span id="cb28-4"><a href="qiime2-pipeline.html#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--output-path</span> <span class="va">$PWD</span>/qiime2_bushmeat/demux.qza <span class="dt">\</span></span>
+<span id="cb28-5"><a href="qiime2-pipeline.html#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input-format</span> PairedEndFastqManifestPhred33V2</span></code></pre></div>
+<div id="summarize-and-visualize-preliminary-analysis" class="section level3" number="4.3.1">
 <h3>
-<span class="header-section-number">4.2.1</span> Summarize and visualize preliminary analysis<a class="anchor" aria-label="anchor" href="#summarize-and-visualize-preliminary-analysis"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.3.1</span> Summarize and visualize preliminary analysis<a class="anchor" aria-label="anchor" href="#summarize-and-visualize-preliminary-analysis"><i class="fas fa-link"></i></a>
 </h3>
-<div class="sourceCode" id="cb27"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb27-1"><a href="qiime2-pipeline.html#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> demux summarize <span class="dt">\</span></span>
-<span id="cb27-2"><a href="qiime2-pipeline.html#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-data</span> <span class="va">$PWD</span>/qiime2_bushmeat/demux.qza <span class="dt">\</span></span>
-<span id="cb27-3"><a href="qiime2-pipeline.html#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-visualization</span> <span class="va">$PWD</span>/qiime2_bushmeat/demux.qzv</span></code></pre></div>
-<div class="sourceCode" id="cb28"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb28-1"><a href="qiime2-pipeline.html#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> tools view <span class="va">$PWD</span>/qiime2_bushmeat/demux.qzv</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb29-1"><a href="qiime2-pipeline.html#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> demux summarize <span class="dt">\</span></span>
+<span id="cb29-2"><a href="qiime2-pipeline.html#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-data</span> <span class="va">$PWD</span>/qiime2_bushmeat/demux.qza <span class="dt">\</span></span>
+<span id="cb29-3"><a href="qiime2-pipeline.html#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-visualization</span> <span class="va">$PWD</span>/qiime2_bushmeat/demux.qzv</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb30-1"><a href="qiime2-pipeline.html#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> tools view <span class="va">$PWD</span>/qiime2_bushmeat/demux.qzv</span></code></pre></div>
 <blockquote>
 <p>Review and pick truncation parameters if needed.</p>
 </blockquote>
 </div>
 </div>
-<div id="microbial-profiling-pipeline" class="section level2" number="4.3">
+<div id="microbial-profiling-pipeline" class="section level2" number="4.4">
 <h2>
-<span class="header-section-number">4.3</span> Microbial profiling pipeline<a class="anchor" aria-label="anchor" href="#microbial-profiling-pipeline"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.4</span> Microbial profiling pipeline<a class="anchor" aria-label="anchor" href="#microbial-profiling-pipeline"><i class="fas fa-link"></i></a>
 </h2>
 <ul>
 <li>Here we can set the parameters as desired.</li>
 <li>Note that this may take a while, please be patient.</li>
 <li>In addition to setting the STAR and END time, we also optionally use <code>time</code> to gauge the amount of time used for some analysis.</li>
 </ul>
-<div class="sourceCode" id="cb29"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb29-1"><a href="qiime2-pipeline.html#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="va">START</span><span class="op">=</span><span class="kw">`</span><span class="fu">date</span> +%s<span class="kw">`</span></span>
-<span id="cb29-2"><a href="qiime2-pipeline.html#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-3"><a href="qiime2-pipeline.html#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="bu">time</span> qiime dada2 denoise-paired <span class="dt">\</span></span>
-<span id="cb29-4"><a href="qiime2-pipeline.html#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-demultiplexed-seqs</span> <span class="va">$PWD</span>/qiime2_bushmeat/demux.qza <span class="dt">\</span></span>
-<span id="cb29-5"><a href="qiime2-pipeline.html#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">--p-trim-left-f</span> 0 <span class="dt">\</span></span>
-<span id="cb29-6"><a href="qiime2-pipeline.html#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">--p-trunc-len-f</span> 0 <span class="dt">\</span></span>
-<span id="cb29-7"><a href="qiime2-pipeline.html#cb29-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">--p-trim-left-r</span> 0 <span class="dt">\</span></span>
-<span id="cb29-8"><a href="qiime2-pipeline.html#cb29-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">--p-trunc-len-r</span> 0 <span class="dt">\</span></span>
-<span id="cb29-9"><a href="qiime2-pipeline.html#cb29-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-representative-sequences</span> <span class="va">$PWD</span>/qiime2_bushmeat/rep-seqs.qza <span class="dt">\</span></span>
-<span id="cb29-10"><a href="qiime2-pipeline.html#cb29-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-table</span> <span class="va">$PWD</span>/qiime2_bushmeat/feature-table.qza <span class="dt">\</span></span>
-<span id="cb29-11"><a href="qiime2-pipeline.html#cb29-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-denoising-stats</span> <span class="va">$PWD</span>/qiime2_bushmeat/stats.qza</span>
-<span id="cb29-12"><a href="qiime2-pipeline.html#cb29-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-13"><a href="qiime2-pipeline.html#cb29-13" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Summarizing denoise statistics"</span></span>
-<span id="cb29-14"><a href="qiime2-pipeline.html#cb29-14" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> metadata tabulate <span class="dt">\</span></span>
-<span id="cb29-15"><a href="qiime2-pipeline.html#cb29-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">--m-input-file</span> <span class="va">$PWD</span>/qiime2_bushmeat/stats.qza <span class="dt">\</span></span>
-<span id="cb29-16"><a href="qiime2-pipeline.html#cb29-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-visualization</span> <span class="va">$PWD</span>/qiime2_bushmeat/stats.qzv</span>
-<span id="cb29-17"><a href="qiime2-pipeline.html#cb29-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-18"><a href="qiime2-pipeline.html#cb29-18" aria-hidden="true" tabindex="-1"></a><span class="co">## Visualizing denoise statistics</span></span>
-<span id="cb29-19"><a href="qiime2-pipeline.html#cb29-19" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> tools view <span class="va">$PWD</span>/qiime2_bushmeat/stats.qzv</span>
-<span id="cb29-20"><a href="qiime2-pipeline.html#cb29-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-21"><a href="qiime2-pipeline.html#cb29-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-22"><a href="qiime2-pipeline.html#cb29-22" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
-<span id="cb29-23"><a href="qiime2-pipeline.html#cb29-23" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Visualizing denoise statistics"</span></span>
-<span id="cb29-24"><a href="qiime2-pipeline.html#cb29-24" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
-<span id="cb29-25"><a href="qiime2-pipeline.html#cb29-25" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> metadata tabulate <span class="dt">\</span></span>
-<span id="cb29-26"><a href="qiime2-pipeline.html#cb29-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">--m-input-file</span> <span class="va">$PWD</span>/qiime2_bushmeat/stats.qza <span class="dt">\</span></span>
-<span id="cb29-27"><a href="qiime2-pipeline.html#cb29-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-visualization</span> <span class="va">$PWD</span>/qiime2_bushmeat/stats.qzv</span>
-<span id="cb29-28"><a href="qiime2-pipeline.html#cb29-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-29"><a href="qiime2-pipeline.html#cb29-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-30"><a href="qiime2-pipeline.html#cb29-30" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
-<span id="cb29-31"><a href="qiime2-pipeline.html#cb29-31" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Visualizing feature (sample &amp; seqs) table"</span></span>
-<span id="cb29-32"><a href="qiime2-pipeline.html#cb29-32" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
-<span id="cb29-33"><a href="qiime2-pipeline.html#cb29-33" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> feature-table summarize <span class="dt">\</span></span>
-<span id="cb29-34"><a href="qiime2-pipeline.html#cb29-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-table</span> <span class="va">$PWD</span>/qiime2_bushmeat/feature-table.qza <span class="dt">\</span></span>
-<span id="cb29-35"><a href="qiime2-pipeline.html#cb29-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-visualization</span> <span class="va">$PWD</span>/qiime2_bushmeat/feature-table.qzv <span class="dt">\</span></span>
-<span id="cb29-36"><a href="qiime2-pipeline.html#cb29-36" aria-hidden="true" tabindex="-1"></a>  <span class="at">--m-sample-metadata-file</span> <span class="va">$PWD</span>/q2-metadata.tsv</span>
-<span id="cb29-37"><a href="qiime2-pipeline.html#cb29-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-38"><a href="qiime2-pipeline.html#cb29-38" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
-<span id="cb29-39"><a href="qiime2-pipeline.html#cb29-39" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Visualizing representative sequences"</span></span>
-<span id="cb29-40"><a href="qiime2-pipeline.html#cb29-40" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
-<span id="cb29-41"><a href="qiime2-pipeline.html#cb29-41" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> feature-table tabulate-seqs <span class="dt">\</span></span>
-<span id="cb29-42"><a href="qiime2-pipeline.html#cb29-42" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-data</span> <span class="va">$PWD</span>/qiime2_bushmeat/rep-seqs.qza <span class="dt">\</span></span>
-<span id="cb29-43"><a href="qiime2-pipeline.html#cb29-43" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-visualization</span> <span class="va">$PWD</span>/qiime2_bushmeat/rep-seqs.qzv</span>
-<span id="cb29-44"><a href="qiime2-pipeline.html#cb29-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-45"><a href="qiime2-pipeline.html#cb29-45" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
-<span id="cb29-46"><a href="qiime2-pipeline.html#cb29-46" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Clustering sequences into OTUs"</span></span>
-<span id="cb29-47"><a href="qiime2-pipeline.html#cb29-47" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
-<span id="cb29-48"><a href="qiime2-pipeline.html#cb29-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-49"><a href="qiime2-pipeline.html#cb29-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-50"><a href="qiime2-pipeline.html#cb29-50" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"De novo clustering"</span></span>
-<span id="cb29-51"><a href="qiime2-pipeline.html#cb29-51" aria-hidden="true" tabindex="-1"></a><span class="co"># Sequences are clustered against one another. Here the clustering is performed at 99% to create 99% OTUs.</span></span>
-<span id="cb29-52"><a href="qiime2-pipeline.html#cb29-52" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> vsearch cluster-features-de-novo <span class="dt">\</span></span>
-<span id="cb29-53"><a href="qiime2-pipeline.html#cb29-53" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-table</span> <span class="va">$PWD</span>/qiime2_bushmeat/feature-table.qza <span class="dt">\</span></span>
-<span id="cb29-54"><a href="qiime2-pipeline.html#cb29-54" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-sequences</span> <span class="va">$PWD</span>/qiime2_bushmeat/rep-seqs.qza <span class="dt">\</span></span>
-<span id="cb29-55"><a href="qiime2-pipeline.html#cb29-55" aria-hidden="true" tabindex="-1"></a>  <span class="at">--p-perc-identity</span> 0.99 <span class="dt">\</span></span>
-<span id="cb29-56"><a href="qiime2-pipeline.html#cb29-56" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-clustered-table</span> <span class="va">$PWD</span>/qiime2_bushmeat/feature-table-dn-99.qza <span class="dt">\</span></span>
-<span id="cb29-57"><a href="qiime2-pipeline.html#cb29-57" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-clustered-sequences</span> <span class="va">$PWD</span>/qiime2_bushmeat/rep-seqs-dn-99.qza</span>
-<span id="cb29-58"><a href="qiime2-pipeline.html#cb29-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-59"><a href="qiime2-pipeline.html#cb29-59" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
-<span id="cb29-60"><a href="qiime2-pipeline.html#cb29-60" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Visualizing denovo 99%"</span></span>
-<span id="cb29-61"><a href="qiime2-pipeline.html#cb29-61" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
-<span id="cb29-62"><a href="qiime2-pipeline.html#cb29-62" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> feature-table tabulate-seqs <span class="dt">\</span></span>
-<span id="cb29-63"><a href="qiime2-pipeline.html#cb29-63" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-data</span> <span class="va">$PWD</span>/qiime2_bushmeat/rep-seqs-dn-99.qza <span class="dt">\</span></span>
-<span id="cb29-64"><a href="qiime2-pipeline.html#cb29-64" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-visualization</span> <span class="va">$PWD</span>/qiime2_bushmeat/rep-seqs-dn-99.qzv</span>
-<span id="cb29-65"><a href="qiime2-pipeline.html#cb29-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-66"><a href="qiime2-pipeline.html#cb29-66" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
-<span id="cb29-67"><a href="qiime2-pipeline.html#cb29-67" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Closed-reference clustering"</span></span>
-<span id="cb29-68"><a href="qiime2-pipeline.html#cb29-68" aria-hidden="true" tabindex="-1"></a><span class="co"># Here the clustering is performed at 99% identity against the Greengenes 13_8 99% OTUs reference database.</span></span>
-<span id="cb29-69"><a href="qiime2-pipeline.html#cb29-69" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> vsearch cluster-features-closed-reference <span class="dt">\</span></span>
-<span id="cb29-70"><a href="qiime2-pipeline.html#cb29-70" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-table</span> <span class="va">$PWD</span>/qiime2_bushmeat/feature-table.qza <span class="dt">\</span></span>
-<span id="cb29-71"><a href="qiime2-pipeline.html#cb29-71" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-sequences</span> <span class="va">$PWD</span>/qiime2_bushmeat/rep-seqs.qza <span class="dt">\</span></span>
-<span id="cb29-72"><a href="qiime2-pipeline.html#cb29-72" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-reference-sequences</span> <span class="va">$PWD</span>/qiime2_bushmeat/rep-seqs-dn-99.qza <span class="dt">\</span></span>
-<span id="cb29-73"><a href="qiime2-pipeline.html#cb29-73" aria-hidden="true" tabindex="-1"></a>  <span class="at">--p-perc-identity</span> 0.99 <span class="dt">\</span></span>
-<span id="cb29-74"><a href="qiime2-pipeline.html#cb29-74" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-clustered-table</span> <span class="va">$PWD</span>/qiime2_bushmeat/feature-table-cr-99.qza <span class="dt">\</span></span>
-<span id="cb29-75"><a href="qiime2-pipeline.html#cb29-75" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-clustered-sequences</span> <span class="va">$PWD</span>/qiime2_bushmeat/rep-seqs-cr-99.qza <span class="dt">\</span></span>
-<span id="cb29-76"><a href="qiime2-pipeline.html#cb29-76" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-unmatched-sequences</span> <span class="va">$PWD</span>/qiime2_bushmeat/unmatched-cr-99.qza</span>
-<span id="cb29-77"><a href="qiime2-pipeline.html#cb29-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-78"><a href="qiime2-pipeline.html#cb29-78" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
-<span id="cb29-79"><a href="qiime2-pipeline.html#cb29-79" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Open-reference clustering"</span></span>
-<span id="cb29-80"><a href="qiime2-pipeline.html#cb29-80" aria-hidden="true" tabindex="-1"></a><span class="co"># Here the clustering is performed at 99% identity against the Greengenes 13_8 99% OTUs reference database.</span></span>
-<span id="cb29-81"><a href="qiime2-pipeline.html#cb29-81" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> vsearch cluster-features-open-reference <span class="dt">\</span></span>
-<span id="cb29-82"><a href="qiime2-pipeline.html#cb29-82" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-table</span> <span class="va">$PWD</span>/qiime2_bushmeat/feature-table.qza <span class="dt">\</span></span>
-<span id="cb29-83"><a href="qiime2-pipeline.html#cb29-83" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-sequences</span> <span class="va">$PWD</span>/qiime2_bushmeat/rep-seqs.qza <span class="dt">\</span></span>
-<span id="cb29-84"><a href="qiime2-pipeline.html#cb29-84" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-reference-sequences</span> <span class="va">$PWD</span>/qiime2_bushmeat/rep-seqs-dn-99.qza <span class="dt">\</span></span>
-<span id="cb29-85"><a href="qiime2-pipeline.html#cb29-85" aria-hidden="true" tabindex="-1"></a>  <span class="at">--p-perc-identity</span> 0.99 <span class="dt">\</span></span>
-<span id="cb29-86"><a href="qiime2-pipeline.html#cb29-86" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-clustered-table</span> <span class="va">$PWD</span>/qiime2_bushmeat/feature-table-or-99.qza <span class="dt">\</span></span>
-<span id="cb29-87"><a href="qiime2-pipeline.html#cb29-87" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-clustered-sequences</span> <span class="va">$PWD</span>/qiime2_bushmeat/rep-seqs-or-99.qza <span class="dt">\</span></span>
-<span id="cb29-88"><a href="qiime2-pipeline.html#cb29-88" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-new-reference-sequences</span> <span class="va">$PWD</span>/qiime2_bushmeat/new-ref-seqs-or-99.qza</span>
-<span id="cb29-89"><a href="qiime2-pipeline.html#cb29-89" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-90"><a href="qiime2-pipeline.html#cb29-90" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-91"><a href="qiime2-pipeline.html#cb29-91" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
-<span id="cb29-92"><a href="qiime2-pipeline.html#cb29-92" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Performing de novo multiple sequence alignment of representative sequences using MAFFT "</span> </span>
-<span id="cb29-93"><a href="qiime2-pipeline.html#cb29-93" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
-<span id="cb29-94"><a href="qiime2-pipeline.html#cb29-94" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-95"><a href="qiime2-pipeline.html#cb29-95" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> alignment mafft <span class="dt">\</span></span>
-<span id="cb29-96"><a href="qiime2-pipeline.html#cb29-96" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-sequences</span> <span class="va">$PWD</span>/qiime2_bushmeat/rep-seqs.qza <span class="dt">\</span></span>
-<span id="cb29-97"><a href="qiime2-pipeline.html#cb29-97" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-alignment</span> <span class="va">$PWD</span>/qiime2_bushmeat/aligned-rep-seqs.qza</span>
-<span id="cb29-98"><a href="qiime2-pipeline.html#cb29-98" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-99"><a href="qiime2-pipeline.html#cb29-99" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
-<span id="cb29-100"><a href="qiime2-pipeline.html#cb29-100" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Removing poor alignment"</span> </span>
-<span id="cb29-101"><a href="qiime2-pipeline.html#cb29-101" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
-<span id="cb29-102"><a href="qiime2-pipeline.html#cb29-102" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-103"><a href="qiime2-pipeline.html#cb29-103" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> alignment mask <span class="dt">\</span></span>
-<span id="cb29-104"><a href="qiime2-pipeline.html#cb29-104" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-alignment</span> <span class="va">$PWD</span>/qiime2_bushmeat/aligned-rep-seqs.qza <span class="dt">\</span></span>
-<span id="cb29-105"><a href="qiime2-pipeline.html#cb29-105" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-masked-alignment</span> <span class="va">$PWD</span>/qiime2_bushmeat/masked-aligned-rep-seqs.qza</span>
-<span id="cb29-106"><a href="qiime2-pipeline.html#cb29-106" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-107"><a href="qiime2-pipeline.html#cb29-107" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
-<span id="cb29-108"><a href="qiime2-pipeline.html#cb29-108" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Visualizing masked alignments"</span></span>
-<span id="cb29-109"><a href="qiime2-pipeline.html#cb29-109" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
-<span id="cb29-110"><a href="qiime2-pipeline.html#cb29-110" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> feature-table tabulate-seqs <span class="dt">\</span></span>
-<span id="cb29-111"><a href="qiime2-pipeline.html#cb29-111" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-data</span> <span class="va">$PWD</span>/qiime2_bushmeat/masked-aligned-rep-seqs.qza <span class="dt">\</span></span>
-<span id="cb29-112"><a href="qiime2-pipeline.html#cb29-112" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-visualization</span> <span class="va">$PWD</span>/qiime2_bushmeat/masked-aligned-rep-seqs.qzv</span>
-<span id="cb29-113"><a href="qiime2-pipeline.html#cb29-113" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-114"><a href="qiime2-pipeline.html#cb29-114" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-115"><a href="qiime2-pipeline.html#cb29-115" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
-<span id="cb29-116"><a href="qiime2-pipeline.html#cb29-116" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Phylogenetic sequence clustering"</span> </span>
-<span id="cb29-117"><a href="qiime2-pipeline.html#cb29-117" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
-<span id="cb29-118"><a href="qiime2-pipeline.html#cb29-118" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-119"><a href="qiime2-pipeline.html#cb29-119" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Unrooted tree"</span></span>
-<span id="cb29-120"><a href="qiime2-pipeline.html#cb29-120" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
-<span id="cb29-121"><a href="qiime2-pipeline.html#cb29-121" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> phylogeny fasttree <span class="dt">\</span></span>
-<span id="cb29-122"><a href="qiime2-pipeline.html#cb29-122" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-alignment</span> <span class="va">$PWD</span>/qiime2_bushmeat/masked-aligned-rep-seqs.qza <span class="dt">\</span></span>
-<span id="cb29-123"><a href="qiime2-pipeline.html#cb29-123" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-tree</span> <span class="va">$PWD</span>/qiime2_bushmeat/unrooted-tree.qza</span>
-<span id="cb29-124"><a href="qiime2-pipeline.html#cb29-124" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-125"><a href="qiime2-pipeline.html#cb29-125" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
-<span id="cb29-126"><a href="qiime2-pipeline.html#cb29-126" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Rooted tree"</span></span>
-<span id="cb29-127"><a href="qiime2-pipeline.html#cb29-127" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
-<span id="cb29-128"><a href="qiime2-pipeline.html#cb29-128" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> phylogeny midpoint-root <span class="dt">\</span></span>
-<span id="cb29-129"><a href="qiime2-pipeline.html#cb29-129" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-tree</span> <span class="va">$PWD</span>/qiime2_bushmeat/unrooted-tree.qza <span class="dt">\</span></span>
-<span id="cb29-130"><a href="qiime2-pipeline.html#cb29-130" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-rooted-tree</span> <span class="va">$PWD</span>/qiime2_bushmeat/rooted-tree.qza</span>
-<span id="cb29-131"><a href="qiime2-pipeline.html#cb29-131" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-132"><a href="qiime2-pipeline.html#cb29-132" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-133"><a href="qiime2-pipeline.html#cb29-133" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
-<span id="cb29-134"><a href="qiime2-pipeline.html#cb29-134" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Taxonomic assignment to masked aligned representative sequences"</span></span>
-<span id="cb29-135"><a href="qiime2-pipeline.html#cb29-135" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
-<span id="cb29-136"><a href="qiime2-pipeline.html#cb29-136" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-137"><a href="qiime2-pipeline.html#cb29-137" aria-hidden="true" tabindex="-1"></a><span class="co">## Using Greengenes 2013-8-99-515-806-nb</span></span>
-<span id="cb29-138"><a href="qiime2-pipeline.html#cb29-138" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-139"><a href="qiime2-pipeline.html#cb29-139" aria-hidden="true" tabindex="-1"></a><span class="bu">time</span> qiime feature-classifier classify-sklearn <span class="dt">\</span></span>
-<span id="cb29-140"><a href="qiime2-pipeline.html#cb29-140" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-classifier</span> <span class="va">$PWD</span>/gg-13-8-99-515-806-nb-classifier.qza <span class="dt">\</span></span>
-<span id="cb29-141"><a href="qiime2-pipeline.html#cb29-141" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-reads</span> <span class="va">$PWD</span>/qiime2_bushmeat/rep-seqs-dn-99.qza <span class="dt">\</span></span>
-<span id="cb29-142"><a href="qiime2-pipeline.html#cb29-142" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-classification</span> <span class="va">$PWD</span>/qiime2_bushmeat/taxonomy.qza</span>
-<span id="cb29-143"><a href="qiime2-pipeline.html#cb29-143" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-144"><a href="qiime2-pipeline.html#cb29-144" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-145"><a href="qiime2-pipeline.html#cb29-145" aria-hidden="true" tabindex="-1"></a><span class="co">### Visualizing taxonomy classification</span></span>
-<span id="cb29-146"><a href="qiime2-pipeline.html#cb29-146" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> metadata tabulate <span class="dt">\</span></span>
-<span id="cb29-147"><a href="qiime2-pipeline.html#cb29-147" aria-hidden="true" tabindex="-1"></a>  <span class="at">--m-input-file</span> <span class="va">$PWD</span>/qiime2_bushmeat/taxonomy.qza <span class="dt">\</span></span>
-<span id="cb29-148"><a href="qiime2-pipeline.html#cb29-148" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-visualization</span> <span class="va">$PWD</span>/qiime2_bushmeat/taxonomy.qzv</span>
-<span id="cb29-149"><a href="qiime2-pipeline.html#cb29-149" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-150"><a href="qiime2-pipeline.html#cb29-150" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
-<span id="cb29-151"><a href="qiime2-pipeline.html#cb29-151" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"QIIME2 data transformation"</span></span>
-<span id="cb29-152"><a href="qiime2-pipeline.html#cb29-152" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
-<span id="cb29-153"><a href="qiime2-pipeline.html#cb29-153" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-154"><a href="qiime2-pipeline.html#cb29-154" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> tools export <span class="dt">\</span></span>
-<span id="cb29-155"><a href="qiime2-pipeline.html#cb29-155" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input-path</span> <span class="va">$PWD</span>/qiime2_bushmeat/feature-table.qza <span class="dt">\</span></span>
-<span id="cb29-156"><a href="qiime2-pipeline.html#cb29-156" aria-hidden="true" tabindex="-1"></a>  <span class="at">--output-path</span> <span class="va">$PWD</span>/qiime2_bushmeat/q2-transformed-tables <span class="co"># Output feature-table.biom </span></span>
-<span id="cb29-157"><a href="qiime2-pipeline.html#cb29-157" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-158"><a href="qiime2-pipeline.html#cb29-158" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-159"><a href="qiime2-pipeline.html#cb29-159" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
-<span id="cb29-160"><a href="qiime2-pipeline.html#cb29-160" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Converting BIOM table into Tab-Separated-Values (TSV)"</span></span>
-<span id="cb29-161"><a href="qiime2-pipeline.html#cb29-161" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
-<span id="cb29-162"><a href="qiime2-pipeline.html#cb29-162" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-163"><a href="qiime2-pipeline.html#cb29-163" aria-hidden="true" tabindex="-1"></a><span class="ex">biom</span> convert <span class="dt">\</span></span>
-<span id="cb29-164"><a href="qiime2-pipeline.html#cb29-164" aria-hidden="true" tabindex="-1"></a>  <span class="at">-i</span> <span class="va">$PWD</span>/qiime2_bushmeat/q2-transformed-tables/feature-table.biom <span class="dt">\</span></span>
-<span id="cb29-165"><a href="qiime2-pipeline.html#cb29-165" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> <span class="va">$PWD</span>/qiime2_bushmeat/q2-transformed-tables/feature-table.tsv <span class="at">--to-tsv</span></span>
-<span id="cb29-166"><a href="qiime2-pipeline.html#cb29-166" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb29-167"><a href="qiime2-pipeline.html#cb29-167" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> tools export <span class="dt">\</span></span>
-<span id="cb29-168"><a href="qiime2-pipeline.html#cb29-168" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input-path</span> <span class="va">$PWD</span>/qiime2_bushmeat/taxonomy.qza <span class="dt">\</span></span>
-<span id="cb29-169"><a href="qiime2-pipeline.html#cb29-169" aria-hidden="true" tabindex="-1"></a>  <span class="at">--output-path</span> <span class="va">$PWD</span>/qiime2_bushmeat/q2-transformed-tables <span class="co"># Output taxonomy.tsv</span></span>
-<span id="cb29-170"><a href="qiime2-pipeline.html#cb29-170" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-171"><a href="qiime2-pipeline.html#cb29-171" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-172"><a href="qiime2-pipeline.html#cb29-172" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
-<span id="cb29-173"><a href="qiime2-pipeline.html#cb29-173" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Combining fetature table with taxonomy"</span></span>
-<span id="cb29-174"><a href="qiime2-pipeline.html#cb29-174" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
-<span id="cb29-175"><a href="qiime2-pipeline.html#cb29-175" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-176"><a href="qiime2-pipeline.html#cb29-176" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> metadata tabulate <span class="dt">\</span></span>
-<span id="cb29-177"><a href="qiime2-pipeline.html#cb29-177" aria-hidden="true" tabindex="-1"></a>  <span class="at">--m-input-file</span> <span class="va">$PWD</span>/qiime2_bushmeat/q2-transformed-tables/feature-table.tsv <span class="dt">\</span></span>
-<span id="cb29-178"><a href="qiime2-pipeline.html#cb29-178" aria-hidden="true" tabindex="-1"></a>  <span class="at">--m-input-file</span> <span class="va">$PWD</span>/qiime2_bushmeat/q2-transformed-tables/taxonomy.tsv <span class="dt">\</span></span>
-<span id="cb29-179"><a href="qiime2-pipeline.html#cb29-179" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-visualization</span> <span class="va">$PWD</span>/qiime2_bushmeat/q2-transformed-tables/feature-taxonomy-table.qzv</span>
-<span id="cb29-180"><a href="qiime2-pipeline.html#cb29-180" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-181"><a href="qiime2-pipeline.html#cb29-181" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-182"><a href="qiime2-pipeline.html#cb29-182" aria-hidden="true" tabindex="-1"></a><span class="co">## Newick tree</span></span>
-<span id="cb29-183"><a href="qiime2-pipeline.html#cb29-183" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> tools export <span class="dt">\</span></span>
-<span id="cb29-184"><a href="qiime2-pipeline.html#cb29-184" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input-path</span> <span class="va">$PWD</span>/qiime2_bushmeat/rooted-tree.qza <span class="dt">\</span></span>
-<span id="cb29-185"><a href="qiime2-pipeline.html#cb29-185" aria-hidden="true" tabindex="-1"></a>  <span class="at">--output-path</span> <span class="va">$PWD</span>/qiime2_bushmeat/q2-transformed-tables/rooted-tree</span>
-<span id="cb29-186"><a href="qiime2-pipeline.html#cb29-186" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-187"><a href="qiime2-pipeline.html#cb29-187" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> tools export <span class="dt">\</span></span>
-<span id="cb29-188"><a href="qiime2-pipeline.html#cb29-188" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input-path</span> <span class="va">$PWD</span>/qiime2_bushmeat/unrooted-tree.qza <span class="dt">\</span></span>
-<span id="cb29-189"><a href="qiime2-pipeline.html#cb29-189" aria-hidden="true" tabindex="-1"></a>  <span class="at">--output-path</span> <span class="va">$PWD</span>/qiime2_bushmeat/q2-transformed-tables/unrooted-tree</span>
-<span id="cb29-190"><a href="qiime2-pipeline.html#cb29-190" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-191"><a href="qiime2-pipeline.html#cb29-191" aria-hidden="true" tabindex="-1"></a><span class="co">#-------------------------</span></span>
-<span id="cb29-192"><a href="qiime2-pipeline.html#cb29-192" aria-hidden="true" tabindex="-1"></a><span class="va">END</span><span class="op">=</span><span class="kw">`</span><span class="fu">date</span> +%s<span class="kw">`</span></span>
-<span id="cb29-193"><a href="qiime2-pipeline.html#cb29-193" aria-hidden="true" tabindex="-1"></a><span class="va">RUNTIME</span><span class="op">=</span><span class="va">$((</span> <span class="va">END</span> <span class="op">-</span> <span class="va">START</span> <span class="va">))</span></span>
-<span id="cb29-194"><a href="qiime2-pipeline.html#cb29-194" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-195"><a href="qiime2-pipeline.html#cb29-195" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
-<span id="cb29-196"><a href="qiime2-pipeline.html#cb29-196" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Time taken to complete the whole workflow\n"</span></span>
-<span id="cb29-197"><a href="qiime2-pipeline.html#cb29-197" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
-<span id="cb29-198"><a href="qiime2-pipeline.html#cb29-198" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"</span><span class="va">$RUNTIME</span><span class="st"> seconds"</span></span>
-<span id="cb29-199"><a href="qiime2-pipeline.html#cb29-199" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-200"><a href="qiime2-pipeline.html#cb29-200" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"...THE END..."</span></span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb31-1"><a href="qiime2-pipeline.html#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="bu">time</span> qiime dada2 denoise-paired <span class="dt">\</span></span>
+<span id="cb31-2"><a href="qiime2-pipeline.html#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-demultiplexed-seqs</span> <span class="va">$PWD</span>/qiime2_bushmeat/demux.qza <span class="dt">\</span></span>
+<span id="cb31-3"><a href="qiime2-pipeline.html#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--p-trim-left-f</span> 0 <span class="dt">\</span></span>
+<span id="cb31-4"><a href="qiime2-pipeline.html#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--p-trunc-len-f</span> 0 <span class="dt">\</span></span>
+<span id="cb31-5"><a href="qiime2-pipeline.html#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">--p-trim-left-r</span> 0 <span class="dt">\</span></span>
+<span id="cb31-6"><a href="qiime2-pipeline.html#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">--p-trunc-len-r</span> 0 <span class="dt">\</span></span>
+<span id="cb31-7"><a href="qiime2-pipeline.html#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-representative-sequences</span> <span class="va">$PWD</span>/qiime2_bushmeat/rep-seqs.qza <span class="dt">\</span></span>
+<span id="cb31-8"><a href="qiime2-pipeline.html#cb31-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-table</span> <span class="va">$PWD</span>/qiime2_bushmeat/feature-table.qza <span class="dt">\</span></span>
+<span id="cb31-9"><a href="qiime2-pipeline.html#cb31-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-denoising-stats</span> <span class="va">$PWD</span>/qiime2_bushmeat/stats.qza</span>
+<span id="cb31-10"><a href="qiime2-pipeline.html#cb31-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-11"><a href="qiime2-pipeline.html#cb31-11" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Summarizing denoise statistics"</span></span>
+<span id="cb31-12"><a href="qiime2-pipeline.html#cb31-12" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> metadata tabulate <span class="dt">\</span></span>
+<span id="cb31-13"><a href="qiime2-pipeline.html#cb31-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">--m-input-file</span> <span class="va">$PWD</span>/qiime2_bushmeat/stats.qza <span class="dt">\</span></span>
+<span id="cb31-14"><a href="qiime2-pipeline.html#cb31-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-visualization</span> <span class="va">$PWD</span>/qiime2_bushmeat/stats.qzv</span>
+<span id="cb31-15"><a href="qiime2-pipeline.html#cb31-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-16"><a href="qiime2-pipeline.html#cb31-16" aria-hidden="true" tabindex="-1"></a><span class="co">## Visualizing denoise statistics</span></span>
+<span id="cb31-17"><a href="qiime2-pipeline.html#cb31-17" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> tools view <span class="va">$PWD</span>/qiime2_bushmeat/stats.qzv</span>
+<span id="cb31-18"><a href="qiime2-pipeline.html#cb31-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-19"><a href="qiime2-pipeline.html#cb31-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-20"><a href="qiime2-pipeline.html#cb31-20" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
+<span id="cb31-21"><a href="qiime2-pipeline.html#cb31-21" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Visualizing denoise statistics"</span></span>
+<span id="cb31-22"><a href="qiime2-pipeline.html#cb31-22" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
+<span id="cb31-23"><a href="qiime2-pipeline.html#cb31-23" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> metadata tabulate <span class="dt">\</span></span>
+<span id="cb31-24"><a href="qiime2-pipeline.html#cb31-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">--m-input-file</span> <span class="va">$PWD</span>/qiime2_bushmeat/stats.qza <span class="dt">\</span></span>
+<span id="cb31-25"><a href="qiime2-pipeline.html#cb31-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-visualization</span> <span class="va">$PWD</span>/qiime2_bushmeat/stats.qzv</span>
+<span id="cb31-26"><a href="qiime2-pipeline.html#cb31-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-27"><a href="qiime2-pipeline.html#cb31-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-28"><a href="qiime2-pipeline.html#cb31-28" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
+<span id="cb31-29"><a href="qiime2-pipeline.html#cb31-29" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Visualizing feature (sample &amp; seqs) table"</span></span>
+<span id="cb31-30"><a href="qiime2-pipeline.html#cb31-30" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
+<span id="cb31-31"><a href="qiime2-pipeline.html#cb31-31" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> feature-table summarize <span class="dt">\</span></span>
+<span id="cb31-32"><a href="qiime2-pipeline.html#cb31-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-table</span> <span class="va">$PWD</span>/qiime2_bushmeat/feature-table.qza <span class="dt">\</span></span>
+<span id="cb31-33"><a href="qiime2-pipeline.html#cb31-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-visualization</span> <span class="va">$PWD</span>/qiime2_bushmeat/feature-table.qzv <span class="dt">\</span></span>
+<span id="cb31-34"><a href="qiime2-pipeline.html#cb31-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">--m-sample-metadata-file</span> <span class="va">$PWD</span>/q2-metadata.tsv</span>
+<span id="cb31-35"><a href="qiime2-pipeline.html#cb31-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-36"><a href="qiime2-pipeline.html#cb31-36" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
+<span id="cb31-37"><a href="qiime2-pipeline.html#cb31-37" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Visualizing representative sequences"</span></span>
+<span id="cb31-38"><a href="qiime2-pipeline.html#cb31-38" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
+<span id="cb31-39"><a href="qiime2-pipeline.html#cb31-39" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> feature-table tabulate-seqs <span class="dt">\</span></span>
+<span id="cb31-40"><a href="qiime2-pipeline.html#cb31-40" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-data</span> <span class="va">$PWD</span>/qiime2_bushmeat/rep-seqs.qza <span class="dt">\</span></span>
+<span id="cb31-41"><a href="qiime2-pipeline.html#cb31-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-visualization</span> <span class="va">$PWD</span>/qiime2_bushmeat/rep-seqs.qzv</span>
+<span id="cb31-42"><a href="qiime2-pipeline.html#cb31-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-43"><a href="qiime2-pipeline.html#cb31-43" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
+<span id="cb31-44"><a href="qiime2-pipeline.html#cb31-44" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Clustering sequences into OTUs"</span></span>
+<span id="cb31-45"><a href="qiime2-pipeline.html#cb31-45" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
+<span id="cb31-46"><a href="qiime2-pipeline.html#cb31-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-47"><a href="qiime2-pipeline.html#cb31-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-48"><a href="qiime2-pipeline.html#cb31-48" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"De novo clustering"</span></span>
+<span id="cb31-49"><a href="qiime2-pipeline.html#cb31-49" aria-hidden="true" tabindex="-1"></a><span class="co"># Sequences are clustered against one another. Here the clustering is performed at 99% to create 99% OTUs.</span></span>
+<span id="cb31-50"><a href="qiime2-pipeline.html#cb31-50" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> vsearch cluster-features-de-novo <span class="dt">\</span></span>
+<span id="cb31-51"><a href="qiime2-pipeline.html#cb31-51" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-table</span> <span class="va">$PWD</span>/qiime2_bushmeat/feature-table.qza <span class="dt">\</span></span>
+<span id="cb31-52"><a href="qiime2-pipeline.html#cb31-52" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-sequences</span> <span class="va">$PWD</span>/qiime2_bushmeat/rep-seqs.qza <span class="dt">\</span></span>
+<span id="cb31-53"><a href="qiime2-pipeline.html#cb31-53" aria-hidden="true" tabindex="-1"></a>  <span class="at">--p-perc-identity</span> 0.99 <span class="dt">\</span></span>
+<span id="cb31-54"><a href="qiime2-pipeline.html#cb31-54" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-clustered-table</span> <span class="va">$PWD</span>/qiime2_bushmeat/feature-table-dn-99.qza <span class="dt">\</span></span>
+<span id="cb31-55"><a href="qiime2-pipeline.html#cb31-55" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-clustered-sequences</span> <span class="va">$PWD</span>/qiime2_bushmeat/rep-seqs-dn-99.qza</span>
+<span id="cb31-56"><a href="qiime2-pipeline.html#cb31-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-57"><a href="qiime2-pipeline.html#cb31-57" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
+<span id="cb31-58"><a href="qiime2-pipeline.html#cb31-58" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Visualizing denovo 99%"</span></span>
+<span id="cb31-59"><a href="qiime2-pipeline.html#cb31-59" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
+<span id="cb31-60"><a href="qiime2-pipeline.html#cb31-60" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> feature-table tabulate-seqs <span class="dt">\</span></span>
+<span id="cb31-61"><a href="qiime2-pipeline.html#cb31-61" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-data</span> <span class="va">$PWD</span>/qiime2_bushmeat/rep-seqs-dn-99.qza <span class="dt">\</span></span>
+<span id="cb31-62"><a href="qiime2-pipeline.html#cb31-62" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-visualization</span> <span class="va">$PWD</span>/qiime2_bushmeat/rep-seqs-dn-99.qzv</span>
+<span id="cb31-63"><a href="qiime2-pipeline.html#cb31-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-64"><a href="qiime2-pipeline.html#cb31-64" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
+<span id="cb31-65"><a href="qiime2-pipeline.html#cb31-65" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Closed-reference clustering"</span></span>
+<span id="cb31-66"><a href="qiime2-pipeline.html#cb31-66" aria-hidden="true" tabindex="-1"></a><span class="co"># Here the clustering is performed at 99% identity against the Greengenes 13_8 99% OTUs reference database.</span></span>
+<span id="cb31-67"><a href="qiime2-pipeline.html#cb31-67" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> vsearch cluster-features-closed-reference <span class="dt">\</span></span>
+<span id="cb31-68"><a href="qiime2-pipeline.html#cb31-68" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-table</span> <span class="va">$PWD</span>/qiime2_bushmeat/feature-table.qza <span class="dt">\</span></span>
+<span id="cb31-69"><a href="qiime2-pipeline.html#cb31-69" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-sequences</span> <span class="va">$PWD</span>/qiime2_bushmeat/rep-seqs.qza <span class="dt">\</span></span>
+<span id="cb31-70"><a href="qiime2-pipeline.html#cb31-70" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-reference-sequences</span> <span class="va">$PWD</span>/qiime2_bushmeat/rep-seqs-dn-99.qza <span class="dt">\</span></span>
+<span id="cb31-71"><a href="qiime2-pipeline.html#cb31-71" aria-hidden="true" tabindex="-1"></a>  <span class="at">--p-perc-identity</span> 0.99 <span class="dt">\</span></span>
+<span id="cb31-72"><a href="qiime2-pipeline.html#cb31-72" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-clustered-table</span> <span class="va">$PWD</span>/qiime2_bushmeat/feature-table-cr-99.qza <span class="dt">\</span></span>
+<span id="cb31-73"><a href="qiime2-pipeline.html#cb31-73" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-clustered-sequences</span> <span class="va">$PWD</span>/qiime2_bushmeat/rep-seqs-cr-99.qza <span class="dt">\</span></span>
+<span id="cb31-74"><a href="qiime2-pipeline.html#cb31-74" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-unmatched-sequences</span> <span class="va">$PWD</span>/qiime2_bushmeat/unmatched-cr-99.qza</span>
+<span id="cb31-75"><a href="qiime2-pipeline.html#cb31-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-76"><a href="qiime2-pipeline.html#cb31-76" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
+<span id="cb31-77"><a href="qiime2-pipeline.html#cb31-77" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Open-reference clustering"</span></span>
+<span id="cb31-78"><a href="qiime2-pipeline.html#cb31-78" aria-hidden="true" tabindex="-1"></a><span class="co"># Here the clustering is performed at 99% identity against the Greengenes 13_8 99% OTUs reference database.</span></span>
+<span id="cb31-79"><a href="qiime2-pipeline.html#cb31-79" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> vsearch cluster-features-open-reference <span class="dt">\</span></span>
+<span id="cb31-80"><a href="qiime2-pipeline.html#cb31-80" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-table</span> <span class="va">$PWD</span>/qiime2_bushmeat/feature-table.qza <span class="dt">\</span></span>
+<span id="cb31-81"><a href="qiime2-pipeline.html#cb31-81" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-sequences</span> <span class="va">$PWD</span>/qiime2_bushmeat/rep-seqs.qza <span class="dt">\</span></span>
+<span id="cb31-82"><a href="qiime2-pipeline.html#cb31-82" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-reference-sequences</span> <span class="va">$PWD</span>/qiime2_bushmeat/rep-seqs-dn-99.qza <span class="dt">\</span></span>
+<span id="cb31-83"><a href="qiime2-pipeline.html#cb31-83" aria-hidden="true" tabindex="-1"></a>  <span class="at">--p-perc-identity</span> 0.99 <span class="dt">\</span></span>
+<span id="cb31-84"><a href="qiime2-pipeline.html#cb31-84" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-clustered-table</span> <span class="va">$PWD</span>/qiime2_bushmeat/feature-table-or-99.qza <span class="dt">\</span></span>
+<span id="cb31-85"><a href="qiime2-pipeline.html#cb31-85" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-clustered-sequences</span> <span class="va">$PWD</span>/qiime2_bushmeat/rep-seqs-or-99.qza <span class="dt">\</span></span>
+<span id="cb31-86"><a href="qiime2-pipeline.html#cb31-86" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-new-reference-sequences</span> <span class="va">$PWD</span>/qiime2_bushmeat/new-ref-seqs-or-99.qza</span>
+<span id="cb31-87"><a href="qiime2-pipeline.html#cb31-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-88"><a href="qiime2-pipeline.html#cb31-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-89"><a href="qiime2-pipeline.html#cb31-89" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
+<span id="cb31-90"><a href="qiime2-pipeline.html#cb31-90" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Performing de novo multiple sequence alignment of representative sequences using MAFFT "</span> </span>
+<span id="cb31-91"><a href="qiime2-pipeline.html#cb31-91" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
+<span id="cb31-92"><a href="qiime2-pipeline.html#cb31-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-93"><a href="qiime2-pipeline.html#cb31-93" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> alignment mafft <span class="dt">\</span></span>
+<span id="cb31-94"><a href="qiime2-pipeline.html#cb31-94" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-sequences</span> <span class="va">$PWD</span>/qiime2_bushmeat/rep-seqs.qza <span class="dt">\</span></span>
+<span id="cb31-95"><a href="qiime2-pipeline.html#cb31-95" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-alignment</span> <span class="va">$PWD</span>/qiime2_bushmeat/aligned-rep-seqs.qza</span>
+<span id="cb31-96"><a href="qiime2-pipeline.html#cb31-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-97"><a href="qiime2-pipeline.html#cb31-97" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
+<span id="cb31-98"><a href="qiime2-pipeline.html#cb31-98" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Removing poor alignment"</span> </span>
+<span id="cb31-99"><a href="qiime2-pipeline.html#cb31-99" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
+<span id="cb31-100"><a href="qiime2-pipeline.html#cb31-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-101"><a href="qiime2-pipeline.html#cb31-101" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> alignment mask <span class="dt">\</span></span>
+<span id="cb31-102"><a href="qiime2-pipeline.html#cb31-102" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-alignment</span> <span class="va">$PWD</span>/qiime2_bushmeat/aligned-rep-seqs.qza <span class="dt">\</span></span>
+<span id="cb31-103"><a href="qiime2-pipeline.html#cb31-103" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-masked-alignment</span> <span class="va">$PWD</span>/qiime2_bushmeat/masked-aligned-rep-seqs.qza</span>
+<span id="cb31-104"><a href="qiime2-pipeline.html#cb31-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-105"><a href="qiime2-pipeline.html#cb31-105" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
+<span id="cb31-106"><a href="qiime2-pipeline.html#cb31-106" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Visualizing masked alignments"</span></span>
+<span id="cb31-107"><a href="qiime2-pipeline.html#cb31-107" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
+<span id="cb31-108"><a href="qiime2-pipeline.html#cb31-108" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> feature-table tabulate-seqs <span class="dt">\</span></span>
+<span id="cb31-109"><a href="qiime2-pipeline.html#cb31-109" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-data</span> <span class="va">$PWD</span>/qiime2_bushmeat/masked-aligned-rep-seqs.qza <span class="dt">\</span></span>
+<span id="cb31-110"><a href="qiime2-pipeline.html#cb31-110" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-visualization</span> <span class="va">$PWD</span>/qiime2_bushmeat/masked-aligned-rep-seqs.qzv</span>
+<span id="cb31-111"><a href="qiime2-pipeline.html#cb31-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-112"><a href="qiime2-pipeline.html#cb31-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-113"><a href="qiime2-pipeline.html#cb31-113" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
+<span id="cb31-114"><a href="qiime2-pipeline.html#cb31-114" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Phylogenetic sequence clustering"</span> </span>
+<span id="cb31-115"><a href="qiime2-pipeline.html#cb31-115" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
+<span id="cb31-116"><a href="qiime2-pipeline.html#cb31-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-117"><a href="qiime2-pipeline.html#cb31-117" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Unrooted tree"</span></span>
+<span id="cb31-118"><a href="qiime2-pipeline.html#cb31-118" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
+<span id="cb31-119"><a href="qiime2-pipeline.html#cb31-119" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> phylogeny fasttree <span class="dt">\</span></span>
+<span id="cb31-120"><a href="qiime2-pipeline.html#cb31-120" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-alignment</span> <span class="va">$PWD</span>/qiime2_bushmeat/masked-aligned-rep-seqs.qza <span class="dt">\</span></span>
+<span id="cb31-121"><a href="qiime2-pipeline.html#cb31-121" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-tree</span> <span class="va">$PWD</span>/qiime2_bushmeat/unrooted-tree.qza</span>
+<span id="cb31-122"><a href="qiime2-pipeline.html#cb31-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-123"><a href="qiime2-pipeline.html#cb31-123" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
+<span id="cb31-124"><a href="qiime2-pipeline.html#cb31-124" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Rooted tree"</span></span>
+<span id="cb31-125"><a href="qiime2-pipeline.html#cb31-125" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
+<span id="cb31-126"><a href="qiime2-pipeline.html#cb31-126" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> phylogeny midpoint-root <span class="dt">\</span></span>
+<span id="cb31-127"><a href="qiime2-pipeline.html#cb31-127" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-tree</span> <span class="va">$PWD</span>/qiime2_bushmeat/unrooted-tree.qza <span class="dt">\</span></span>
+<span id="cb31-128"><a href="qiime2-pipeline.html#cb31-128" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-rooted-tree</span> <span class="va">$PWD</span>/qiime2_bushmeat/rooted-tree.qza</span>
+<span id="cb31-129"><a href="qiime2-pipeline.html#cb31-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-130"><a href="qiime2-pipeline.html#cb31-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-131"><a href="qiime2-pipeline.html#cb31-131" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
+<span id="cb31-132"><a href="qiime2-pipeline.html#cb31-132" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Taxonomic assignment to masked aligned representative sequences"</span></span>
+<span id="cb31-133"><a href="qiime2-pipeline.html#cb31-133" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
+<span id="cb31-134"><a href="qiime2-pipeline.html#cb31-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-135"><a href="qiime2-pipeline.html#cb31-135" aria-hidden="true" tabindex="-1"></a><span class="co">## Using Greengenes 2013-8-99-515-806-nb</span></span>
+<span id="cb31-136"><a href="qiime2-pipeline.html#cb31-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-137"><a href="qiime2-pipeline.html#cb31-137" aria-hidden="true" tabindex="-1"></a><span class="bu">time</span> qiime feature-classifier classify-sklearn <span class="dt">\</span></span>
+<span id="cb31-138"><a href="qiime2-pipeline.html#cb31-138" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-classifier</span> <span class="va">$PWD</span>/gg-13-8-99-515-806-nb-classifier.qza <span class="dt">\</span></span>
+<span id="cb31-139"><a href="qiime2-pipeline.html#cb31-139" aria-hidden="true" tabindex="-1"></a>  <span class="at">--i-reads</span> <span class="va">$PWD</span>/qiime2_bushmeat/rep-seqs-dn-99.qza <span class="dt">\</span></span>
+<span id="cb31-140"><a href="qiime2-pipeline.html#cb31-140" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-classification</span> <span class="va">$PWD</span>/qiime2_bushmeat/taxonomy.qza</span>
+<span id="cb31-141"><a href="qiime2-pipeline.html#cb31-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-142"><a href="qiime2-pipeline.html#cb31-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-143"><a href="qiime2-pipeline.html#cb31-143" aria-hidden="true" tabindex="-1"></a><span class="co">### Visualizing taxonomy classification</span></span>
+<span id="cb31-144"><a href="qiime2-pipeline.html#cb31-144" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> metadata tabulate <span class="dt">\</span></span>
+<span id="cb31-145"><a href="qiime2-pipeline.html#cb31-145" aria-hidden="true" tabindex="-1"></a>  <span class="at">--m-input-file</span> <span class="va">$PWD</span>/qiime2_bushmeat/taxonomy.qza <span class="dt">\</span></span>
+<span id="cb31-146"><a href="qiime2-pipeline.html#cb31-146" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-visualization</span> <span class="va">$PWD</span>/qiime2_bushmeat/taxonomy.qzv</span>
+<span id="cb31-147"><a href="qiime2-pipeline.html#cb31-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-148"><a href="qiime2-pipeline.html#cb31-148" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
+<span id="cb31-149"><a href="qiime2-pipeline.html#cb31-149" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"QIIME2 data transformation"</span></span>
+<span id="cb31-150"><a href="qiime2-pipeline.html#cb31-150" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
+<span id="cb31-151"><a href="qiime2-pipeline.html#cb31-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-152"><a href="qiime2-pipeline.html#cb31-152" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> tools export <span class="dt">\</span></span>
+<span id="cb31-153"><a href="qiime2-pipeline.html#cb31-153" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input-path</span> <span class="va">$PWD</span>/qiime2_bushmeat/feature-table.qza <span class="dt">\</span></span>
+<span id="cb31-154"><a href="qiime2-pipeline.html#cb31-154" aria-hidden="true" tabindex="-1"></a>  <span class="at">--output-path</span> <span class="va">$PWD</span>/qiime2_bushmeat/q2-transformed-tables <span class="co"># Output feature-table.biom </span></span>
+<span id="cb31-155"><a href="qiime2-pipeline.html#cb31-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-156"><a href="qiime2-pipeline.html#cb31-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-157"><a href="qiime2-pipeline.html#cb31-157" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
+<span id="cb31-158"><a href="qiime2-pipeline.html#cb31-158" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Converting BIOM table into Tab-Separated-Values (TSV)"</span></span>
+<span id="cb31-159"><a href="qiime2-pipeline.html#cb31-159" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
+<span id="cb31-160"><a href="qiime2-pipeline.html#cb31-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-161"><a href="qiime2-pipeline.html#cb31-161" aria-hidden="true" tabindex="-1"></a><span class="ex">biom</span> convert <span class="dt">\</span></span>
+<span id="cb31-162"><a href="qiime2-pipeline.html#cb31-162" aria-hidden="true" tabindex="-1"></a>  <span class="at">-i</span> <span class="va">$PWD</span>/qiime2_bushmeat/q2-transformed-tables/feature-table.biom <span class="dt">\</span></span>
+<span id="cb31-163"><a href="qiime2-pipeline.html#cb31-163" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> <span class="va">$PWD</span>/qiime2_bushmeat/q2-transformed-tables/feature-table.tsv <span class="at">--to-tsv</span></span>
+<span id="cb31-164"><a href="qiime2-pipeline.html#cb31-164" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb31-165"><a href="qiime2-pipeline.html#cb31-165" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> tools export <span class="dt">\</span></span>
+<span id="cb31-166"><a href="qiime2-pipeline.html#cb31-166" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input-path</span> <span class="va">$PWD</span>/qiime2_bushmeat/taxonomy.qza <span class="dt">\</span></span>
+<span id="cb31-167"><a href="qiime2-pipeline.html#cb31-167" aria-hidden="true" tabindex="-1"></a>  <span class="at">--output-path</span> <span class="va">$PWD</span>/qiime2_bushmeat/q2-transformed-tables <span class="co"># Output taxonomy.tsv</span></span>
+<span id="cb31-168"><a href="qiime2-pipeline.html#cb31-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-169"><a href="qiime2-pipeline.html#cb31-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-170"><a href="qiime2-pipeline.html#cb31-170" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
+<span id="cb31-171"><a href="qiime2-pipeline.html#cb31-171" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Combining fetature table with taxonomy"</span></span>
+<span id="cb31-172"><a href="qiime2-pipeline.html#cb31-172" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">""</span></span>
+<span id="cb31-173"><a href="qiime2-pipeline.html#cb31-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-174"><a href="qiime2-pipeline.html#cb31-174" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> metadata tabulate <span class="dt">\</span></span>
+<span id="cb31-175"><a href="qiime2-pipeline.html#cb31-175" aria-hidden="true" tabindex="-1"></a>  <span class="at">--m-input-file</span> <span class="va">$PWD</span>/qiime2_bushmeat/q2-transformed-tables/feature-table.tsv <span class="dt">\</span></span>
+<span id="cb31-176"><a href="qiime2-pipeline.html#cb31-176" aria-hidden="true" tabindex="-1"></a>  <span class="at">--m-input-file</span> <span class="va">$PWD</span>/qiime2_bushmeat/q2-transformed-tables/taxonomy.tsv <span class="dt">\</span></span>
+<span id="cb31-177"><a href="qiime2-pipeline.html#cb31-177" aria-hidden="true" tabindex="-1"></a>  <span class="at">--o-visualization</span> <span class="va">$PWD</span>/qiime2_bushmeat/q2-transformed-tables/feature-taxonomy-table.qzv</span>
+<span id="cb31-178"><a href="qiime2-pipeline.html#cb31-178" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-179"><a href="qiime2-pipeline.html#cb31-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-180"><a href="qiime2-pipeline.html#cb31-180" aria-hidden="true" tabindex="-1"></a><span class="co">## Newick tree</span></span>
+<span id="cb31-181"><a href="qiime2-pipeline.html#cb31-181" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> tools export <span class="dt">\</span></span>
+<span id="cb31-182"><a href="qiime2-pipeline.html#cb31-182" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input-path</span> <span class="va">$PWD</span>/qiime2_bushmeat/rooted-tree.qza <span class="dt">\</span></span>
+<span id="cb31-183"><a href="qiime2-pipeline.html#cb31-183" aria-hidden="true" tabindex="-1"></a>  <span class="at">--output-path</span> <span class="va">$PWD</span>/qiime2_bushmeat/q2-transformed-tables/rooted-tree</span>
+<span id="cb31-184"><a href="qiime2-pipeline.html#cb31-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-185"><a href="qiime2-pipeline.html#cb31-185" aria-hidden="true" tabindex="-1"></a><span class="ex">qiime</span> tools export <span class="dt">\</span></span>
+<span id="cb31-186"><a href="qiime2-pipeline.html#cb31-186" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input-path</span> <span class="va">$PWD</span>/qiime2_bushmeat/unrooted-tree.qza <span class="dt">\</span></span>
+<span id="cb31-187"><a href="qiime2-pipeline.html#cb31-187" aria-hidden="true" tabindex="-1"></a>  <span class="at">--output-path</span> <span class="va">$PWD</span>/qiime2_bushmeat/q2-transformed-tables/unrooted-tree</span></code></pre></div>
 </div>
-<div id="tidying-qiime2-output" class="section level2" number="4.4">
+<div id="getting-tidy-otus-and-taxonomy" class="section level2" number="4.5">
 <h2>
-<span class="header-section-number">4.4</span> Tidying qiime2 output<a class="anchor" aria-label="anchor" href="#tidying-qiime2-output"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.5</span> Getting tidy OTUs and taxonomy<a class="anchor" aria-label="anchor" href="#getting-tidy-otus-and-taxonomy"><i class="fas fa-link"></i></a>
 </h2>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">taxlevels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"kingdom"</span>, <span class="st">"phylum"</span>, <span class="st">"class"</span>, <span class="st">"order"</span>, <span class="st">"family"</span>, <span class="st">"genus"</span>, <span class="st">"species"</span><span class="op">)</span>
 
-<span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_delim</a></span><span class="op">(</span><span class="st">"/Volumes/RedSeagate/MOTHUR_BUSHMEAT/SRR7450/qiime2_bushmeat/q2-transformed-tables/taxonomy.tsv"</span>, show_col_types <span class="op">=</span> <span class="cn">F</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+<span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_delim</a></span><span class="op">(</span><span class="st">"data/q2-transformed-tables/taxonomy.tsv"</span>, show_col_types <span class="op">=</span> <span class="cn">F</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html">rename_all</a></span><span class="op">(</span><span class="va">tolower</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span>otu <span class="op">=</span> <span class="st">"feature id"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>confidence <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">confidence</span>, digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
@@ -394,11 +390,11 @@
          <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="https://tidyr.tidyverse.org/reference/separate.html">separate</a></span><span class="op">(</span>col <span class="op">=</span> <span class="va">taxon</span>, into <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html">all_of</a></span><span class="op">(</span><span class="va">taxlevels</span><span class="op">)</span>, sep <span class="op">=</span> <span class="st">"; "</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="st">"RDataRDS/q2_taxonomy.rds"</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_delim</a></span><span class="op">(</span><span class="st">"/Volumes/RedSeagate/MOTHUR_BUSHMEAT/SRR7450/qiime2_bushmeat/q2-transformed-tables/feature-table.tsv"</span>, skip <span class="op">=</span> <span class="fl">1</span>, show_col_types <span class="op">=</span> <span class="cn">F</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_delim</a></span><span class="op">(</span><span class="st">"data/q2-transformed-tables/feature-table.tsv"</span>, skip <span class="op">=</span> <span class="fl">1</span>, show_col_types <span class="op">=</span> <span class="cn">F</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span>otu <span class="op">=</span> <span class="st">"#OTU ID"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="st">"RDataRDS/q2_otutable.rds"</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="st">"RDataRDS/q2_taxonomy.rds"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join</a></span><span class="op">(</span><span class="va">.</span>, <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="st">"RDataRDS/q2_otutable.rds"</span><span class="op">)</span>, by<span class="op">=</span><span class="st">"otu"</span><span class="op">)</span></code></pre></div>
 <pre><code># A tibble: 494 × 19
@@ -422,28 +418,29 @@
 </div>
   <div class="chapter-nav">
 <div class="prev"><a href="mothur-pipeline.html"><span class="header-section-number">3</span> Mcrobial profiling Using mothur</a></div>
-<div class="next"><a href="metaphlan-taxonomic-profiling.html"><span class="header-section-number">5</span> Taxonomic Profiling Metagenomics Sequencing Data</a></div>
+<div class="next"><a href="metaphlan-taxonomic-profiling.html"><span class="header-section-number">5</span> Taxonomic Profiling of Metagenomics Sequencing Data</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
 <li><a class="nav-link" href="#qiime2-pipeline"><span class="header-section-number">4</span> Mcrobial Profiling Using qiime2</a></li>
+<li><a class="nav-link" href="#expected-tabulated-results-1"><span class="header-section-number">4.1</span> Expected tabulated results</a></li>
 <li>
-<a class="nav-link" href="#prerequisites"><span class="header-section-number">4.1</span> Prerequisites</a><ul class="nav navbar-nav">
-<li><a class="nav-link" href="#download-a-qiime2-trained-classifer"><span class="header-section-number">4.1.1</span> Download a QIIME2 trained classifer</a></li>
-<li><a class="nav-link" href="#install-qiime2"><span class="header-section-number">4.1.2</span> Install qiime2</a></li>
-<li><a class="nav-link" href="#running-qiime2-commands"><span class="header-section-number">4.1.3</span> Running QIIME2 commands</a></li>
-<li><a class="nav-link" href="#activate-qiime-environment"><span class="header-section-number">4.1.4</span> Activate qiime environment</a></li>
-<li><a class="nav-link" href="#confirm-installation"><span class="header-section-number">4.1.5</span> Confirm installation</a></li>
-<li><a class="nav-link" href="#validate-associated-metadata"><span class="header-section-number">4.1.6</span> Validate associated metadata</a></li>
-<li><a class="nav-link" href="#tabulate-metadata-in-qiime2-format"><span class="header-section-number">4.1.7</span> Tabulate metadata in QIIME2 format</a></li>
-<li><a class="nav-link" href="#visualizing-tabulated-metadata"><span class="header-section-number">4.1.8</span> Visualizing tabulated metadata</a></li>
+<a class="nav-link" href="#prerequisites"><span class="header-section-number">4.2</span> Prerequisites</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#download-a-qiime2-trained-classifer"><span class="header-section-number">4.2.1</span> Download a QIIME2 trained classifer</a></li>
+<li><a class="nav-link" href="#install-qiime2"><span class="header-section-number">4.2.2</span> Install qiime2</a></li>
+<li><a class="nav-link" href="#running-qiime2-commands"><span class="header-section-number">4.2.3</span> Running QIIME2 commands</a></li>
+<li><a class="nav-link" href="#activate-qiime-environment"><span class="header-section-number">4.2.4</span> Activate qiime environment</a></li>
+<li><a class="nav-link" href="#confirm-installation"><span class="header-section-number">4.2.5</span> Confirm installation</a></li>
+<li><a class="nav-link" href="#validate-associated-metadata"><span class="header-section-number">4.2.6</span> Validate associated metadata</a></li>
+<li><a class="nav-link" href="#tabulate-metadata-in-qiime2-format"><span class="header-section-number">4.2.7</span> Tabulate metadata in QIIME2 format</a></li>
+<li><a class="nav-link" href="#visualizing-tabulated-metadata"><span class="header-section-number">4.2.8</span> Visualizing tabulated metadata</a></li>
 </ul>
 </li>
 <li>
-<a class="nav-link" href="#import-paired-end-fastq-files"><span class="header-section-number">4.2</span> Import paired-end fastq files</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#summarize-and-visualize-preliminary-analysis"><span class="header-section-number">4.2.1</span> Summarize and visualize preliminary analysis</a></li></ul>
+<a class="nav-link" href="#import-paired-end-fastq-files"><span class="header-section-number">4.3</span> Import paired-end fastq files</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#summarize-and-visualize-preliminary-analysis"><span class="header-section-number">4.3.1</span> Summarize and visualize preliminary analysis</a></li></ul>
 </li>
-<li><a class="nav-link" href="#microbial-profiling-pipeline"><span class="header-section-number">4.3</span> Microbial profiling pipeline</a></li>
-<li><a class="nav-link" href="#tidying-qiime2-output"><span class="header-section-number">4.4</span> Tidying qiime2 output</a></li>
+<li><a class="nav-link" href="#microbial-profiling-pipeline"><span class="header-section-number">4.4</span> Microbial profiling pipeline</a></li>
+<li><a class="nav-link" href="#getting-tidy-otus-and-taxonomy"><span class="header-section-number">4.5</span> Getting tidy OTUs and taxonomy</a></li>
 </ul>
 
       <div class="book-extra">

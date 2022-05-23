@@ -4,16 +4,16 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Chapter 5 Taxonomic Profiling Metagenomics Sequencing Data | Bioinformatics Analysis of Microbiome Data</title>
+<title>Chapter 5 Taxonomic Profiling of Metagenomics Sequencing Data | Bioinformatics Analysis of Microbiome Data</title>
 <meta name="author" content="Teresia Mrema-Buza, A Microbiome Data Science Enthusiast and Owner of the Complex Data Insights, LLC, USA">
-<meta name="description" content="5.1 Using MetaPhlAn pipeline. We loop through the fastq files using the following parameters. You can optionally customize these parameters to suit your needs. Note that most parameters are...">
+<meta name="description" content="5.1 Expected tabulated results Relative taxonomic profiles with taxonomy or Relative taxonomic profiles with read count and taxonomy if setting -t rel_ab_w_read_stats.  5.2 Using MetaPhlAn...">
 <meta name="generator" content="bookdown 0.25 with bs4_book()">
-<meta property="og:title" content="Chapter 5 Taxonomic Profiling Metagenomics Sequencing Data | Bioinformatics Analysis of Microbiome Data">
+<meta property="og:title" content="Chapter 5 Taxonomic Profiling of Metagenomics Sequencing Data | Bioinformatics Analysis of Microbiome Data">
 <meta property="og:type" content="book">
-<meta property="og:description" content="5.1 Using MetaPhlAn pipeline. We loop through the fastq files using the following parameters. You can optionally customize these parameters to suit your needs. Note that most parameters are...">
+<meta property="og:description" content="5.1 Expected tabulated results Relative taxonomic profiles with taxonomy or Relative taxonomic profiles with read count and taxonomy if setting -t rel_ab_w_read_stats.  5.2 Using MetaPhlAn...">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Chapter 5 Taxonomic Profiling Metagenomics Sequencing Data | Bioinformatics Analysis of Microbiome Data">
-<meta name="twitter:description" content="5.1 Using MetaPhlAn pipeline. We loop through the fastq files using the following parameters. You can optionally customize these parameters to suit your needs. Note that most parameters are...">
+<meta name="twitter:title" content="Chapter 5 Taxonomic Profiling of Metagenomics Sequencing Data | Bioinformatics Analysis of Microbiome Data">
+<meta name="twitter:description" content="5.1 Expected tabulated results Relative taxonomic profiles with taxonomy or Relative taxonomic profiles with read count and taxonomy if setting -t rel_ab_w_read_stats.  5.2 Using MetaPhlAn...">
 <!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
 <script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><link href="libs/_Sen-0.4.1/font.css" rel="stylesheet">
@@ -50,11 +50,11 @@
         <ul class="book-toc list-unstyled">
 <li><a class="" href="index.html">Bioinformatics Analysis of Microbiome Data</a></li>
 <li class="book-part">BIOINFORMATICS ANALYSIS</li>
-<li><a class="" href="preprocess-16S-reads.html"><span class="header-section-number">1</span> Standard Sequence Preprocessing</a></li>
-<li><a class="" href="preprocess-kneaddata.html"><span class="header-section-number">2</span> Preprocessing Metagenomics Data Using Kneaddata</a></li>
+<li><a class="" href="preprocess-16S-reads.html"><span class="header-section-number">1</span> Preprocessing 16S rRNA Sequencing Data</a></li>
+<li><a class="" href="preprocess-kneaddata.html"><span class="header-section-number">2</span> Preprocessing Metagenomics Sequencing Data</a></li>
 <li><a class="" href="mothur-pipeline.html"><span class="header-section-number">3</span> Mcrobial profiling Using mothur</a></li>
 <li><a class="" href="qiime2-pipeline.html"><span class="header-section-number">4</span> Mcrobial Profiling Using qiime2</a></li>
-<li><a class="active" href="metaphlan-taxonomic-profiling.html"><span class="header-section-number">5</span> Taxonomic Profiling Metagenomics Sequencing Data</a></li>
+<li><a class="active" href="metaphlan-taxonomic-profiling.html"><span class="header-section-number">5</span> Taxonomic Profiling of Metagenomics Sequencing Data</a></li>
 <li class="book-part">APPENDIX</li>
 <li><a class="" href="saved-data-objects.html"><span class="header-section-number">A</span> Saved Data Objects</a></li>
 <li><a class="" href="software-and-packages.html"><span class="header-section-number">B</span> Software and Packages</a></li>
@@ -68,42 +68,41 @@
 </div>
   </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="metaphlan-taxonomic-profiling" class="section level1" number="5">
 <h1>
-<span class="header-section-number">5</span> Taxonomic Profiling Metagenomics Sequencing Data<a class="anchor" aria-label="anchor" href="#metaphlan-taxonomic-profiling"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5</span> Taxonomic Profiling of Metagenomics Sequencing Data<a class="anchor" aria-label="anchor" href="#metaphlan-taxonomic-profiling"><i class="fas fa-link"></i></a>
 </h1>
-<div id="using-metaphlan-pipeline." class="section level2" number="5.1">
+<div id="expected-tabulated-results-2" class="section level2" number="5.1">
 <h2>
-<span class="header-section-number">5.1</span> Using MetaPhlAn pipeline.<a class="anchor" aria-label="anchor" href="#using-metaphlan-pipeline."><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.1</span> Expected tabulated results<a class="anchor" aria-label="anchor" href="#expected-tabulated-results-2"><i class="fas fa-link"></i></a>
+</h2>
+<ol style="list-style-type: decimal">
+<li>Relative taxonomic profiles with taxonomy or</li>
+<li>Relative taxonomic profiles with read count and taxonomy if setting <em>-t rel_ab_w_read_stats</em>.</li>
+</ol>
+</div>
+<div id="using-metaphlan-pipeline." class="section level2" number="5.2">
+<h2>
+<span class="header-section-number">5.2</span> Using MetaPhlAn pipeline.<a class="anchor" aria-label="anchor" href="#using-metaphlan-pipeline."><i class="fas fa-link"></i></a>
 </h2>
 <ul>
 <li>We loop through the fastq files using the following parameters.</li>
 <li>You can optionally customize these parameters to suit your needs.</li>
 <li>Note that most parameters are default setting except the <em>-t rel_ab_w_read_stats</em> which will add the read count to the output.</li>
 </ul>
-<div class="sourceCode" id="cb34"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb34-1"><a href="metaphlan-taxonomic-profiling.html#cb34-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-2"><a href="metaphlan-taxonomic-profiling.html#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> data/<span class="pp">*</span>.fastq.gz</span>
-<span id="cb34-3"><a href="metaphlan-taxonomic-profiling.html#cb34-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">do</span> </span>
-<span id="cb34-4"><a href="metaphlan-taxonomic-profiling.html#cb34-4" aria-hidden="true" tabindex="-1"></a>        <span class="ex">metaphlan</span> <span class="va">$i</span> <span class="dt">\</span></span>
-<span id="cb34-5"><a href="metaphlan-taxonomic-profiling.html#cb34-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">--input_type</span> fastq <span class="dt">\</span></span>
-<span id="cb34-6"><a href="metaphlan-taxonomic-profiling.html#cb34-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">--force</span> <span class="dt">\</span></span>
-<span id="cb34-7"><a href="metaphlan-taxonomic-profiling.html#cb34-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">--bowtie2db</span> /Volumes/SeagateTMB/metaphlan_databases/ <span class="dt">\</span></span>
-<span id="cb34-8"><a href="metaphlan-taxonomic-profiling.html#cb34-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">--nproc</span> 4 <span class="dt">\</span></span>
-<span id="cb34-9"><a href="metaphlan-taxonomic-profiling.html#cb34-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">--stat_q</span> 0.02 <span class="dt">\</span></span>
-<span id="cb34-10"><a href="metaphlan-taxonomic-profiling.html#cb34-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">--min_mapq_val</span> 5 <span class="dt">\</span></span>
-<span id="cb34-11"><a href="metaphlan-taxonomic-profiling.html#cb34-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">--output_file</span> <span class="va">${i</span><span class="op">%</span><span class="va">}</span>_metaphlan3_profile.txt <span class="dt">\</span></span>
-<span id="cb34-12"><a href="metaphlan-taxonomic-profiling.html#cb34-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">--bowtie2out</span> <span class="va">${i</span><span class="op">%</span><span class="va">}</span>_metaphlan3_bowtie2out.txt <span class="dt">\</span></span>
-<span id="cb34-13"><a href="metaphlan-taxonomic-profiling.html#cb34-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">--biom</span> <span class="va">${i</span><span class="op">%</span><span class="va">}</span>_metaphlan3_abundance.biom <span class="dt">\</span></span>
-<span id="cb34-14"><a href="metaphlan-taxonomic-profiling.html#cb34-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">-t</span> rel_ab_w_read_stats</span>
-<span id="cb34-15"><a href="metaphlan-taxonomic-profiling.html#cb34-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">done</span></span></code></pre></div>
-</div>
-<div id="output-of-taxonomic-profiling" class="section level2" number="5.2">
-<h2>
-<span class="header-section-number">5.2</span> Output of taxonomic profiling<a class="anchor" aria-label="anchor" href="#output-of-taxonomic-profiling"><i class="fas fa-link"></i></a>
-</h2>
-<ul>
-<li>OTU table in mothur and QIIME2</li>
-<li>MetaPhlAn pipeline output taxonomic profiles for each input fastq file.</li>
-<li>You can further use some integrated functions to manage the output. For example, the command below merge relative abundance into a single file similar to a transposed OTU table from Mothur and QIIME platforms.</li>
-</ul>
+<div class="sourceCode" id="cb36"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb36-1"><a href="metaphlan-taxonomic-profiling.html#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> data/<span class="pp">*</span>.fastq.gz</span>
+<span id="cb36-2"><a href="metaphlan-taxonomic-profiling.html#cb36-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">do</span> </span>
+<span id="cb36-3"><a href="metaphlan-taxonomic-profiling.html#cb36-3" aria-hidden="true" tabindex="-1"></a>        <span class="ex">metaphlan</span> <span class="va">$i</span> <span class="dt">\</span></span>
+<span id="cb36-4"><a href="metaphlan-taxonomic-profiling.html#cb36-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">--input_type</span> fastq <span class="dt">\</span></span>
+<span id="cb36-5"><a href="metaphlan-taxonomic-profiling.html#cb36-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">--force</span> <span class="dt">\</span></span>
+<span id="cb36-6"><a href="metaphlan-taxonomic-profiling.html#cb36-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">--bowtie2db</span> /Volumes/SeagateTMB/metaphlan_databases/ <span class="dt">\</span></span>
+<span id="cb36-7"><a href="metaphlan-taxonomic-profiling.html#cb36-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">--nproc</span> 4 <span class="dt">\</span></span>
+<span id="cb36-8"><a href="metaphlan-taxonomic-profiling.html#cb36-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">--stat_q</span> 0.02 <span class="dt">\</span></span>
+<span id="cb36-9"><a href="metaphlan-taxonomic-profiling.html#cb36-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">--min_mapq_val</span> 5 <span class="dt">\</span></span>
+<span id="cb36-10"><a href="metaphlan-taxonomic-profiling.html#cb36-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">--output_file</span> <span class="va">${i</span><span class="op">%</span><span class="va">}</span>_metaphlan3_profile.txt <span class="dt">\</span></span>
+<span id="cb36-11"><a href="metaphlan-taxonomic-profiling.html#cb36-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">--bowtie2out</span> <span class="va">${i</span><span class="op">%</span><span class="va">}</span>_metaphlan3_bowtie2out.txt <span class="dt">\</span></span>
+<span id="cb36-12"><a href="metaphlan-taxonomic-profiling.html#cb36-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">--biom</span> <span class="va">${i</span><span class="op">%</span><span class="va">}</span>_metaphlan3_abundance.biom <span class="dt">\</span></span>
+<span id="cb36-13"><a href="metaphlan-taxonomic-profiling.html#cb36-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">-t</span> rel_ab_w_read_stats</span>
+<span id="cb36-14"><a href="metaphlan-taxonomic-profiling.html#cb36-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">done</span></span></code></pre></div>
+
 </div>
 </div>
 
@@ -115,9 +114,9 @@
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
-<li><a class="nav-link" href="#metaphlan-taxonomic-profiling"><span class="header-section-number">5</span> Taxonomic Profiling Metagenomics Sequencing Data</a></li>
-<li><a class="nav-link" href="#using-metaphlan-pipeline."><span class="header-section-number">5.1</span> Using MetaPhlAn pipeline.</a></li>
-<li><a class="nav-link" href="#output-of-taxonomic-profiling"><span class="header-section-number">5.2</span> Output of taxonomic profiling</a></li>
+<li><a class="nav-link" href="#metaphlan-taxonomic-profiling"><span class="header-section-number">5</span> Taxonomic Profiling of Metagenomics Sequencing Data</a></li>
+<li><a class="nav-link" href="#expected-tabulated-results-2"><span class="header-section-number">5.1</span> Expected tabulated results</a></li>
+<li><a class="nav-link" href="#using-metaphlan-pipeline."><span class="header-section-number">5.2</span> Using MetaPhlAn pipeline.</a></li>
 </ul>
 
       <div class="book-extra">
