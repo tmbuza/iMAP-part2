@@ -1,0 +1,103 @@
+# (PART) MICROBIAL PROFILING {-}
+
+# Using Mothur Pipeline {#mothur-workflow}
+
+## Download trained classifer
+- For demo purposes we will use [Silva seed](https://mothur.org/wiki/Silva_reference_files) due to its smaller size.
+
+```bash
+wget https://mothur.s3.us-east-2.amazonaws.com/wiki/silva.seed_v138_1.tgz
+tar xvzf silva.seed_v138_1.tgz
+rm *.tgz
+```
+
+> Other mothur-based classifiers can be found [here](https://mothur.org/wiki/taxonomy_outline/).
+
+## Implementing `mothur` workflow
+### Key Points
+- We recommend getting familiar with the tutorials detailed in [MiSeq SOP](https://mothur.org/wiki/miseq_sop/). .
+
+```{block, type="tmbinfo", echo=TRUE}
+- Run the analysis on `mothur` command line NOT `bash`. This takes the advantage of using the **current** option to refer to the last saved files.
+- If not generating the mapping file automatically you should make sure that it confer to accepted format as in `mothur_mapping_files.tsv` described in the previous section. 
+- In this demo we name the mapping file `bush.files`. This means that all output files will be prefixed with the term <u>bush</u> to reflect the name of the project. Try to avoid longer names.
+```
+
+
+Let's get started! 
+
+### Running analysis interactively
+Interactive approach is the best for learning and reviewing the intermediate output, aka *RAYG* (Review-As-You-Go)[@TMB2019]
+
+```bash
+set.current(processors=1)
+# set.logfile(name=make_files.logfile)
+# make.file(inputdir=., type=fastq.gz, prefix=test)
+
+set.logfile(name=seq_assembly.logfile)
+make.contigs(file=bush.files, outputdir=./test, maxambig=0, maxlength=275);
+unique.seqs(count=current);
+summary.seqs(fasta=current, count=current)
+
+set.logfile(name=seq_align_preclustering.logfile)
+align.seqs(fasta=current, reference=silva.seed_v138_1.align);
+screen.seqs(fasta=current, count=current, start=13862, end=23444, maxhomop=8);
+filter.seqs(fasta=current, vertical=T, trump=.);
+pre.cluster(fasta=current, count=current, diffs=2);
+unique.seqs(fasta=current, count=current);
+
+set.logfile(name=chimera_removal.logfile)
+chimera.vsearch(fasta=current, count=current, dereplicate=t);
+
+set.logfile(name=silva_seed_classification.logfile)
+classify.seqs(fasta=current, count=current, reference=silva.seed_v138_1.align, taxonomy=silva.seed_v138_1.tax, cutoff=100);
+remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-unknown-Archaea-Eukaryota);
+
+set.logfile(name=final_files.logfile)
+rename.file(fasta=current, count=current, taxonomy=current, prefix=final)
+
+set.logfile(name=otu_clustering.logfile)
+dist.seqs(fasta=current, cutoff=0.03);
+cluster(column=current, count=current, cutoff=0.03);
+make.shared(list=current, count=current, label=0.03);
+classify.otu(list=current, count=current, taxonomy=current, label=0.03);
+make.lefse(shared=current, constaxonomy=current);
+make.biom(shared=current, constaxonomy=current);
+
+set.logfile(name=phylotype_clustering.logfile)
+phylotype(taxonomy=current);
+make.shared(list=current, count=current, label=1);
+classify.otu(list=current, count=current, taxonomy=current, label=1);
+make.lefse(shared=current, constaxonomy=current);
+make.biom(shared=current, constaxonomy=current);
+
+set.logfile(name=asv_clustering.logfile)
+make.shared(count=current)
+classify.otu(list=current, count=current, taxonomy=current, label=ASV)
+make.lefse(shared=current, constaxonomy=current)
+make.biom(shared=current, constaxonomy=current)
+
+set.logfile(name=phylogenetic_clustering.logfile)
+dist.seqs(fasta=current, output=lt)
+clearcut(phylip=current)
+```
+
+### Batch analysis
+- We can save the code above as `mothur_code.batch` and place it in a folder named code.
+- Then call `mothur` to run the file from bash command line as shown below.
+
+```bash
+ # if executable mothur is in the path
+ mothur code/mothur_code.batch
+ 
+ # On Linux-like machine if the executable `mothur` is in the working directory.
+./mothur code/mothur_code.batch 
+
+# on Windows machins if the executable `mothur.exe` is in the working directory.
+./mothur.exe code/mothur_code.batch 
+```
+> Be sure to google for better solutions!
+
+
+
+

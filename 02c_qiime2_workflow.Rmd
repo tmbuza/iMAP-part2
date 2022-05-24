@@ -1,0 +1,253 @@
+# Using QIIME2 Workflow{#qiime2-pipeline}
+
+## Download a QIIME2 trained classifer
+- You can use Naive Bayes (nb) classifiers trained on GreenGenes or SILVA database with 99% OTUs. You can train your own classifier using the [q2-feature-classifier](https://github.com/qiime2/q2-feature-classifier).
+
+Here we will download the smallest classifier, the naive classifier trained on [Greengenes 13_8 99% OTUs from 515F/806R region of sequences](https://docs.qiime2.org/2022.2/data-resources/)
+
+```bash
+wget \
+  -O "gg-13-8-99-515-806-nb-classifier.qza" \
+  "https://data.qiime2.org/2022.2/common/gg-13-8-99-515-806-nb-classifier.qza"
+```
+
+## Install qiime2
+- We assumes that you have already installed QIIME 2. If not please do so using the instructions described [here!](https://docs.qiime2.org/2022.2/install/). Below is a simple demo for installing qiime2 on Mac OS.
+
+```bash
+wget https://data.qiime2.org/distro/core/qiime2-2022.2-py38-osx-conda.yml
+conda env create -n qiime2-2022.2 --file qiime2-2022.2-py38-osx-conda.yml
+rm qiime2-2022.2-py39-osx-conda.yml
+```
+
+## Running QIIME2 commands
+- We prefer to use the command line interface [g2cli](https://docs.qiime2.org/2022.2/interfaces/q2cli/).
+- Activate the qiime2 environment: We are using qiime2-2022.2.
+- Then confirm installation.
+
+```bash
+conda activate qiime2-2022.2
+
+## Confirm installation
+qiime info
+```
+
+## Validate metadata
+```bash
+qiime tools inspect-metadata \
+  $PWD/q2-metadata.tsv
+
+## Tabulate metadata in QIIME2 format
+qiime metadata tabulate \
+  --m-input-file $PWD/q2-metadata.tsv \
+  --o-visualization $PWD/qiime2_bushmeat/sample-metadata.qzv
+
+## Visualizing tabulated metadata
+qiime tools view $PWD/qiime2_bushmeat/sample-metadata.qzv
+```
+
+## Import paired-end fastq files
+```bash
+qiime tools import \
+  --type 'SampleData[PairedEndSequencesWithQuality]' \
+  --input-path $PWD/pe-33-manifest.tsv \
+  --output-path $PWD/qiime2_bushmeat/demux.qza \
+  --input-format PairedEndFastqManifestPhred33V2
+
+### Summarize preliminary analysis
+qiime demux summarize \
+  --i-data $PWD/qiime2_bushmeat/demux.qza \
+  --o-visualization $PWD/qiime2_bushmeat/demux.qzv
+
+## Review and pick truncation parameters
+qiime tools view $PWD/qiime2_bushmeat/demux.qzv
+```
+
+## Quality control and clustering
+- Here we can set the parameters as desired.
+- Note that this may take a while, please be patient.
+- In addition to setting the STAR and END time, we also optionally use `time` to gauge the amount of time used for some analysis.
+
+```bash
+time qiime dada2 denoise-paired \
+  --i-demultiplexed-seqs $PWD/qiime2_bushmeat/demux.qza \
+  --p-trim-left-f 0 \
+  --p-trunc-len-f 0 \
+  --p-trim-left-r 0 \
+  --p-trunc-len-r 0 \
+  --o-representative-sequences $PWD/qiime2_bushmeat/rep-seqs.qza \
+  --o-table $PWD/qiime2_bushmeat/feature-table.qza \
+  --o-denoising-stats $PWD/qiime2_bushmeat/stats.qza
+
+### Summarizing denoise statistics
+qiime metadata tabulate \
+  --m-input-file $PWD/qiime2_bushmeat/stats.qza \
+  --o-visualization $PWD/qiime2_bushmeat/stats.qzv
+
+### Visualizing denoise statistics
+qiime tools view $PWD/qiime2_bushmeat/stats.qzv
+
+
+### "Visualizing denoise statistics
+qiime metadata tabulate \
+  --m-input-file $PWD/qiime2_bushmeat/stats.qza \
+  --o-visualization $PWD/qiime2_bushmeat/stats.qzv
+
+
+### Visualizing feature (sample & seqs) table
+qiime feature-table summarize \
+  --i-table $PWD/qiime2_bushmeat/feature-table.qza \
+  --o-visualization $PWD/qiime2_bushmeat/feature-table.qzv \
+  --m-sample-metadata-file $PWD/q2-metadata.tsv
+
+### Visualizing representative sequences
+qiime feature-table tabulate-seqs \
+  --i-data $PWD/qiime2_bushmeat/rep-seqs.qza \
+  --o-visualization $PWD/qiime2_bushmeat/rep-seqs.qzv
+```
+
+
+## Explore QIIME2 OTU Clustering Methods
+### De novo clustering
+- Sequences are clustered against one another. 
+
+```bash
+qiime vsearch cluster-features-de-novo \
+  --i-table $PWD/qiime2_bushmeat/feature-table.qza \
+  --i-sequences $PWD/qiime2_bushmeat/rep-seqs.qza \
+  --p-perc-identity 0.99 \
+  --o-clustered-table $PWD/qiime2_bushmeat/feature-table-dn-99.qza \
+  --o-clustered-sequences $PWD/qiime2_bushmeat/rep-seqs-dn-99.qza
+
+qiime feature-table tabulate-seqs \
+  --i-data $PWD/qiime2_bushmeat/rep-seqs-dn-99.qza \
+  --o-visualization $PWD/qiime2_bushmeat/rep-seqs-dn-99.qzv
+```
+
+### Closed-reference clustering
+- Here the clustering is performed at 99% identity against the Greengenes reference database.
+```bash
+qiime vsearch cluster-features-closed-reference \
+  --i-table $PWD/qiime2_bushmeat/feature-table.qza \
+  --i-sequences $PWD/qiime2_bushmeat/rep-seqs.qza \
+  --i-reference-sequences $PWD/qiime2_bushmeat/rep-seqs-dn-99.qza \
+  --p-perc-identity 0.99 \
+  --o-clustered-table $PWD/qiime2_bushmeat/feature-table-cr-99.qza \
+  --o-clustered-sequences $PWD/qiime2_bushmeat/rep-seqs-cr-99.qza \
+  --o-unmatched-sequences $PWD/qiime2_bushmeat/unmatched-cr-99.qza
+```
+
+### Open-reference clustering
+- Here the clustering is performed at 99% identity against the Greengenes reference database.
+
+```bash
+qiime vsearch cluster-features-open-reference \
+  --i-table $PWD/qiime2_bushmeat/feature-table.qza \
+  --i-sequences $PWD/qiime2_bushmeat/rep-seqs.qza \
+  --i-reference-sequences $PWD/qiime2_bushmeat/rep-seqs-dn-99.qza \
+  --p-perc-identity 0.99 \
+  --o-clustered-table $PWD/qiime2_bushmeat/feature-table-or-99.qza \
+  --o-clustered-sequences $PWD/qiime2_bushmeat/rep-seqs-or-99.qza \
+  --o-new-reference-sequences $PWD/qiime2_bushmeat/new-ref-seqs-or-99.qza
+```
+
+##  Alignment of representative sequences 
+- The MAFFT (Multiple Alignment using Fast Fourier Transform) software provides alignments of the representative sequences.
+- Then we will run alignment mask function to remove poor alignments.
+
+```bash
+### Multiple alignment
+qiime alignment mafft \
+  --i-sequences $PWD/qiime2_bushmeat/rep-seqs.qza \
+  --o-alignment $PWD/qiime2_bushmeat/aligned-rep-seqs.qza
+
+### Mask poor alignment
+qiime alignment mask \
+  --i-alignment $PWD/qiime2_bushmeat/aligned-rep-seqs.qza \
+  --o-masked-alignment $PWD/qiime2_bushmeat/masked-aligned-rep-seqs.qza
+
+### Visualizing masked alignments
+qiime feature-table tabulate-seqs \
+  --i-data $PWD/qiime2_bushmeat/masked-aligned-rep-seqs.qza \
+  --o-visualization $PWD/qiime2_bushmeat/masked-aligned-rep-seqs.qzv
+
+qiime tools view $PWD/qiime2_bushmeat/stats.qzv
+```
+
+## Phylogenetic sequence clustering" 
+```bash
+### Unrooted tree
+qiime phylogeny fasttree \
+  --i-alignment $PWD/qiime2_bushmeat/masked-aligned-rep-seqs.qza \
+  --o-tree $PWD/qiime2_bushmeat/unrooted-tree.qza
+
+### Rooted tree
+qiime phylogeny midpoint-root \
+  --i-tree $PWD/qiime2_bushmeat/unrooted-tree.qza \
+  --o-rooted-tree $PWD/qiime2_bushmeat/rooted-tree.qza
+```
+
+<br>
+
+## Taxonomic assignment
+- Using Greengenes 2013-8-99-515-806-nb
+- Input: Representative sequences generated by *denovo* method.
+- We can then use tools view to visualize individual feature, the assigned taxonomy and the confidence value.
+
+```bash
+### Classifying sequences
+time qiime feature-classifier classify-sklearn \
+  --i-classifier $PWD/gg-13-8-99-515-806-nb-classifier.qza \
+  --i-reads $PWD/qiime2_bushmeat/rep-seqs-dn-99.qza \
+  --o-classification $PWD/qiime2_bushmeat/taxonomy.qza
+
+## Visualizing taxonomy classification
+qiime metadata tabulate \
+  --m-input-file $PWD/qiime2_bushmeat/taxonomy.qza \
+  --o-visualization $PWD/qiime2_bushmeat/taxonomy.qzv
+
+qiime tools view $PWD/qiime2_bushmeat/taxonomy.qzv
+```
+
+## Output conversion
+
+### Creating tab-separated feature table
+```bash
+qiime tools export \
+  --input-path $PWD/qiime2_bushmeat/feature-table.qza \
+  --output-path $PWD/qiime2_bushmeat/q2-transformed-tables
+
+biom convert \
+  -i $PWD/qiime2_bushmeat/q2-transformed-tables/feature-table.biom \
+  -o $PWD/qiime2_bushmeat/q2-transformed-tables/feature-table.tsv --to-tsv
+```
+
+### Creating tab-separated taxonomy table
+```bash
+qiime tools export \
+  --input-path $PWD/qiime2_bushmeat/taxonomy.qza \
+  --output-path $PWD/qiime2_bushmeat/q2-transformed-tables
+```
+
+### Tabulating fetature table with taxonomy"
+```bash
+qiime metadata tabulate \
+  --m-input-file $PWD/qiime2_bushmeat/q2-transformed-tables/feature-table.tsv \
+  --m-input-file $PWD/qiime2_bushmeat/q2-transformed-tables/taxonomy.tsv \
+  --o-visualization $PWD/qiime2_bushmeat/q2-transformed-tables/feature-taxonomy-table.qzv
+  
+qiime tools view $PWD/qiime2_bushmeat/q2-transformed-tables/feature-taxonomy-table.qzv
+```
+
+## Exporting unrooted and rooted Newick tree
+```bash
+### Unrooted Newick tree
+qiime tools export \
+  --input-path $PWD/qiime2_bushmeat/unrooted-tree.qza \
+  --output-path $PWD/qiime2_bushmeat/q2-transformed-tables/unrooted-tree
+
+### rooted Newick tree
+qiime tools export \
+  --input-path $PWD/qiime2_bushmeat/rooted-tree.qza \
+  --output-path $PWD/qiime2_bushmeat/q2-transformed-tables/rooted-tree
+```

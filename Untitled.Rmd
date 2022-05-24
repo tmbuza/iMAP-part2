@@ -1,0 +1,29 @@
+# Microbiome Profiling from Metagenomics Sequencing Data {#microbial_in_metagenomics}
+
+## Using MetaPhlAn pipeline.
+- We loop through the fastq files using the following parameters.
+- You can optionally customize these parameters to suit your needs.
+- Note that most parameters are default setting except the *-t rel_ab_w_read_stats* which will add the read count to the output.
+
+```bash
+for i in data/*.fastq.gz
+	do 
+		metaphlan $i \
+		--input_type fastq \
+		--force \
+		--bowtie2db /Volumes/SeagateTMB/metaphlan_databases/ \
+		--nproc 4 \
+		--stat_q 0.02 \
+		--min_mapq_val 5 \
+		--output_file ${i%}_metaphlan3_profile.txt \
+		--bowtie2out ${i%}_metaphlan3_bowtie2out.txt \
+		--biom ${i%}_metaphlan3_abundance.biom \
+    -t rel_ab_w_read_stats
+	done
+```
+
+## Using HUMAnN pipeline.
+```{r}
+
+```
+

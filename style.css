@@ -22,3 +22,7 @@ pre code {
 .figure {
   margin: auto;
 }
+
+.book-extra #book-source, #book-edit {
+  display: none;
+}

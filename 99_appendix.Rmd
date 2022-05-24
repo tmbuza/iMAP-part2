@@ -27,7 +27,7 @@ rdata
 ## CSV or TSV Format Files
 ```{r}
 
-list.files(path="./data", pattern = "*.csv|tsv", full.names = TRUE)
+list.files(path="./RDataRDS", pattern = "*.csv|tsv", full.names = TRUE)
 
 ```
 
@@ -61,14 +61,6 @@ lsdata("RDataRDS/saved_objects.RData")
 * `rmarkdown` (v. `r packageVersion("rmarkdown")`)
 * `bookdown` (v. `r packageVersion("bookdown")`)
 
-<!-- * `ggpubr` (v. `r packageVersion("ggpubr")`) -->
-<!-- * `downlit` (v. `r packageVersion("downlit")`) -->
-<!-- * `phyloseq` (v. `r packageVersion("phyloseq")`) -->
-<!-- * `ape` (v. `r packageVersion("ape")`) -->
-<!-- * `ggtext` (v. `r packageVersion("ggtext")`) -->
-<!-- * `dendextend` (v. `r packageVersion("dendextend")`) -->
-<!-- * `metagMisc` (v. `r packageVersion("metagMisc")`) -->
-<!-- * `cgwtools` (v. `r packageVersion("cgwtools")`) -->
 
 ## Available on machine used 
 ```{r}

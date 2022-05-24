@@ -36,8 +36,9 @@ knitr::write_bib(c(
 ), 'library/packages.bib')
 ```
 
-```{r setup, include=FALSE}
+```{r setup, echo=FALSE}
 source(file = "R/common.R")
+if (!dir.exists("data")) {dir.create("data")}
 ```
 
 # Bioinformatics Analysis of Microbiome Data {-#frontpage}
