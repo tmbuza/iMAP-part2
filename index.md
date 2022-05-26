@@ -1,4 +1,4 @@
-# iMAP-PART2<br>Bioinformatics Analysis of Microbiome Data
+# Bioinformatics Analysis of Microbiome Data
 
 <br>
 
