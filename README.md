@@ -6,7 +6,7 @@
 
 <br>
 
-The <strong>iMAP-PART2</strong> is one of the practical user guide for providing analytical support to the microbiome research community. Explore more guides from the table below:
+The <strong>iMAP-PART2</strong> is one of the practical user guides for providing analytical support to the microbiome research community. Explore more guides from the table below:
 
 ## Related resources
 
