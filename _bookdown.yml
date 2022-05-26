@@ -10,7 +10,8 @@ rmd_files: [
 "02a_read_preprocessing.Rmd",
 "02b_mothur_workflow.Rmd",
 "02c_qiime2_workflow.Rmd",
-"02d_metaphlan_human_pipeline.Rmd",
+"02d_metaphlan_pipeline.Rmd",
+"02e_humann_pipeline.Rmd",
 "99_appendix.Rmd",
 "999-references.Rmd"
 ]

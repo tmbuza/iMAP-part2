@@ -1,0 +1,34 @@
+# (PART) FUNCTIONAL PROFILING {-}
+# Using HUMAnN Pipeline {#humann-pipeline}
+
+## Quick glimpse
+Although HUMAnN is mostly used for profiling the abundance of microbial metabolic pathways, it also generate intermediate files (`bugs_list.tsv`) similar to the taxonomic profiles from MetaPhlAn.
+
+## Expected tabulated output
+1. Microbial abundance, aka `bugs_list.tsv` files.
+2. Gene families.
+3. Pathway abundance.
+4. Pathway coverage.
+
+## Implementing HUMAnN pipeline
+```bash
+for i in data/*.fastq.gz;
+  do
+    time humann \
+    -i $i \
+    -o humann3_out \
+    --resume \
+    --threads 4 \
+    --memory-use maximum \
+    --input-format fastq \
+    --bypass-translated-search;
+  done
+```
+
+## Merging the tables
+```bash
+mkdir -p humann3_profiles
+humann_join_tables --input humann3_out --output humann3_profiles/humann3_genefamilies.tsv --file_name genefamilies
+humann_join_tables --input humann3_out --output humann3_profiles/humann3_pathcoverage.tsv --file_name pathcoverage
+humann_join_tables --input humann3_out --output humann3_profiles/humann3_pathabundance.tsv --file_name pathabundance
+```

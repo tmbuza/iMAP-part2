@@ -1,0 +1,137 @@
+<!-- # (PART) METAGENOMIC PROFILING {-} -->
+
+# Using MetaPhlAn Pipeline {#metaphlan-pipeline}
+- We loop through the fastq files using the following parameters.
+- You can optionally customize these parameters to suit your needs.
+- Note that most parameters are default setting except the *-t rel_ab_w_read_stats* which will add the read count to the output.
+
+```bash
+for i in data/*.fastq.gz
+	do 
+		metaphlan $i \
+		--input_type fastq \
+		--force \
+		--bowtie2db /Volumes/SeagateTMB/metaphlan_databases/ \
+		--nproc 4 \
+		--stat_q 0.02 \
+		--min_mapq_val 5 \
+		--output_file ${i%}_metaphlan3_profile.txt \
+		--bowtie2out ${i%}_metaphlan3_bowtie2out.txt \
+		--biom ${i%}_metaphlan3_abundance.biom \
+    -t rel_ab_w_read_stats
+	done
+	
+# Merging the profiles tables and store in the folder named metaphlan3_profiles
+mkdir -p metaphlan3_profiles
+merge_metaphlan_tables.py metaphlan3_profiles/*_metaphlan3_profile*.txt > metaphlan3_profiles/merged_abundance_table.txt
+
+```
+
+## Processing MetaPhlAn Output
+
+### Merged microbial abundance
+- First we create an empty column to hold the file names.
+- Then we loop through each file to fill the actual file names in the dataframe.
+- Then we create the abund_table containing OTU ID, taxa and abundances.
+
+> Note: We specify the path where the `metaphlan` output is located. Replace the path to match yours.
+
+
+```{r withcounts}
+library(tidyverse)
+library(data.table)
+
+set.seed(110912)
+
+path <- "/Volumes/RedSeagate/SYNTHETIC/microbes/data/*_profile.txt"
+files <- Sys.glob(path)
+taxlevels <- c("Domain", "Phylum", "Class", "Order", "Family", "Genus", "Species")
+
+merged_abund_table <- data.frame(ModelName = character(), Object = character(), stringsAsFactors = FALSE) %>%
+  mutate(Filename = "")
+
+for (i in 1:length(files)){
+    currentFile = read_delim(files[i], skip = 4, show_col_types = FALSE) %>% mutate(Filename = files[i])
+    merged_abund_table = rbind(merged_abund_table, currentFile)
+}
+
+colnames(merged_abund_table)[1] <- "clade_name"
+
+abund_table <- merged_abund_table %>% 
+  rename_all(tolower) %>%
+  select(sample_id = filename, taxonomy = clade_name, rel_abund = relative_abundance, mapped_read = estimated_number_of_reads_from_the_clade) %>% 
+  dplyr::filter(grepl("s__", taxonomy)) %>%
+  # dplyr::filter(grepl("g__", taxonomy)) %>%
+  mutate(sample_id = str_replace_all(sample_id, ".*/", ""),
+         sample_id = str_replace_all(sample_id, ".fast.*", "")) %>% 
+  group_by(sample_id, taxonomy, rel_abund, mapped_read) %>%
+  summarize(count = sum(mapped_read), .groups="drop") %>%
+  group_by(sample_id) %>%
+  mutate(rel_abund = round(rel_abund / 100, digits = 4),
+         rel_mapped_read = round(mapped_read / sum(mapped_read), digits = 4)) %>% 
+  ungroup() %>% 
+  select(-count) %>% 
+  mutate(otu= paste("otu", seq(1:length(rownames(.))), sep = ""), .before = 1) %>% 
+  separate(taxonomy, into = all_of(taxlevels), sep = "\\|")
+
+head(abund_table)
+```
+
+### Species relative abundance
+```{r}
+m3_species_rel_abund <- as.data.frame(abund_table) %>%
+  rename_all(tolower) %>% 
+  select(sample_id, otu = species, rel_abund) %>%
+  group_by(sample_id, otu) %>% 
+  summarise(rel_abund = sum(rel_abund), .groups = "drop") %>% 
+  group_by(sample_id, otu) %>% 
+  summarise(rel_abund = round(rel_abund/100, digits = 4), .groups = "drop") %>% 
+  ungroup() %>% 
+  pivot_wider(id_cols = otu, names_from = sample_id, values_from = rel_abund) %>%
+  mutate_all(~replace(., is.na(.), 0))
+  # mutate(otu = paste("otu", seq(1:length(rownames(df_rel_genus))), sep = ""), .before = 1)
+
+head(m3_species_rel_abund) %>% as.data.frame()
+
+write_csv(m3_species_rel_abund, "RDataRDS/m3_species_rel_abund.csv")
+saveRDS(m3_species_rel_abund, "RDataRDS/m3_species_rel_abund.rds")
+```
+
+
+### Species raw abundance based on mapped reads
+```{r}
+m3_species_raw_read <- as.data.frame(abund_table) %>%
+  rename_all(tolower) %>% 
+  select(sample_id, otu = species, mapped_read) %>%
+  pivot_wider(id_cols = otu, names_from = sample_id, values_from = mapped_read) %>%
+  mutate_all(~replace(., is.na(.), 0))
+  # mutate(otu = paste("otu", seq(1:length(rownames(df_rel_genus))), sep = ""), .before = 1)
+
+head(m3_species_raw_read) %>% as.data.frame()
+
+write_csv(m3_species_raw_read, "RDataRDS/m3_species_raw_read.csv")
+saveRDS(m3_species_raw_read, "RDataRDS/m3_species_raw_read.rds")
+```
+
+
+### Species relative abundance based on mapped reads
+```{r}
+m3_species_rel_read <- as.data.frame(abund_table) %>%
+  rename_all(tolower) %>% 
+  select(sample_id, otu = species, mapped_read) %>%
+  group_by(sample_id, otu) %>% 
+  summarise(mapped_read = sum(mapped_read), .groups = "drop") %>% 
+  group_by(sample_id) %>% 
+  mutate(rel_read = round(mapped_read / sum(mapped_read), digits = 4)) %>% 
+  ungroup() %>%
+  pivot_wider(id_cols = otu, names_from = sample_id, values_from = rel_read) %>%
+  mutate_all(~replace(., is.na(.), 0))
+
+  # mutate(otu = paste("otu", seq(1:length(rownames(df_rel_genus))), sep = ""), .before = 1)
+
+head(m3_species_rel_read) %>% as.data.frame()
+
+write_csv(m3_species_rel_read, "RDataRDS/m3_species_rel_read.csv")
+saveRDS(m3_species_rel_read, "RDataRDS/m3_species_rel_read.rds")
+```
+
