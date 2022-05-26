@@ -3,4 +3,4 @@ show_downloads: true
 title:
 description: A practical user guide for bioinformatics analysis of microbiome data.
 github:
-  is_project_page: false
+  is_project_page: true
