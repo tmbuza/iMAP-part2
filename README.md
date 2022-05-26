@@ -4,7 +4,7 @@
 
 ![Workflow for bioinformatics analysis of microbiome data.](img/part2_flow.png)
 
-The iMAP-PART2 is one of the practical user guide series]</strong> for supporting the <a class="text-light" href="https://complexdatainsights.com/books/microbiome-analysis/end-to-end-user-guide/">Systematic Microbiome Data Analysis (SMDA)</a> beyond the traditional approaches. 
+The iMAP-PART2 is one of the practical user guide series</strong> providing <a class="text-light" href="https://complexdatainsights.com/books/microbiome-analysis/end-to-end-user-guide/">Systematic Microbiome Data Analysis (SMDA)</a> beyond the traditional approaches. 
 
 ## Related resources
 

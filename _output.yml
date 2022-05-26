@@ -6,7 +6,7 @@ bookdown::gitbook:
         <li><a href="./">Microbiome Bioinformatics</a></li>
       after: |
         <li>This practical user guide was built by the <a href:"https://bookdown.org/">bookdown</a> R package</a></li>
-    edit: https://github.com/CDI2021/smda_part2/edit/main/%s
+    edit: https://github.com/tmbuza/iMAP-part2/edit/main/%s
     download: ["pdf", "epub"]
 
 bookdown::pdf_book:
@@ -23,7 +23,7 @@ bookdown::bs4_book:
   footnotes_inline: false
   split_bib: false
   repo:
-    base: https://github.com/CDI2021/smda_part2
+    base: https://github.com/tmbuza/iMAP-part2
     branch: main
     # subdir: book
     icon: "fas fa-air-freshener"
