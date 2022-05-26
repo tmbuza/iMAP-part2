@@ -115,4 +115,4 @@ Investigating the role of microbial communities in health and disease requires a
 This guide is divided into chapters to facilitate easy navigation. Each chapter contains several sections as displayed in the navigation bars on the left and right. Click the hyper-linked text if you want to jump into a specific chapter or section.
 
 ## Code availability {-}
-The code is available at a public [GitHub repository](https://github.com/tmbuza/microbiome-part2/). If interested you can request a consulting service by contacting the developer of this repo using <a href="https://complexdatainsights.com/contact-us">this contact form</a>. 
+The code that generated this guide is available at a public [GitHub repository](https://github.com/tmbuza/iMAP-part2/) or via a [GH-Page](https://tmbuza.github.io/iMAP-part2/). If interested you can request a consulting service by contacting the developer of this repo using <a href="https://complexdatainsights.com/contact-us">this contact form</a>. 
