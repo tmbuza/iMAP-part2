@@ -1,6 +1,6 @@
 <!-- # (PART) METAGENOMIC PROFILING {-} -->
 
-# Using MetaPhlAn Pipeline {#metaphlan-pipeline}
+# Taxonomic Profiling Using MetaPhlAn Pipeline {#metaphlan-pipeline}
 - We loop through the fastq files using the following parameters.
 - You can optionally customize these parameters to suit your needs.
 - Note that most parameters are default setting except the *-t rel_ab_w_read_stats* which will add the read count to the output.
@@ -27,111 +27,212 @@ merge_metaphlan_tables.py metaphlan3_profiles/*_metaphlan3_profile*.txt > metaph
 
 ```
 
-## Processing MetaPhlAn Output
-
-### Merged microbial abundance
+## Merging abundance files
 - First we create an empty column to hold the file names.
-- Then we loop through each file to fill the actual file names in the dataframe.
-- Then we create the abund_table containing OTU ID, taxa and abundances.
+- Then we loop through each file to fill the actual file names.
+- Then we create the m3_merged_abund_table.rds containing sample ID, taxonomy and the abundances.
 
-> Note: We specify the path where the `metaphlan` output is located. Replace the path to match yours.
-
+> Note: We will specify the path where the `metaphlan` output is located. Replace the path to match yours.
 
 ```{r withcounts}
-library(tidyverse)
-library(data.table)
+source("R/common.R")
 
 set.seed(110912)
 
 path <- "/Volumes/RedSeagate/SYNTHETIC/microbes/data/*_profile.txt"
 files <- Sys.glob(path)
-taxlevels <- c("Domain", "Phylum", "Class", "Order", "Family", "Genus", "Species")
 
-merged_abund_table <- data.frame(ModelName = character(), Object = character(), stringsAsFactors = FALSE) %>%
+merged_files <- data.frame(ModelName = character(), Object = character(), stringsAsFactors = FALSE) %>%
   mutate(Filename = "")
 
 for (i in 1:length(files)){
     currentFile = read_delim(files[i], skip = 4, show_col_types = FALSE) %>% mutate(Filename = files[i])
-    merged_abund_table = rbind(merged_abund_table, currentFile)
+    merged_files = rbind(merged_files, currentFile)
 }
 
-colnames(merged_abund_table)[1] <- "clade_name"
-
-abund_table <- merged_abund_table %>% 
+m3_merged_abund_table <- merged_files %>% 
   rename_all(tolower) %>%
-  select(sample_id = filename, taxonomy = clade_name, rel_abund = relative_abundance, mapped_read = estimated_number_of_reads_from_the_clade) %>% 
-  dplyr::filter(grepl("s__", taxonomy)) %>%
-  # dplyr::filter(grepl("g__", taxonomy)) %>%
+  rename(clade_name = colnames(merged_files)[1],
+         sample_id = filename,
+         rel_abund = relative_abundance, 
+         mapped_read = estimated_number_of_reads_from_the_clade) %>% 
   mutate(sample_id = str_replace_all(sample_id, ".*/", ""),
-         sample_id = str_replace_all(sample_id, ".fast.*", "")) %>% 
-  group_by(sample_id, taxonomy, rel_abund, mapped_read) %>%
-  summarize(count = sum(mapped_read), .groups="drop") %>%
-  group_by(sample_id) %>%
-  mutate(rel_abund = round(rel_abund / 100, digits = 4),
-         rel_mapped_read = round(mapped_read / sum(mapped_read), digits = 4)) %>% 
-  ungroup() %>% 
+         sample_id = str_replace_all(sample_id, ".fast.*", "")) %>%
+  select(sample_id, taxonomy = clade_name, rel_abund, mapped_read)
+    
+head(m3_merged_abund_table) %>% as.data.frame()
+
+saveRDS(m3_merged_abund_table, "RDataRDS/m3_merged_abund_table.rds")
+```
+
+## Abundance distribution at taxon-level
+
+```{r m3_taxon_bars, fig.height=6, fig.width=6}
+library(ggplot2)
+m3_merged_abund_table <- readRDS("RDataRDS/m3_merged_abund_table.rds")
+
+m3_merged_abund_table %>% 
+  select(sample_id, taxonomy, rel_abund) %>% 
+  distinct() %>% 
+  dplyr::filter(!grepl("\\|p__*", taxonomy)) %>%
+  group_by(sample_id, taxonomy, rel_abund) %>%
+  summarise(count = sum(rel_abund),
+            rel_abund = rel_abund/100, .groups = "drop") %>% 
   select(-count) %>% 
-  mutate(otu= paste("otu", seq(1:length(rownames(.))), sep = ""), .before = 1) %>% 
+  mutate(taxonomy = str_replace_all(taxonomy, ".*__", "")) %>% 
+  ggplot(aes(x = sample_id, y = rel_abund, fill = taxonomy)) +
+  geom_col() +
+  theme_bw() +
+  labs(x = "", y = "Relative Abundance", title = "", fill = "Kingdom") +
+  noxlabels +
+  scale_y_continuous(expand = c(0, 0))
+
+m3_merged_abund_table %>% 
+  select(sample_id, taxonomy, rel_abund) %>% 
+  distinct() %>% 
+  dplyr::filter(!grepl("\\|c__*", taxonomy),
+                grepl("p__*", taxonomy)) %>%
+  mutate(taxonomy = str_replace_all(taxonomy, ".*__", "")) %>% 
+  group_by(sample_id, taxonomy, rel_abund) %>%
+  summarise(count = sum(rel_abund),
+            rel_abund = rel_abund/100, .groups = "drop") %>% 
+  select(-count) %>% 
+  ggplot(aes(x = sample_id, y = rel_abund, fill = taxonomy)) +
+  geom_col(position = "fill") +
+  theme_bw() +
+  labs(x = "", y = "Relative Abundance", title = "", fill = "Phylum") +
+  noxlabels +
+  scale_y_continuous(expand = c(0, 0))
+```
+
+```{r eval=FALSE, include=FALSE}
+m3_merged_abund_table %>% 
+  select(sample_id, taxonomy, rel_abund) %>% 
+  distinct() %>% 
+  dplyr::filter(!grepl("\\|o__*", taxonomy),
+                grepl("c__*", taxonomy)) %>%
+  mutate(taxonomy = str_replace_all(taxonomy, ".*__", "")) %>% 
+  group_by(sample_id, taxonomy, rel_abund) %>%
+  summarise(count = sum(rel_abund),
+            rel_abund = rel_abund/100, .groups = "drop") %>% 
+  select(-count) %>% 
+  ggplot(aes(x = sample_id, y = rel_abund, fill = taxonomy)) +
+  geom_col(position = "fill") +
+  theme_bw() +
+  labs(x = "", y = "Relative Abundance", title = "", fill = "Class") +
+  noxlabels +
+  scale_y_continuous(expand = c(0, 0))
+
+m3_merged_abund_table %>% 
+  select(sample_id, taxonomy, rel_abund) %>% 
+  distinct() %>% 
+  dplyr::filter(!grepl("\\|f__*", taxonomy),
+                grepl("o__*", taxonomy)) %>%
+  mutate(taxonomy = str_replace_all(taxonomy, ".*__", "")) %>% 
+  group_by(sample_id, taxonomy, rel_abund) %>%
+  summarise(count = sum(rel_abund),
+            rel_abund = rel_abund/100, .groups = "drop") %>% 
+  select(-count) %>% 
+  ggplot(aes(x = sample_id, y = rel_abund, fill = taxonomy)) +
+  geom_col(position = "fill") +
+  theme_bw() +
+  labs(x = "", y = "Relative Abundance", title = "", fill = "Order") +
+  noxlabels +
+  scale_y_continuous(expand = c(0, 0))
+
+m3_merged_abund_table %>% 
+  select(sample_id, taxonomy, rel_abund) %>% 
+  distinct() %>% 
+  dplyr::filter(!grepl("\\|g__*", taxonomy),
+                grepl("f__*", taxonomy)) %>%
+  mutate(taxonomy = str_replace_all(taxonomy, ".*__", "")) %>% 
+  group_by(sample_id, taxonomy, rel_abund) %>%
+  summarise(count = sum(rel_abund),
+            rel_abund = rel_abund/100, .groups = "drop") %>% 
+  select(-count) %>% 
+  ggplot(aes(x = sample_id, y = rel_abund, fill = taxonomy)) +
+  geom_col(position = "fill") +
+  theme_bw() +
+  labs(x = "", y = "Relative Abundance", title = "", fill = "Family") +
+  noxlabels +
+  scale_y_continuous(expand = c(0, 0))
+
+m3_merged_abund_table %>% 
+  select(sample_id, taxonomy, rel_abund) %>% 
+  distinct() %>% 
+  dplyr::filter(!grepl("\\|s__*", taxonomy),
+                grepl("g__*", taxonomy)) %>%
+  mutate(taxonomy = str_replace_all(taxonomy, ".*__", "")) %>% 
+  group_by(sample_id, taxonomy, rel_abund) %>%
+  summarise(count = sum(rel_abund),
+            rel_abund = rel_abund/100, .groups = "drop") %>% 
+  select(-count) %>% 
+  ggplot(aes(x = sample_id, y = rel_abund, fill = taxonomy)) +
+  geom_col(position = "fill") +
+  theme_bw() +
+  labs(x = "", y = "Relative Abundance", title = "", fill = "Genus") +
+  noxlabels +
+  scale_y_continuous(expand = c(0, 0))
+
+m3_merged_abund_table %>% 
+  select(sample_id, taxonomy, rel_abund) %>% 
+  distinct() %>% 
+  dplyr::filter(grepl("s__*", taxonomy)) %>%
+  mutate(taxonomy = str_replace_all(taxonomy, ".*__", "")) %>% 
+  group_by(sample_id, taxonomy, rel_abund) %>%
+  summarise(count = sum(rel_abund),
+            rel_abund = rel_abund/100, .groups = "drop") %>% 
+  select(-count) %>% 
+  ggplot(aes(x = sample_id, y = rel_abund, fill = taxonomy)) +
+  geom_col(position = "fill") +
+  theme_bw() +
+  labs(x = "", y = "Relative Abundance", title = "", fill = "Species") +
+  noxlabels +
+  scale_y_continuous(expand = c(0, 0))
+```
+
+
+## Getting abundance at taxon-level
+- Here we demonstrate how to use the `filter` function from `dplyr` to extract abundance at genus taxonomic-lineage.
+- Additional processing is also done to create a tidy dataframe.
+
+```{r}
+taxlevels <- c("kingdom", "phylum", "class", "order", "family", "genus")
+m3_taxa_abund <- readRDS("RDataRDS/m3_merged_abund_table.rds") %>% 
+  select(sample_id, taxonomy, rel_abund) %>% 
+  distinct() %>% 
+  dplyr::filter(!grepl("\\|s__*", taxonomy),
+                grepl("g__*", taxonomy)) %>%
+  group_by(sample_id, taxonomy, rel_abund) %>%
+  summarise(count = sum(rel_abund),
+            rel_abund = rel_abund/100, .groups = "drop") %>% 
+  select(-count) %>% 
+  pivot_wider(id_cols = "taxonomy", names_from = "sample_id", values_from = "rel_abund") %>% 
+  mutate(otu = paste("otu", seq(1:length(rownames(.))), sep = ""), .before = 1) %>% 
+  mutate_if(is.numeric, ~replace(., is.na(.), 0 )) %>% 
   separate(taxonomy, into = all_of(taxlevels), sep = "\\|")
-
-head(abund_table)
-```
-
-### Species relative abundance
-```{r}
-m3_species_rel_abund <- as.data.frame(abund_table) %>%
-  rename_all(tolower) %>% 
-  select(sample_id, otu = species, rel_abund) %>%
-  group_by(sample_id, otu) %>% 
-  summarise(rel_abund = sum(rel_abund), .groups = "drop") %>% 
-  group_by(sample_id, otu) %>% 
-  summarise(rel_abund = round(rel_abund/100, digits = 4), .groups = "drop") %>% 
-  ungroup() %>% 
-  pivot_wider(id_cols = otu, names_from = sample_id, values_from = rel_abund) %>%
-  mutate_all(~replace(., is.na(.), 0))
-  # mutate(otu = paste("otu", seq(1:length(rownames(df_rel_genus))), sep = ""), .before = 1)
-
-head(m3_species_rel_abund) %>% as.data.frame()
-
-write_csv(m3_species_rel_abund, "RDataRDS/m3_species_rel_abund.csv")
-saveRDS(m3_species_rel_abund, "RDataRDS/m3_species_rel_abund.rds")
+  
+tail(m3_taxa_abund) %>% as.data.frame()
 ```
 
 
-### Species raw abundance based on mapped reads
+## Creating MetaPhlAn otutable and taxonomy objects
 ```{r}
-m3_species_raw_read <- as.data.frame(abund_table) %>%
-  rename_all(tolower) %>% 
-  select(sample_id, otu = species, mapped_read) %>%
-  pivot_wider(id_cols = otu, names_from = sample_id, values_from = mapped_read) %>%
-  mutate_all(~replace(., is.na(.), 0))
-  # mutate(otu = paste("otu", seq(1:length(rownames(df_rel_genus))), sep = ""), .before = 1)
+m3_otutable <- readRDS("RDataRDS/m3_taxa_abund.rds") %>% 
+  select(-all_of(taxlevels))
 
-head(m3_species_raw_read) %>% as.data.frame()
+saveRDS(m3_otutable, "RDataRDS/m3_otutable.rds")
+head(m3_otutable)[, 1:5] %>% as.data.frame()
 
-write_csv(m3_species_raw_read, "RDataRDS/m3_species_raw_read.csv")
-saveRDS(m3_species_raw_read, "RDataRDS/m3_species_raw_read.rds")
+m3_taxonomy <- readRDS("RDataRDS/m3_taxa_abund.rds") %>% 
+  select(otu, all_of(taxlevels))
+
+saveRDS(m3_taxonomy, "RDataRDS/m3_taxonomy.rds")
+head(m3_taxonomy)[, 1:5] %>% as.data.frame()
 ```
 
-
-### Species relative abundance based on mapped reads
+## Creating Embedded metadata (optional)
 ```{r}
-m3_species_rel_read <- as.data.frame(abund_table) %>%
-  rename_all(tolower) %>% 
-  select(sample_id, otu = species, mapped_read) %>%
-  group_by(sample_id, otu) %>% 
-  summarise(mapped_read = sum(mapped_read), .groups = "drop") %>% 
-  group_by(sample_id) %>% 
-  mutate(rel_read = round(mapped_read / sum(mapped_read), digits = 4)) %>% 
-  ungroup() %>%
-  pivot_wider(id_cols = otu, names_from = sample_id, values_from = rel_read) %>%
-  mutate_all(~replace(., is.na(.), 0))
 
-  # mutate(otu = paste("otu", seq(1:length(rownames(df_rel_genus))), sep = ""), .before = 1)
-
-head(m3_species_rel_read) %>% as.data.frame()
-
-write_csv(m3_species_rel_read, "RDataRDS/m3_species_rel_read.csv")
-saveRDS(m3_species_rel_read, "RDataRDS/m3_species_rel_read.rds")
 ```
 

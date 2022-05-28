@@ -1,5 +1,5 @@
 # (PART) FUNCTIONAL PROFILING {-}
-# Using HUMAnN Pipeline {#humann-pipeline}
+# Functional Profiling Using HUMAnN Pipeline {#humann-pipeline}
 
 ## Quick glimpse
 Although HUMAnN is mostly used for profiling the abundance of microbial metabolic pathways, it also generate intermediate files (`bugs_list.tsv`) similar to the taxonomic profiles from MetaPhlAn.
