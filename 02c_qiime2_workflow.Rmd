@@ -1,4 +1,4 @@
-# Using QIIME2 Workflow{#qiime2-pipeline}
+# Microbial Profiling Using QIIME2 Workflow{#qiime2-pipeline}
 
 ## Download a QIIME2 trained classifer
 - You can use Naive Bayes (nb) classifiers trained on GreenGenes or SILVA database with 99% OTUs. You can train your own classifier using the [q2-feature-classifier](https://github.com/qiime2/q2-feature-classifier).
@@ -239,7 +239,7 @@ qiime metadata tabulate \
 qiime tools view $PWD/qiime2_bushmeat/q2-transformed-tables/feature-taxonomy-table.qzv
 ```
 
-## Exporting unrooted and rooted Newick tree
+### Exporting unrooted and rooted Newick tree
 ```bash
 ### Unrooted Newick tree
 qiime tools export \
@@ -251,3 +251,81 @@ qiime tools export \
   --input-path $PWD/qiime2_bushmeat/rooted-tree.qza \
   --output-path $PWD/qiime2_bushmeat/q2-transformed-tables/rooted-tree
 ```
+
+# Processing `qiime2` output in R
+
+## Create tidy qiime2 taxa abundance table
+
+```{r}
+source("R/common.R")
+library(tidyverse)
+taxlevels <- c("kingdom", "phylum", "class", "order", "family", "genus")
+
+q2_genus_lineage <- read_tsv("data/q2-transformed-tables/q2_feature_tax_abund.tsv", skip = 0, show_col_types = FALSE)[-1,] %>% 
+  rename(feature = id,
+         taxonomy = Taxon) %>% 
+  relocate(taxonomy, .after = feature) %>% 
+  distinct() %>%
+  mutate_if(is.numeric, ~replace(., is.na(.), 0)) %>%
+  mutate(taxonomy = str_replace_all(taxonomy, "; s__$", ""),
+         taxonomy = str_replace_all(taxonomy, "; g__$", ""),
+         taxonomy = str_replace_all(taxonomy, "; f__$", ""),
+         taxonomy = str_replace_all(taxonomy, "; o__$", ""),
+         taxonomy = str_replace_all(taxonomy, "; c__$", ""),
+         taxonomy = str_replace_all(taxonomy, "; p__$", ""),
+         taxonomy = str_replace_all(taxonomy, "; k__$", ""),
+         taxonomy = str_replace_all(taxonomy, "\\[|\\]", ""),
+         taxonomy = str_replace_all(taxonomy, "\\s", "")) %>%
+  dplyr::filter(!grepl("s__*", taxonomy)) %>%
+  dplyr::filter(grepl("g__*", taxonomy)) %>% 
+  select(-Confidence) %>% 
+  mutate(taxonomy = str_replace_all(taxonomy, "\\w__", "")) %>% 
+  separate(taxonomy, into = all_of(taxlevels), sep = ";")
+
+colnames(q2_genus_lineage)
+
+saveRDS(q2_genus_lineage, "RDataRDS/q2_genus_lineage.rds")
+resave(q2_genus_lineage, file = "~/Dropbox/CDILLC/GIT_REPOS/smda-end2end/RDataRDS/saved_objects.RData")
+```
+
+## Creating qiime2 otutable
+```{r}
+taxlevels <- c("kingdom", "phylum", "class", "order", "family", "genus")
+
+q2_otutable <- readRDS("RDataRDS/q2_genus_lineage.rds") %>%
+  select(-all_of(taxlevels))
+
+cat("Dimension of the otutable\n")
+dim(q2_otutable)
+cat("\nStructure of the otutable\n")
+head(q2_otutable)[, 1:5] %>% as.data.frame()  
+
+saveRDS(q2_otutable, "RDataRDS/q2_otutable.rds")
+resave(q2_otutable, file = "~/Dropbox/CDILLC/GIT_REPOS/smda-end2end/RDataRDS/saved_objects.RData")
+```
+
+## Creating qiime2 taxonomy table
+```{r}  
+taxlevels <- c("kingdom", "phylum", "class", "order", "family", "genus")
+
+q2_taxonomy <- readRDS("RDataRDS/q2_genus_lineage.rds") %>%
+  rename_all(tolower) %>%
+  select(feature, all_of(taxlevels)) %>%
+  distinct()
+
+cat("Dimension of the taxonomy table\n")
+dim(q2_taxonomy)
+cat("\nStructure of the taxonomy table\n")
+head(q2_taxonomy) %>% as.data.frame() 
+
+saveRDS(q2_taxonomy, "RDataRDS/q2_taxonomy.rds")
+resave(q2_taxonomy, file = "~/Dropbox/CDILLC/GIT_REPOS/smda-end2end/RDataRDS/saved_objects.RData")
+```
+
+
+```{bash}
+cp ~/Dropbox/CDILLC/GIT_REPOS/iMAP_part2/RDataRDS/q2_taxonomy.rds ~/Dropbox/CDILLC/GIT_REPOS/iMAP_part3/RDataRDS/
+cp ~/Dropbox/CDILLC/GIT_REPOS/iMAP_part2/RDataRDS/q2_otutable.rds ~/Dropbox/CDILLC/GIT_REPOS/iMAP_part3/RDataRDS/
+```
+
+

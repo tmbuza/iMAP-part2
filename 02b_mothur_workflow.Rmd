@@ -1,8 +1,8 @@
 # (PART) MICROBIAL PROFILING {-}
 
-# Using Mothur Pipeline {#mothur-workflow}
+# Microbila Profiling Using Mothur Pipeline {#mothur-workflow}
 
-## Download trained classifer
+## Downloading mothur-trained classifer
 - For demo purposes we will use [Silva seed](https://mothur.org/wiki/Silva_reference_files) due to its smaller size.
 
 ```bash
@@ -14,7 +14,6 @@ rm *.tgz
 > Other mothur-based classifiers can be found [here](https://mothur.org/wiki/taxonomy_outline/).
 
 ## Implementing `mothur` workflow
-### Key Points
 - We recommend getting familiar with the tutorials detailed in [MiSeq SOP](https://mothur.org/wiki/miseq_sop/). .
 
 ```{block, type="tmbinfo", echo=TRUE}
@@ -26,7 +25,7 @@ rm *.tgz
 
 Let's get started! 
 
-### Running analysis interactively
+## Running analysis interactively
 Interactive approach is the best for learning and reviewing the intermediate output, aka *RAYG* (Review-As-You-Go)[@TMB2019]
 
 ```bash
@@ -82,7 +81,7 @@ dist.seqs(fasta=current, output=lt)
 clearcut(phylip=current)
 ```
 
-### Batch analysis
+## Batch analysis
 - We can save the code above as `mothur_code.batch` and place it in a folder named code.
 - Then call `mothur` to run the file from bash command line as shown below.
 
@@ -99,26 +98,33 @@ clearcut(phylip=current)
 > Be sure to google for better solutions!
 
 
-## Processing mothur output
-### OTU tidy table or shared file
+# Processing `mothur` output in R
+## Tidy mothur otutable with OTUs in rows
 ```{r}
 library(tidyverse)
-mo_otutable <- read_tsv("data/final.opti_mcc.shared", show_col_types = FALSE) %>% 
+mo_otutable_long <- read_tsv("data/final.opti_mcc.shared", show_col_types = FALSE) %>% 
   select(-label, -numOtus) %>% 
   rename(sample_id = Group) %>% 
   rename_all(tolower) %>% 
-  mutate_if(is.numeric, ~replace(., is.na(.), 0)) %>% 
   pivot_longer(-sample_id, names_to="otu", values_to="count") %>% 
   filter(count != 0)
-  
-head(mo_otutable)[1:3,] %>% as.data.frame()  
 
-saveRDS(mo_otutable, "RDataRDS/mo_taxonomy.rds")
+ mo_otutable <- mo_otutable_long %>% 
+   pivot_wider(id_cols = otu, names_from = sample_id, values_from = count) %>% 
+  mutate_if(is.numeric, ~replace(., is.na(.), 0))
+
+cat("Dimension of the otutable\n")
+dim(mo_otutable)
+cat("\nStructure of the otutable\n")
+head(mo_otutable)[, 1:5] %>% as.data.frame()  
+
+saveRDS(mo_otutable, "RDataRDS/mo_otutable.rds")
+resave(mo_otutable, file = "~/Dropbox/CDILLC/GIT_REPOS/smda-end2end/RDataRDS/saved_objects.RData")
 ```
 
-### Preprocessing tidy taxonomy table
+## Tidy mothur taxonomy table
 ```{r}  
-taxlevels <- c("Domain", "Phylum", "Class", "Order", "Family", "Genus")
+taxlevels <- c("kingdom", "phylum", "class", "order", "family", "genus")
 
 mo_taxonomy <- read_tsv("data/final.opti_mcc.0.03.cons.taxonomy", show_col_types = F) %>%
   rename_all(tolower) %>%
@@ -128,9 +134,18 @@ mo_taxonomy <- read_tsv("data/final.opti_mcc.0.03.cons.taxonomy", show_col_types
          taxonomy = str_replace(taxonomy, ";unclassified", "_unclassified"),
          taxonomy = str_replace_all(taxonomy, ";unclassified", ""),
          taxonomy = str_replace_all(taxonomy, ";$", "")) %>% 
-  separate(taxonomy, into = c("Domain", "Phylum", "Class", "Order", "Family", "Genus"), sep = ";")
+  separate(taxonomy, into = all_of(taxlevels), sep = ";")
 
-head(mo_taxonomy)[1:3,] %>% as.data.frame()  
+cat("Dimension of the taxonomy table\n")
+dim(mo_taxonomy)
+cat("\nStructure of the taxonomy table\n")
+head(mo_taxonomy)[, 1:5] %>% as.data.frame() 
 
 saveRDS(mo_taxonomy, "RDataRDS/mo_taxonomy.rds")
+resave(mo_taxonomy, file = "~/Dropbox/CDILLC/GIT_REPOS/smda-end2end/RDataRDS/saved_objects.RData")
+```
+
+```{bash}
+cp ~/Dropbox/CDILLC/GIT_REPOS/iMAP_part2/RDataRDS/mo_taxonomy.rds ~/Dropbox/CDILLC/GIT_REPOS/iMAP_part3/RDataRDS/
+cp ~/Dropbox/CDILLC/GIT_REPOS/iMAP_part2/RDataRDS/mo_otutable.rds ~/Dropbox/CDILLC/GIT_REPOS/iMAP_part3/RDataRDS/
 ```
