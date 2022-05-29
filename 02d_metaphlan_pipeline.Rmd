@@ -2,11 +2,11 @@
 
 # Taxonomic Profiling Using MetaPhlAn Pipeline {#metaphlan-pipeline}
 
-## Generating relative abundance 
-- We loop through the fastq files using the following parameters.
-- Note that most parameters are default settings.
-- The output is a merged abundance table generated using the `merge_metaphlan_tables.py` python script.
-- the merged file is stored in a folder named *metaphlan3_profiles*.
+## Generating relative abundance
+- The `metaphlan` loop through the fastq files using specified parameters.
+- Then the files are merged into an abundance table using the `merge_metaphlan_tables.py` python script and store the output in a folder named *metaphlan3_profiles*.
+
+> Note: The output does not contain read count. See next section on how to add mapped read count.
 
 ```bash
 for i in data/*.fastq.gz
@@ -27,9 +27,12 @@ merge_metaphlan_tables.py metaphlan3_profiles/*_metaphlan3_profile*.txt > metaph
 
 ```
 
-## Generating relative abundance and read count
-- We add ``-t rel_ab_w_read_stats` which will add the read count to the output.
+## Generating relative abundance and read statistics
+- We add `-t rel_ab_w_read_stats` which will add the read statistics to the output.
 - We also add an option of generating a `biom` file which can be useful in some analyses.
+
+> Merging the output using the `merge_metaphlan_tables.py` python script will ignore the read statistics. In the next section we will demonstrate how to process the abundance files to include read statistics in the merged file.
+
 
 ```bash
 for i in data/*.fastq.gz
@@ -48,11 +51,12 @@ for i in data/*.fastq.gz
 	done
 ```
 
-# Processing unmerged `metaphlan` output files in R
-## Merging abundance files
-- First we create an empty column to hold the file names.
-- Then we loop through each file to fill the actual file names.
-- Then we create the m3_merged_abund_table.rds containing sample ID, taxonomy and the abundances.
+# Processing `metaphlan` output in R
+## Merging `metaphlan` abundance files
+- First we create an object to specify the location of `metaphlan` output.
+- Then we an empty data frame containing an empty column for holding the file names.
+- Then we loop through each file to extract the output and create a merged abundance table.
+- We will then create a tidy table containing sample ID, taxonomy, relative abundance and read statistics.
 
 > Note: We will specify the path where the `metaphlan` output is located. Replace the path to match yours.
 
@@ -64,19 +68,17 @@ set.seed(110912)
 path <- "/Volumes/RedSeagate/SYNTHETIC/microbes/data/*_profile.txt"
 files <- Sys.glob(path)
 
-merged_files <- data.frame(ModelName = character(), Object = character(), stringsAsFactors = FALSE) %>%
+merged_files <- data.frame(
+  ModelName = character(), 
+  Object = character(), 
+  stringsAsFactors = FALSE) %>%
   mutate(Filename = "")
 
 for (i in 1:length(files)){
-    currentFile = read_delim(files[i], skip = 4, show_col_types = FALSE) %>% mutate(Filename = files[i])
-    merged_files = rbind(merged_files, currentFile)
-}
-```
+  currentFile = read_delim(files[i], skip = 4, show_col_types = FALSE) %>% 
+    mutate(Filename = files[i])
+    merged_files = rbind(merged_files, currentFile)}
 
-## Creaating merged abundance object
-- The merged file contains sample ID, taxonomy and relative abundance and mapped read counts.
-
-```{r}
 m3_merged_abund_table <- merged_files %>% 
   rename_all(tolower) %>%
   rename(clade_name = colnames(merged_files)[1],
@@ -87,16 +89,18 @@ m3_merged_abund_table <- merged_files %>%
          sample_id = str_replace_all(sample_id, ".fast.*", "")) %>%
   select(sample_id, taxonomy = clade_name, rel_abund, mapped_read)
     
-head(m3_merged_abund_table) %>% as.data.frame()
+colnames(m3_merged_abund_table)
 
 saveRDS(m3_merged_abund_table, "RDataRDS/m3_merged_abund_table.rds")
 resave(m3_merged_abund_table, file = "~/Dropbox/CDILLC/GIT_REPOS/smda-end2end/RDataRDS/saved_objects.RData")
 ```
 
 
-## Getting abundance at taxon-level
-- Here we demonstrate how to use the `filter` function from `dplyr` to extract abundance at genus taxonomic-lineage.
+## Creating `metaphlan` taxa abundance table
+- Here we read through the merged abundance table and extract abundance at a taxon lineage.
+- The demo below extract and split abundance at genus-lineage and add code each row to a unique OTU ID.
 - Additional processing is also done to create a tidy dataframe.
+- The final out put will contain OTU ID, taxonomy and abundance for each sample.
 
 ```{r}
 taxlevels <- c("kingdom", "phylum", "class", "order", "family", "genus")
@@ -113,41 +117,42 @@ m3_taxa_abund <- readRDS("RDataRDS/m3_merged_abund_table.rds") %>%
   pivot_wider(id_cols = "taxonomy", names_from = "sample_id", values_from = "rel_abund") %>% 
   mutate(otu = paste("otu", seq(1:length(rownames(.))), sep = ""), .before = 1) %>% 
   mutate_if(is.numeric, ~replace(., is.na(.), 0 )) %>% 
+  mutate(taxonomy = str_replace_all(taxonomy, "\\w__", "")) %>%
   separate(taxonomy, into = all_of(taxlevels), sep = "\\|")
   
-tail(m3_taxa_abund) %>% as.data.frame()
+cat("Dimension of the otutable\n")
+dim(m3_taxa_abund)
+cat("\nStructure of the otutable\n")
+head(m3_taxa_abund)[, 1:4] %>% as.data.frame() 
 
 saveRDS(m3_taxa_abund, "RDataRDS/m3_taxa_abund.rds")
 resave(m3_taxa_abund, file = "~/Dropbox/CDILLC/GIT_REPOS/smda-end2end/RDataRDS/saved_objects.RData")
 ```
 
 
-## Creating MetaPhlAn otutable and taxonomy objects
+## Creating `metaphlan` otutable
 ```{r}
 m3_otutable <- readRDS("RDataRDS/m3_taxa_abund.rds") %>% 
   select(-all_of(taxlevels))
 cat("Dimension of the otutable\n")
 dim(m3_otutable)
 cat("\nStructure of the otutable\n")
-head(m3_otutable)[, 1:5] %>% as.data.frame()  
+head(m3_otutable)[, 1:3] %>% as.data.frame()  
 
 saveRDS(m3_otutable, "RDataRDS/m3_otutable.rds")
+```
 
-
+## Creating `metaphlan` taxonomy table
+```{r}
 m3_taxonomy <- readRDS("RDataRDS/m3_taxa_abund.rds") %>% 
   select(otu, all_of(taxlevels))
 cat("Dimension of the taxonomy table\n")
 dim(m3_taxonomy)
 cat("\nStructure of the taxonomy table\n")
-head(m3_taxonomy)[, 1:5] %>% as.data.frame() 
+head(m3_taxonomy)[, 1:4] %>% as.data.frame() 
 
 saveRDS(m3_taxonomy, "RDataRDS/m3_taxonomy.rds")
 resave(m3_taxonomy, file = "~/Dropbox/CDILLC/GIT_REPOS/smda-end2end/RDataRDS/saved_objects.RData")
 ```
 
-## Creating Embedded metadata (optional)
-```{bash}
-cp ~/Dropbox/CDILLC/GIT_REPOS/iMAP_part2/RDataRDS/m3_taxonomy.rds ~/Dropbox/CDILLC/GIT_REPOS/iMAP_part3/RDataRDS/
-cp ~/Dropbox/CDILLC/GIT_REPOS/iMAP_part2/RDataRDS/m3_otutable.rds ~/Dropbox/CDILLC/GIT_REPOS/iMAP_part3/RDataRDS/
-```
 

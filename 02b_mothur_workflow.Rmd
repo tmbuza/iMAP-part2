@@ -1,6 +1,6 @@
 # (PART) MICROBIAL PROFILING {-}
 
-# Microbila Profiling Using Mothur Pipeline {#mothur-workflow}
+# Microbila Profiling Using `mothur` Pipeline {#mothur-workflow}
 
 ## Downloading mothur-trained classifer
 - For demo purposes we will use [Silva seed](https://mothur.org/wiki/Silva_reference_files) due to its smaller size.
@@ -82,7 +82,7 @@ clearcut(phylip=current)
 ```
 
 ## Batch analysis
-- We can save the code above as `mothur_code.batch` and place it in a folder named code.
+- We can save the code as `mothur_code.batch` and place it in a folder named code.
 - Then call `mothur` to run the file from bash command line as shown below.
 
 ```bash
@@ -99,7 +99,7 @@ clearcut(phylip=current)
 
 
 # Processing `mothur` output in R
-## Tidy mothur otutable with OTUs in rows
+## Creting `mothur` otutable with OTUs in rows
 ```{r}
 library(tidyverse)
 mo_otutable_long <- read_tsv("data/final.opti_mcc.shared", show_col_types = FALSE) %>% 
@@ -116,13 +116,13 @@ mo_otutable_long <- read_tsv("data/final.opti_mcc.shared", show_col_types = FALS
 cat("Dimension of the otutable\n")
 dim(mo_otutable)
 cat("\nStructure of the otutable\n")
-head(mo_otutable)[, 1:5] %>% as.data.frame()  
+head(mo_otutable)[, 1:3] %>% as.data.frame()  
 
 saveRDS(mo_otutable, "RDataRDS/mo_otutable.rds")
 resave(mo_otutable, file = "~/Dropbox/CDILLC/GIT_REPOS/smda-end2end/RDataRDS/saved_objects.RData")
 ```
 
-## Tidy mothur taxonomy table
+## Creating `mothur` taxonomy table
 ```{r}  
 taxlevels <- c("kingdom", "phylum", "class", "order", "family", "genus")
 
@@ -139,13 +139,8 @@ mo_taxonomy <- read_tsv("data/final.opti_mcc.0.03.cons.taxonomy", show_col_types
 cat("Dimension of the taxonomy table\n")
 dim(mo_taxonomy)
 cat("\nStructure of the taxonomy table\n")
-head(mo_taxonomy)[, 1:5] %>% as.data.frame() 
+head(mo_taxonomy)[, 1:4] %>% as.data.frame() 
 
 saveRDS(mo_taxonomy, "RDataRDS/mo_taxonomy.rds")
 resave(mo_taxonomy, file = "~/Dropbox/CDILLC/GIT_REPOS/smda-end2end/RDataRDS/saved_objects.RData")
-```
-
-```{bash}
-cp ~/Dropbox/CDILLC/GIT_REPOS/iMAP_part2/RDataRDS/mo_taxonomy.rds ~/Dropbox/CDILLC/GIT_REPOS/iMAP_part3/RDataRDS/
-cp ~/Dropbox/CDILLC/GIT_REPOS/iMAP_part2/RDataRDS/mo_otutable.rds ~/Dropbox/CDILLC/GIT_REPOS/iMAP_part3/RDataRDS/
 ```
