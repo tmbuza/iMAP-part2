@@ -1,0 +1,228 @@
+# (PART) DATA PROCESSING {-}
+
+# Processing `mothur` output in R
+## Creting `mothur` otutable with OTUs in rows
+```{r}
+library(tidyverse)
+mo_otutable_long <- read_tsv("data/final.opti_mcc.shared", show_col_types = FALSE) %>% 
+  select(-label, -numOtus) %>% 
+  rename(sample_id = Group) %>% 
+  rename_all(tolower) %>% 
+  pivot_longer(-sample_id, names_to="otu", values_to="count") %>% 
+  filter(count != 0)
+
+ mo_otutable <- mo_otutable_long %>% 
+   pivot_wider(id_cols = otu, names_from = sample_id, values_from = count) %>% 
+  mutate_if(is.numeric, ~replace(., is.na(.), 0))
+
+cat("Dimension of the otutable\n")
+dim(mo_otutable)
+cat("\nStructure of the otutable\n")
+head(mo_otutable)[, 1:3] %>% as.data.frame()  
+
+saveRDS(mo_otutable, "RDataRDS/mo_otutable.rds")
+resave(mo_otutable, file = "~/Dropbox/CDILLC/GIT_REPOS/smda-end2end/RDataRDS/saved_objects.RData")
+```
+
+## Creating `mothur` taxonomy table
+```{r}  
+taxlevels <- c("kingdom", "phylum", "class", "order", "family", "genus")
+
+mo_taxonomy <- read_tsv("data/final.opti_mcc.0.03.cons.taxonomy", show_col_types = F) %>%
+  rename_all(tolower) %>%
+  select(otu, taxonomy) %>%
+  mutate(otu = tolower(otu),
+         taxonomy = str_replace_all(taxonomy, "\\(\\d+\\)", ""),
+         taxonomy = str_replace(taxonomy, ";unclassified", "_unclassified"),
+         taxonomy = str_replace_all(taxonomy, ";unclassified", ""),
+         taxonomy = str_replace_all(taxonomy, ";$", "")) %>% 
+  separate(taxonomy, into = all_of(taxlevels), sep = ";")
+
+cat("Dimension of the taxonomy table\n")
+dim(mo_taxonomy)
+cat("\nStructure of the taxonomy table\n")
+head(mo_taxonomy)[, 1:4] %>% as.data.frame() 
+
+saveRDS(mo_taxonomy, "RDataRDS/mo_taxonomy.rds")
+resave(mo_taxonomy, file = "~/Dropbox/CDILLC/GIT_REPOS/smda-end2end/RDataRDS/saved_objects.RData")
+```
+
+# Processing `qiime2` Output in R
+
+## Creating `qiime2` taxa abundance table
+- Here we read through the merged feature-taxonomy-abundance table and extract abundance at a taxon lineage.
+- The demo below extract and split abundance at genus-lineage.
+- Additional processing is also done to create a tidy dataframe.
+- The final out put will contain feature ID, taxonomy and abundance for each sample.
+```{r}
+source("R/common.R")
+library(tidyverse)
+taxlevels <- c("kingdom", "phylum", "class", "order", "family", "genus")
+
+q2_taxa_abund <- read_tsv("data/q2-transformed-tables/q2_feature_tax_abund.tsv", skip = 0, show_col_types = FALSE)[-1,] %>% 
+  rename(feature = id,
+         taxonomy = Taxon) %>% 
+  relocate(taxonomy, .after = feature) %>% 
+  distinct() %>%
+  mutate_if(is.numeric, ~replace(., is.na(.), 0)) %>%
+  mutate(taxonomy = str_replace_all(taxonomy, "; s__$", ""),
+         taxonomy = str_replace_all(taxonomy, "; g__$", ""),
+         taxonomy = str_replace_all(taxonomy, "; f__$", ""),
+         taxonomy = str_replace_all(taxonomy, "; o__$", ""),
+         taxonomy = str_replace_all(taxonomy, "; c__$", ""),
+         taxonomy = str_replace_all(taxonomy, "; p__$", ""),
+         taxonomy = str_replace_all(taxonomy, "; k__$", ""),
+         taxonomy = str_replace_all(taxonomy, "\\[|\\]", ""),
+         taxonomy = str_replace_all(taxonomy, "\\s", "")) %>%
+  dplyr::filter(!grepl("s__*", taxonomy)) %>%
+  dplyr::filter(grepl("g__*", taxonomy)) %>% 
+  select(-Confidence) %>% 
+  mutate(taxonomy = str_replace_all(taxonomy, "\\w__", "")) %>% 
+  separate(taxonomy, into = all_of(taxlevels), sep = ";")
+
+colnames(q2_taxa_abund)
+
+saveRDS(q2_taxa_abund, "RDataRDS/q2_taxa_abund.rds")
+resave(q2_taxa_abund, file = "~/Dropbox/CDILLC/GIT_REPOS/smda-end2end/RDataRDS/saved_objects.RData")
+```
+
+## Creating `qiime2` otutable
+```{r}
+taxlevels <- c("kingdom", "phylum", "class", "order", "family", "genus")
+
+q2_otutable <- readRDS("RDataRDS/q2_taxa_abund.rds") %>%
+  select(-all_of(taxlevels))
+
+cat("Dimension of the otutable\n")
+dim(q2_otutable)
+cat("\nStructure of the otutable\n")
+head(q2_otutable)[, 1:3] %>% as.data.frame()  
+
+saveRDS(q2_otutable, "RDataRDS/q2_otutable.rds")
+resave(q2_otutable, file = "~/Dropbox/CDILLC/GIT_REPOS/smda-end2end/RDataRDS/saved_objects.RData")
+```
+
+## Creating `qiime2` taxonomy table
+```{r}  
+taxlevels <- c("kingdom", "phylum", "class", "order", "family", "genus")
+
+q2_taxonomy <- readRDS("RDataRDS/q2_taxa_abund.rds") %>%
+  rename_all(tolower) %>%
+  select(feature, all_of(taxlevels)) %>%
+  distinct()
+
+cat("Dimension of the taxonomy table\n")
+dim(q2_taxonomy)
+cat("\nStructure of the taxonomy table\n")
+head(q2_taxonomy)[, 1:3] %>% as.data.frame() 
+
+saveRDS(q2_taxonomy, "RDataRDS/q2_taxonomy.rds")
+resave(q2_taxonomy, file = "~/Dropbox/CDILLC/GIT_REPOS/smda-end2end/RDataRDS/saved_objects.RData")
+```
+
+
+# Processing `metaphlan` output in R
+## Merging `metaphlan` abundance files
+- First we create an object to specify the location of `metaphlan` output.
+- Then we an empty data frame containing an empty column for holding the file names.
+- Then we loop through each file to extract the output and create a merged abundance table.
+- We will then create a tidy table containing sample ID, taxonomy, relative abundance and read statistics.
+
+> Note: We will specify the path where the `metaphlan` output is located. Replace the path to match yours.
+
+```{r withcounts}
+source("R/common.R")
+
+set.seed(110912)
+
+path <- "/Volumes/RedSeagate/SYNTHETIC/microbes/data/*_profile.txt"
+files <- Sys.glob(path)
+
+merged_files <- data.frame(
+  ModelName = character(), 
+  Object = character(), 
+  stringsAsFactors = FALSE) %>%
+  mutate(Filename = "")
+
+for (i in 1:length(files)){
+  currentFile = read_delim(files[i], skip = 4, show_col_types = FALSE) %>% 
+    mutate(Filename = files[i])
+    merged_files = rbind(merged_files, currentFile)}
+
+m3_merged_abund_table <- merged_files %>% 
+  rename_all(tolower) %>%
+  rename(clade_name = colnames(merged_files)[1],
+         sample_id = filename,
+         rel_abund = relative_abundance, 
+         mapped_read = estimated_number_of_reads_from_the_clade) %>% 
+  mutate(sample_id = str_replace_all(sample_id, ".*/", ""),
+         sample_id = str_replace_all(sample_id, ".fast.*", "")) %>%
+  select(sample_id, taxonomy = clade_name, rel_abund, mapped_read)
+    
+colnames(m3_merged_abund_table)
+
+saveRDS(m3_merged_abund_table, "RDataRDS/m3_merged_abund_table.rds")
+resave(m3_merged_abund_table, file = "~/Dropbox/CDILLC/GIT_REPOS/smda-end2end/RDataRDS/saved_objects.RData")
+```
+
+
+## Creating `metaphlan` taxa abundance table
+- Here we read through the merged abundance table and extract abundance at a taxon lineage.
+- The demo below extract and split abundance at genus-lineage and add code each row to a unique OTU ID.
+- Additional processing is also done to create a tidy dataframe.
+- The final out put will contain OTU ID, taxonomy and abundance for each sample.
+
+```{r}
+taxlevels <- c("kingdom", "phylum", "class", "order", "family", "genus")
+
+m3_taxa_abund <- readRDS("RDataRDS/m3_merged_abund_table.rds") %>% 
+  select(sample_id, taxonomy, rel_abund) %>% 
+  distinct() %>% 
+  dplyr::filter(!grepl("\\|s__*", taxonomy),
+                grepl("g__*", taxonomy)) %>%
+  group_by(sample_id, taxonomy, rel_abund) %>%
+  summarise(count = sum(rel_abund),
+            rel_abund = rel_abund/100, .groups = "drop") %>% 
+  select(-count) %>% 
+  pivot_wider(id_cols = "taxonomy", names_from = "sample_id", values_from = "rel_abund") %>% 
+  mutate(otu = paste("otu", seq(1:length(rownames(.))), sep = ""), .before = 1) %>% 
+  mutate_if(is.numeric, ~replace(., is.na(.), 0 )) %>% 
+  mutate(taxonomy = str_replace_all(taxonomy, "\\w__", "")) %>%
+  separate(taxonomy, into = all_of(taxlevels), sep = "\\|")
+  
+cat("Dimension of the otutable\n")
+dim(m3_taxa_abund)
+cat("\nStructure of the otutable\n")
+head(m3_taxa_abund)[, 1:4] %>% as.data.frame() 
+
+saveRDS(m3_taxa_abund, "RDataRDS/m3_taxa_abund.rds")
+resave(m3_taxa_abund, file = "~/Dropbox/CDILLC/GIT_REPOS/smda-end2end/RDataRDS/saved_objects.RData")
+```
+
+
+## Creating `metaphlan` otutable
+```{r}
+m3_otutable <- readRDS("RDataRDS/m3_taxa_abund.rds") %>% 
+  select(-all_of(taxlevels))
+cat("Dimension of the otutable\n")
+dim(m3_otutable)
+cat("\nStructure of the otutable\n")
+head(m3_otutable)[, 1:3] %>% as.data.frame()  
+
+saveRDS(m3_otutable, "RDataRDS/m3_otutable.rds")
+```
+
+## Creating `metaphlan` taxonomy table
+```{r}
+m3_taxonomy <- readRDS("RDataRDS/m3_taxa_abund.rds") %>% 
+  select(otu, all_of(taxlevels))
+cat("Dimension of the taxonomy table\n")
+dim(m3_taxonomy)
+cat("\nStructure of the taxonomy table\n")
+head(m3_taxonomy)[, 1:4] %>% as.data.frame() 
+
+saveRDS(m3_taxonomy, "RDataRDS/m3_taxonomy.rds")
+resave(m3_taxonomy, file = "~/Dropbox/CDILLC/GIT_REPOS/smda-end2end/RDataRDS/saved_objects.RData")
+```
+
+
