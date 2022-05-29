@@ -8,7 +8,7 @@ The <strong>iMAP-PART2</strong> is one of the practical user guides for providin
 
 ## Related resources
 
-|Code| Description| Glimpse |
+|Repo| Description| Repo Output |
 |--------------------|---------------------------------------------|-----------|
 |[iMAP-PART1](https://github.com/tmbuza/microbiome-part1/) | How to Get Started with Microbiome Data Analysis | [eBook](https://complexdatainsights.com/books/microbiome-analysis/getting-started) |
 |[iMAP-PART2](https://github.com/tmbuza/iMAP-part2/) | Bioinformatics Analysis of Microbiome Data | [eBook](https://complexdatainsights.com/books/microbiome-analysis/bioinformatics-analysis) |
