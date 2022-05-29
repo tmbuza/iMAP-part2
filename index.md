@@ -4,7 +4,7 @@
 
 ![Workflow for bioinformatics analysis of microbiome data.](img/part2_flow.png)
 
-The <strong>iMAP-PART2</strong> is one of the practical user guides for providing analytical support to the microbiome research community. Explore more guides from the table below:
+The <strong>iMAP-PART2</strong> is one of the practical user-guide-series for providing analytical support to the microbiome research community. Explore more guides from the table below:
 
 ## Related resources
 
