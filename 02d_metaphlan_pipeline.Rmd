@@ -1,8 +1,6 @@
-<!-- # (PART) METAGENOMIC PROFILING {-} -->
-
 # Taxonomic Profiling Using MetaPhlAn Pipeline {#metaphlan-pipeline}
 
-## Generating relative abundance
+## Generating relative abundance {#rel-abund-noread_stats}
 - The `metaphlan` loop through the fastq files using specified parameters.
 - Then the files are merged into an abundance table using the `merge_metaphlan_tables.py` python script and store the output in a folder named *metaphlan3_profiles*.
 
@@ -27,7 +25,7 @@ merge_metaphlan_tables.py metaphlan3_profiles/*_metaphlan3_profile*.txt > metaph
 
 ```
 
-## Generating relative abundance and read statistics
+## Generating relative abundance with read statistics {#rel-abund-read_stats}
 - We add `-t rel_ab_w_read_stats` which will add the read statistics to the output.
 - We also add an option of generating a `biom` file which can be useful in some analyses.
 

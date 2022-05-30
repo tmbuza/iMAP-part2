@@ -1,6 +1,6 @@
 # (PART) MICROBIAL PROFILING {-}
 
-# Microbila Profiling Using `mothur` Pipeline {#mothur-workflow}
+# Microbial Profiling Using `mothur` Pipeline {#mothur-workflow}
 
 ## Downloading mothur-trained classifer
 - For demo purposes we will use [Silva seed](https://mothur.org/wiki/Silva_reference_files) due to its smaller size.
