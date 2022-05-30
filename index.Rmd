@@ -73,7 +73,7 @@ J [label = 'Feature & Taxonomy\nTables']
 K [label = 'Microbial\nProfiles']
 L [label = 'MetaPhlAn\nBugs List']
 M [label = 'Processing Mothur, QIIME2,\nMetaPhlAn & HUMAnN Output', shape = oval, penwidth = 2.0]
-N [label = 'TIDY MICROBIAL\nABUNDANCE\nTABLES', penwidth = 5.0]
+N [label = 'TIDY OTU & \nTAXONOMY\nTABLES',fillcolor = yellow, penwidth = 5.0]
 
 # A [color = black]
 # C,E,F,I,J [color = limegreen]
