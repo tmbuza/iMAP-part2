@@ -152,7 +152,6 @@ m3_merged_abund_table <- merged_files %>%
   select(sample_id, taxonomy = clade_name, rel_abund, mapped_read)
     
 colnames(m3_merged_abund_table)
-
 saveRDS(m3_merged_abund_table, "RDataRDS/m3_merged_abund_table.rds")
 resave(m3_merged_abund_table, file = "~/Dropbox/CDILLC/GIT_REPOS/smda-end2end/RDataRDS/saved_objects.RData")
 ```
@@ -233,17 +232,17 @@ cat("\nStructure of the otutable\n")
 head(m3_read_counts_otutable)[, 1:5] %>% as.data.frame()  
 saveRDS(m3_read_counts_otutable, "RDataRDS/m3_read_counts_otutable.rds")
 
-m3_taxonomy <- readRDS("RDataRDS/m3_taxa_abund.rds") %>% 
+m3_read_counts_taxonomy <- readRDS("RDataRDS/m3_taxa_abund.rds") %>% 
   select(otu, all_of(taxlevels))
 
 cat("Dimension of the taxonomy table\n")
-dim(m3_taxonomy)
+dim(m3_read_counts_taxonomy)
 cat("\nStructure of the taxonomy table\n")
-head(m3_taxonomy)[, 1:4] %>% as.data.frame() 
-saveRDS(m3_taxonomy, "RDataRDS/m3_taxonomy.rds")
+head(m3_read_counts_taxonomy)[, 1:4] %>% as.data.frame() 
+saveRDS(m3_read_counts_taxonomy, "RDataRDS/m3_read_counts_taxonomy.rds")
 
-resave(m3_read_counts_otutable, m3_taxonomy, file = "RDataRDS/otutaxonomy_objects.RData")
-resave(m3_read_counts_otutable, m3_taxonomy, file = "~/Dropbox/CDILLC/GIT_REPOS/smda-end2end/RDataRDS/saved_objects.RData")
+resave(m3_read_counts_otutable, m3_read_counts_taxonomy, file = "RDataRDS/otutaxonomy_objects.RData")
+resave(m3_read_counts_otutable, m3_read_counts_taxonomy, file = "~/Dropbox/CDILLC/GIT_REPOS/smda-end2end/RDataRDS/saved_objects.RData")
 ```
 
 
