@@ -1,5 +1,3 @@
-# (PART) MICROBIAL PROFILING {-}
-
 # Microbial Profiling Using `mothur` Pipeline {#mothur-workflow}
 
 ## Downloading mothur-trained classifer

@@ -1,4 +1,4 @@
-# (PART) READ PREPROCESSING {-}
+# (PART) BIOINFORMATICS ANALYSIS {-}
 
 # Preprocessing 16S rRNA Sequencing Data{#preprocess-16S-reads}
 At this point we are aware of the preprocessing and bioinformatics tools needed to getting started with microbiome data analysis. We assume that the tools are already installed. Now it is time to use them to:

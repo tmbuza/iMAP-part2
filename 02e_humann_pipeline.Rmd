@@ -1,4 +1,3 @@
-# (PART) FUNCTIONAL PROFILING {-}
 # Functional Profiling Using HUMAnN Pipeline {#humann-pipeline}
 
 ## Quick glimpse
