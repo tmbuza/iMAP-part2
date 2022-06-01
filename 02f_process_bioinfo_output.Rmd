@@ -1,17 +1,18 @@
-# (PART) DATA PROCESSING {-}
+# (PART) DATA PROCESSING IN R {-}
 
-# Processing `mothur` output in R
+# Tidying Bioinformatics Output {#data-tidying}
 
-## Import library and functions
+## Output from `mothur` pipeline
+
+### Import libraries and functions
 ```{r}
-source("R/common.R")
 source("R/common.R")
 library(tidyverse, suppressPackageStartupMessages())
 set.seed(110912)
 ```
 
 
-## Creating `mothur` otu and taxonomy tables
+### Creating `mothur` otu and taxonomy tables {#mothur-otu-taxonomy}
 ```{r}
 library(tidyverse)
 mo_otutable_long <- read_tsv("data/final.opti_mcc.shared", show_col_types = FALSE) %>% 
@@ -49,12 +50,12 @@ head(mo_taxonomy)[, 1:4] %>% as.data.frame()
 saveRDS(mo_taxonomy, "RDataRDS/mo_taxonomy.rds")
 
 save(mo_otutable, mo_taxonomy, file = "RDataRDS/otutaxonomy_objects.RData")
-resave(mo_otutable, mo_taxonomy, file = "~/Dropbox/CDILLC/GIT_REPOS/smda-end2end/RDataRDS/saved_objects.RData")
+save(mo_otutable, mo_taxonomy, file = "RDataRDS/saved_objects.RData")
 ```
 
-# Processing `qiime2` Output in R
+## Output from `qiime2` pipeline
 
-## Creating `qiime2` taxa abundance table {#mo-otu-taxonomy}
+### Creating `qiime2` taxa abundance table {#qiime2-otu-taxonomy}
 - Here we read through the merged feature-taxonomy-abundance table and extract abundance at a taxon lineage.
 - The demo below extract and split abundance at genus-lineage.
 - Additional processing is also done to create a tidy dataframe.
@@ -112,13 +113,13 @@ head(q2_taxonomy)[, 1:3] %>% as.data.frame()
 saveRDS(q2_taxonomy, "RDataRDS/q2_taxonomy.rds")
 
 resave(q2_otutable, q2_taxonomy, file = "RDataRDS/otutaxonomy_objects.RData")
-resave(q2_otutable, q2_taxonomy, file = "~/Dropbox/CDILLC/GIT_REPOS/smda-end2end/RDataRDS/saved_objects.RData")
+resave(q2_otutable, q2_taxonomy, file = "RDataRDS/saved_objects.RData")
 ```
 
 
-# Processing `metaphlan` output in R
+## Output from `metaphlan` pipeline
 
-## Merging `metaphlan` abundance files
+### Merging `metaphlan` abundance files
 - First we create an object to specify the location of `metaphlan` output.
 - Then we an empty data frame containing an empty column for holding the file names.
 - Then we loop through each file to extract the output and create a merged abundance table.
@@ -153,11 +154,11 @@ m3_merged_abund_table <- merged_files %>%
     
 colnames(m3_merged_abund_table)
 saveRDS(m3_merged_abund_table, "RDataRDS/m3_merged_abund_table.rds")
-resave(m3_merged_abund_table, file = "~/Dropbox/CDILLC/GIT_REPOS/smda-end2end/RDataRDS/saved_objects.RData")
+resave(m3_merged_abund_table, file = "RDataRDS/saved_objects.RData")
 ```
 
 
-## Creating `metaphlan` relative abundance and taxonomy tables {#m3-otu-taxonomy}
+### Creating `metaphlan` relative abundance and taxonomy tables {#m3-otu-taxonomy}
 - Here we read through the merged abundance table and extract abundance at a taxon lineage.
 - The demo below extract and split abundance at genus-lineage and add code each row to a unique OTU ID.
 - Additional processing is also done to create a tidy dataframe.
@@ -180,6 +181,9 @@ m3_taxa_abund <- readRDS("RDataRDS/m3_merged_abund_table.rds") %>%
   mutate(taxonomy = str_replace_all(taxonomy, "\\w__", "")) %>%
   separate(taxonomy, into = all_of(taxlevels), sep = "\\|") 
 
+saveRDS(m3_taxa_abund, "RDataRDS/m3_taxa_abund.rds")
+resave(m3_taxa_abund, file = "RDataRDS/saved_objects.RData")
+
 m3_otutable <- m3_taxa_abund %>% 
   select(-all_of(taxlevels))
 
@@ -199,11 +203,11 @@ head(m3_taxonomy)[, 1:4] %>% as.data.frame()
 saveRDS(m3_taxonomy, "RDataRDS/m3_taxonomy.rds")
 
 resave(m3_otutable, m3_taxonomy, file = "RDataRDS/otutaxonomy_objects.RData")
-resave(m3_otutable, m3_taxonomy, file = "~/Dropbox/CDILLC/GIT_REPOS/smda-end2end/RDataRDS/saved_objects.RData")
+resave(m3_otutable, m3_taxonomy, file = "RDataRDS/saved_objects.RData")
 ```
 
 
-## Creating `metaphlan` raw and relative abundance based on read count {#m3-read-count_abund}
+### Creating `metaphlan` raw and relative abundance based on read count {#m3-read-count_abund}
 - Here we read through the merged abundance table and extract abundance at a taxon lineage.
 - The demo below extract and split abundance at genus-lineage and add code each row to a unique OTU ID.
 - Additional processing is also done to create a tidy dataframe.
@@ -242,7 +246,10 @@ head(m3_read_counts_taxonomy)[, 1:4] %>% as.data.frame()
 saveRDS(m3_read_counts_taxonomy, "RDataRDS/m3_read_counts_taxonomy.rds")
 
 resave(m3_read_counts_otutable, m3_read_counts_taxonomy, file = "RDataRDS/otutaxonomy_objects.RData")
-resave(m3_read_counts_otutable, m3_read_counts_taxonomy, file = "~/Dropbox/CDILLC/GIT_REPOS/smda-end2end/RDataRDS/saved_objects.RData")
+resave(m3_read_counts_otutable, m3_read_counts_taxonomy, file = "RDataRDS/saved_objects.RData")
 ```
-
+## Output from `humann` pipeline
+```{block, type="tmbinfo", echo=T}
+> Processing `humann` output will be added in the near future. 
+```
 

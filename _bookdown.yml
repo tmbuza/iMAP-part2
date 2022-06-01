@@ -12,7 +12,7 @@ rmd_files: [
 "02c_qiime2_workflow.Rmd",
 "02d_metaphlan_pipeline.Rmd",
 "02e_humann_pipeline.Rmd",
-"02f_process_bioinformatics_output.Rmd",
+"02f_process_bioinfo_output.Rmd",
 "99_appendix.Rmd",
 "999-references.Rmd"
 ]

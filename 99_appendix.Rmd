@@ -37,19 +37,20 @@ list.files(path="./RDataRDS", pattern = "*.csv|tsv", full.names = TRUE)
 lsdata("RDataRDS/saved_objects.RData")
 ```
 
-## How to reload RDS or RData into R environment
-```{block, type="tmbarrowF", echo=TRUE}
 
-- RDS format e.g. foo.rds
-  - foo <- readRDS("RDataRDS/foo.rds")
 
-- RData format e.g. foo.RData
-  - load("RDataRDS/foo.RData", verbose = TRUE)
+## How to reload RDS or RData
+```{block, type="tmbinfo", echo=T}
+### RDS format e.g. foo.rds
+foo <-`readRDS("RDataRDS/foo.rds")`
 
-- List objects in RData
-  - lsdata("foo.RData") 
+### RData format e.g. foo.RData
+`load("RDataRDS/foo.RData", verbose = TRUE)`
 
+### List objects in RData
+`lsdata("foo.RData")`
 ```
+
 
 
 # Software and Packages
