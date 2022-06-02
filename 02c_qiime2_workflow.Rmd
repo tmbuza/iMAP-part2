@@ -253,4 +253,13 @@ qiime tools export \
 ```
 
 
+## Save final `qiime2` results
+```{r message=FALSE, warning=FALSE}
+library(tidyverse, suppressPackageStartupMessages())
+library(cgwtools)
+
+q2_feature_taxonomy <- read_tsv("data/q2-transformed-tables/q2_feature_tax_abund.tsv", show_col_types = F)
+
+resave(q2_feature_taxonomy, file = "RDataRDS/final-bioinfo_objects.RData")
+```
 

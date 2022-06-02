@@ -95,4 +95,13 @@ clearcut(phylip=current)
 ```
 > Be sure to google for better solutions!
 
+## Save final `mothur` results
+```{r}
+library(tidyverse, suppressPackageStartupMessages())
+
+mo_shared_table <- read_tsv("data/final.opti_mcc.shared", show_col_types = F)
+mo_cons_taxonomy <- read_tsv("data/final.opti_mcc.0.03.cons.taxonomy", show_col_types = F)
+
+save(mo_shared_table, mo_cons_taxonomy, file = "RDataRDS/final-bioinfo_objects.RData")
+```
 
