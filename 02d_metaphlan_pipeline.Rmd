@@ -57,8 +57,8 @@ for i in data/*.fastq.gz
 
 > Note: We will specify the path where the `metaphlan` output is located. Replace the path to match yours.
 
-```{r withcounts}
-path <- "/Volumes/RedSeagate/SYNTHETIC/microbes/data/*_profile.txt"
+```{r}
+path <- "../smda-end2end/data/metagenomics/metaphlan3_profiles/*_profile.txt"
 files <- Sys.glob(path)
 
 merged_files <- data.frame(

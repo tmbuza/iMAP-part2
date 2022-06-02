@@ -192,7 +192,7 @@ do
     -o kneaddata/fastqc2 \
     --trimmomatic /Users/tmbuza/opt/anaconda3/envs/biobakery3/bin/ \
     --trimmomatic-options \
-        "ILLUMINACLIP:/Volumes/SeagateTMB/trimmomatic-0.36/adapters/NexteraPE-PE.fa:2:30:10 \
+        "ILLUMINACLIP:trimmomatic-0.36/adapters/NexteraPE-PE.fa:2:30:10 \
         LEADING:3 \
         TRAILING:3 \
         SLIDINGWINDOW:4:20 \
@@ -225,10 +225,10 @@ for i in data/*.fastq.gz
 do
 time kneaddata --i $i \
   -o kneaddata/fastqc3 \
-      --reference-db /Volumes/SeagateTMB/kneaddata_database/ \
+      --reference-db kneaddata_database/ \
       --trimmomatic /Users/tmbuza/opt/anaconda3/envs/biobakery3/bin/ \
       --trimmomatic-options \
-          "ILLUMINACLIP:/Volumes/SeagateTMB/trimmomatic-0.36/adapters/NexteraPE-PE.fa:2:30:10 \
+          "ILLUMINACLIP:trimmomatic-0.36/adapters/NexteraPE-PE.fa:2:30:10 \
           LEADING:3 \
           TRAILING:3 \
           SLIDINGWINDOW:4:20 \
@@ -260,10 +260,10 @@ for i in data/*.fastq.gz
 do
 time kneaddata --i $i \
   -o kneaddata/fastqc4 \
-      --reference-db /Volumes/SeagateTMB/Human_Assembly19_BMTagger_DB/ \
+      --reference-db Human_Assembly19_BMTagger_DB/ \
       --trimmomatic /Users/tmbuza/opt/anaconda3/envs/biobakery3/bin/ \
       --trimmomatic-options \
-          "ILLUMINACLIP:/Volumes/SeagateTMB/trimmomatic-0.36/adapters/NexteraPE-PE.fa:2:30:10 \
+          "ILLUMINACLIP:trimmomatic-0.36/adapters/NexteraPE-PE.fa:2:30:10 \
           LEADING:3 \
           TRAILING:3 \
           SLIDINGWINDOW:4:20 \
