@@ -99,9 +99,20 @@ clearcut(phylip=current)
 ```{r}
 library(tidyverse, suppressPackageStartupMessages())
 
-mo_shared_table <- read_tsv("data/final.opti_mcc.shared", show_col_types = F)
-mo_cons_taxonomy <- read_tsv("data/final.opti_mcc.0.03.cons.taxonomy", show_col_types = F)
+mo_opti_shared_table <- read_tsv("data/final.opti_mcc.shared", show_col_types = F)
+mo_opti_cons_taxonomy <- read_tsv("data/final.opti_mcc.0.03.cons.taxonomy", show_col_types = F)
+mo_phylo_shared_table <- read_tsv("data/final.tx.shared", show_col_types = F)
+mo_phylo_cons_taxonomy <- read_tsv("data/final.tx.1.cons.taxonomy", show_col_types = F)
+mo_asv_shared_table <- read_tsv("data/final.asv.shared", show_col_types = F)
+mo_asv_cons_taxonomy <- read_tsv("data/final.asv.ASV.cons.taxonomy", show_col_types = F)
 
-save(mo_shared_table, mo_cons_taxonomy, file = "RDataRDS/final-bioinfo_objects.RData")
+save(
+  mo_opti_shared_table, 
+  mo_opti_cons_taxonomy, 
+  mo_phylo_shared_table, 
+  mo_phylo_cons_taxonomy,
+  mo_asv_shared_table,
+  mo_asv_cons_taxonomy, 
+  file = "RDataRDS/final-bioinfo_objects.RData")
 ```
 

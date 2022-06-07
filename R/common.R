@@ -12,7 +12,7 @@ if (!dir.exists("figures")) {dir.create("figures")}
 if (!dir.exists("gifs")) {dir.create("gifs")}
 
 knitr::opts_chunk$set(
-  echo = FALSE,
+  echo = TRUE,
   message = FALSE,
   warning = FALSE,
   cache = FALSE,

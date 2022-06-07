@@ -39,6 +39,7 @@ knitr::write_bib(c(
 ```{r setup, echo=FALSE}
 source(file = "R/common.R")
 if (!dir.exists("data")) {dir.create("data")}
+if (!dir.exists("RDataRDS")) {dir.create("RDataRDS")}
 ```
 
 # Bioinformatics Analysis of Microbiome Data {-#frontpage}
