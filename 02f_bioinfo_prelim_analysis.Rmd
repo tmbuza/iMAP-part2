@@ -1,0 +1,19 @@
+# Preliminary Analysis {#prelim-analysis}
+
+## Basic commands
+> You can initiate `mothur` and run the following commands on `mothur cli`.
+
+```bash
+set.dir(input=data/, output=data/phylotype_analysis/)
+count.groups(shared=final.tx.shared)
+sub.sample(shared=final.tx.shared)
+summary.single(shared=final.tx.shared, 
+  calc=nseqs-coverage-sobs-invsimpson-chao-npshannon)
+summary.single(shared = final.tx.1.subsample.shared, 
+  calc=nseqs-coverage-sobs-invsimpson-chao-npshannon)
+rarefaction.single(shared=final.tx.shared, 
+  calc=sobs, freq=100)
+dist.shared(shared = final.tx.1.subsample.shared, 
+  calc=jclass-jest-thetayc-braycurtis)
+```
+
