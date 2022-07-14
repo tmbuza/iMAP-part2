@@ -1,19 +1,65 @@
-# Preliminary Analysis {#prelim-analysis}
+# Input Data for Advanced Analysis {#prelim-analysis}
 
-## Basic commands
-> You can initiate `mothur` and run the following commands on `mothur cli`.
+> First initiate `mothur` then run the following commands on `mothur cli`to generate downstream input data.
 
+## Setting input and output directories
 ```bash
 set.dir(input=data/, output=data/phylotype_analysis/)
+```
+
+## Getting count table
+```bash
 count.groups(shared=final.tx.shared)
+```
+
+## Subsample dataset
+```bash
 sub.sample(shared=final.tx.shared)
+```
+
+## Summary table with diversity metrics
+Using calculators for computing:
+
+- Number of sequences
+- Coverage
+- Observed species
+- Inverse Simpson
+- Chao1 estimations
+- Shannon
+
+> We can specify more calculators if needed.
+
+### Computing from unfitered data
+```bash
 summary.single(shared=final.tx.shared, 
   calc=nseqs-coverage-sobs-invsimpson-chao-npshannon)
+```
+
+### Computing from a subsample
+```bash
 summary.single(shared = final.tx.1.subsample.shared, 
   calc=nseqs-coverage-sobs-invsimpson-chao-npshannon)
+```
+
+## Rarefaction dataset at 100%
+```bash
 rarefaction.single(shared=final.tx.shared, 
   calc=sobs, freq=100)
+```
+
+## Rarefaction dataset at 25%
+```bash
+rarefaction.single(shared=final.tx.shared, 
+  calc=sobs, freq=25)
+```
+
+## Distance matrix
+```bash
 dist.shared(shared = final.tx.1.subsample.shared, 
   calc=jclass-jest-thetayc-braycurtis)
 ```
 
+## Sample tree
+```bash
+
+```
