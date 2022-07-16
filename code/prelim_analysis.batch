@@ -1,0 +1,39 @@
+set.dir(input=data/, output=data/mothurdata/)
+count.groups(shared=final.tx.shared)
+sub.sample(shared=final.tx.shared)
+summary.single(shared=final.tx.shared, calc=nseqs-coverage-sobs-invsimpson-chao-npshannon)
+summary.single(shared = final.tx.1.subsample.shared, calc=nseqs-coverage-sobs-invsimpson-chao-npshannon)
+rarefaction.single(shared=final.tx.shared, calc=sobs, freq=100)
+dist.shared(shared = final.tx.1.subsample.shared, calc=jclass-jest-thetayc-braycurtis)
+tree.shared(phylip=final.tx.1.subsample.braycurtis.1.lt.dist)
+
+set.dir(input=data/mothurdata/, output=data/mothurdata/)
+pcoa(phylip=final.tx.1.subsample.braycurtis.1.lt.dist)
+nmds(phylip=final.tx.1.subsample.braycurtis.1.lt.dist, mindim=3, maxdim=3)
+
+amova(phylip=final.tx.1.subsample.braycurtis.1.lt.dist, design=../iMAP-part1/RDataRDS/var1.design)
+# amova(phylip=final.tx.1.subsample.braycurtis.1.lt.dist, design=../iMAP-part1/RDataRDS/var2.design)
+homova(phylip=final.tx.1.subsample.braycurtis.1.lt.dist, design=../iMAP-part1/RDataRDS/var1.design)
+# homova(phylip=final.tx.1.subsample.braycurtis.1.lt.dist, design=../iMAP-part1/RDataRDS/var2.design)
+anosim(phylip=final.tx.1.subsample.braycurtis.1.lt.dist, design=../iMAP-part1/RDataRDS/var1.design)
+# anosim(phylip=final.tx.1.subsample.braycurtis.1.lt.dist, design=../iMAP-part1/RDataRDS/var2.design)
+
+
+parsimony(tree=final.tx.1.subsample.braycurtis.1.lt.tre, group=../iMAP-part1/RDataRDS/var1.design,  groups=all)
+# parsimony(tree=final.tx.1.subsample.braycurtis.1.lt.tre, group=../iMAP-part1/RDataRDS/var2.design,  groups=all)
+
+corr.axes(axes=final.tx.1.subsample.braycurtis.1.lt.pcoa.axes, shared=final.tx.1.subsample.shared, method=spearman, numaxes=3)
+
+indicator(shared=final.tx.1.subsample.shared, design=../iMAP-part1/RDataRDS/var1.design, iters=1000)
+# indicator(shared=final.tx.1.subsample.shared, design=../iMAP-part1/RDataRDS/var2.design, iters=1000)
+
+# get.communitytype(shared=final.tx.1.subsample.shared, minpartitions=2)
+metastats(shared=final.tx.1.subsample.shared, design=../iMAP-part1/RDataRDS/var1.design, iters=1000)
+# metastats(shared=final.tx.1.subsample.shared, design=../iMAP-part1/RDataRDS/var2.design, iters=1000)
+lefse(shared=final.tx.1.subsample.shared, design=../iMAP-part1/RDataRDS/var1.design, iters=1000)
+# lefse(shared=final.tx.1.subsample.shared, design=../iMAP-part1/RDataRDS/var2.design, iters=1000)
+
+kruskal.wallis(shared=final.tx.1.subsample.shared, design=../iMAP-part1/RDataRDS/var1.design)
+# kruskal.wallis(shared=final.tx.1.subsample.shared, design=../iMAP-part1/RDataRDS/var2.design)
+
+system(rm -f *.log*)
