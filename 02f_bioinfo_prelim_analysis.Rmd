@@ -1,10 +1,10 @@
-# Input Data for Advanced Analysis {#prelim-analysis}
+# Preliminary Analysis in Mothur {#prelim-analysis}
 
-> First initiate `mothur` then run the following commands on `mothur cli`to generate downstream input data.
+> First initiate `mothur` then run the following commands on `mothur cli` to generate downstream input data.
 
 ## Setting input and output directories
 ```bash
-set.dir(input=data/, output=data/phylotype_analysis/)
+set.dir(input=data/, output=data/mothurdata/)
 ```
 
 ## Getting count table
@@ -12,13 +12,13 @@ set.dir(input=data/, output=data/phylotype_analysis/)
 count.groups(shared=final.tx.shared)
 ```
 
-## Subsample dataset
+## Subsample dataset for group comparison {#subsampling}
 ```bash
 sub.sample(shared=final.tx.shared)
 ```
 
-## Summary table with diversity metrics
-Using calculators for computing:
+## Summary table with richness and diversity metrics
+Using different calculators to compute:
 
 - Number of sequences
 - Coverage
@@ -29,13 +29,13 @@ Using calculators for computing:
 
 > We can specify more calculators if needed.
 
-### Computing from unfitered data
+### Using unfitered data
 ```bash
 summary.single(shared=final.tx.shared, 
   calc=nseqs-coverage-sobs-invsimpson-chao-npshannon)
 ```
 
-### Computing from a subsample
+### Using a subsample
 ```bash
 summary.single(shared = final.tx.1.subsample.shared, 
   calc=nseqs-coverage-sobs-invsimpson-chao-npshannon)
@@ -54,12 +54,29 @@ rarefaction.single(shared=final.tx.shared,
 ```
 
 ## Distance matrix
+Generating a phylip-formatted distance matrix for describing the dissimilarity (1-similarity) among the groups:
+
+- The `jclass` calculator returns Jaccard index.
+- The `jest` calculator returns estimate of Jaccard index and is computed using `Chao1` richness estimates.
+- The `thetayc` calculator returns the Yue & Clayton measure of dissimilarity.
+- The `braycurtis` calculator returns the Bray-Curtis measure of dissimilarity
+
 ```bash
 dist.shared(shared = final.tx.1.subsample.shared, 
   calc=jclass-jest-thetayc-braycurtis)
 ```
 
-## Sample tree
+## Newick-formatted tree
+- Uses phylip-formatted distance matrix.
 ```bash
-
+tree.shared(phylip=final.tx.1.subsample.braycurtis.1.lt.dist)
 ```
+## PCoa and NMDS axes data
+- Uses phylip-formatted distance matrix
+
+```bash
+pcoa(phylip=final.tx.1.subsample.braycurtis.1.lt.dist)
+nmds(phylip=final.tx.1.subsample.braycurtis.1.lt.dist, mindim=3, maxdim=3)
+```
+
+

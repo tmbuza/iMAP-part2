@@ -1,15 +1,15 @@
 ---
 title: "Bioinformatics Analysis of Microbiome Data"
-subtitle: "End-to-End Practical User Guides"
-author: "Teresia Mrema-Buza, A Microbiome Data Science Enthusiast and Owner of the Complex Data Insights, LLC, USA"
-date: "`r Sys.Date()`"
+subtitle: "Integrated solutions for better results"
+author: "<strong>Teresia Mrema Buza</strong>"
+date: "Updated on `r Sys.Date()`"
 site: bookdown::bookdown_site
 knit: bookdown::render_book
 output:
   bookdown::bs4_book:
     includes:
       in_header:
-    template: bs4_part2_template.html
+    template: bs4_template.html
 documentclass: book
 classoption: openany #remove empty pages in pdf doc
 colorlinks: true

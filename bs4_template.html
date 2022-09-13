@@ -137,20 +137,19 @@ $endfor$
 </div> <!-- .container -->
 
 <footer class="bg-primary text-light mt-5">
-  <div class="container">
-    <div class="row">
+  <div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p><strong>$title$</strong> is PART 2 of the $if(subtitle)$<a class="text-light" href="https://complexdatainsights.com/books/microbiome-analysis/end-to-end-user-guide/"><u>$subtitle$$endif$</u></a> written by $for(author)$$author$$sep$, $endfor$.</p>
-  </div>
-  
-  <div class="col-12 col-md-6 mt-3">
-    <p>This user guide was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package. <br><b>$if(date)$Last updated on: $date$.$endif$</b></p>
+    <p><strong><u>$title$</u></strong>$if(subtitle)$: $subtitle$$endif$ written by $for(author)$$author$$sep$, $endfor$. $if(date)$It was last $date$.$endif$</p>
   </div>
 
-</div>
-</div>
+  <div class="col-12 col-md-6 mt-3">
+    <p>This guide was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
 </footer>
+
 
 $if(math)$
 <!-- dynamically load mathjax for compatibility with self-contained -->
